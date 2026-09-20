@@ -531,14 +531,11 @@
     // ----------------------------------------------------------------------
     // 1. CONFIGURAÇÃO DA NUVEM (SUPABASE)
     // ----------------------------------------------------------------------
-    // Chaves copiadas do seu projeto Supabase
+    // Chaves da Nuvem
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
     
-    // Inicia o cliente que conversa com o banco
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
-    // ID Fixo do restaurante para nosso protótipo SaaS
     const RESTAURANTE_ID = '11111111-1111-1111-1111-111111111111';
 
     // ----------------------------------------------------------------------
@@ -553,11 +550,9 @@
     let qtdSab = 1;
     let bordaPizza = 'sem-borda';
 
-    // Os arrays DADOS e pedidos agora começam vazios, pois vêm da nuvem
     let DADOS = { categorias: [], produtos: [], bordas: [] };
     let pedidos = [];
 
-    // Categorias fixas para a UI
     DADOS.categorias = [
       { id: 'pizzas', nome: '🍕 Pizzas Salgadas' },
       { id: 'esfihas', nome: '🥟 Esfihas Abertas' },
@@ -575,21 +570,15 @@
     // 3. INICIALIZAÇÃO DA APLICAÇÃO (ONLOAD)
     // ----------------------------------------------------------------------
     window.onload = async () => {
-      renderCategorias(); // Renderiza abas de categorias
-      
-      // Carrega os dados reais do Supabase
+      renderCategorias();
       await carregarProdutosDaNuvem();
       await carregarPedidosDaNuvem();
-      
-      // Ativa o WebSocket para escutar pedidos novos em tempo real
       iniciarEscutaRealtime();
     };
 
     // ----------------------------------------------------------------------
     // 4. FUNÇÕES DE BANCO DE DADOS (SUPABASE)
     // ----------------------------------------------------------------------
-    
-    // Busca Produtos (Cardápio)
     async function carregarProdutosDaNuvem() {
       document.getElementById('loading-produtos').style.display = 'block';
       
@@ -601,7 +590,6 @@
         
       if (error) {
         console.error("Erro ao carregar produtos:", error);
-        alert("Erro de conexão com o cardápio.");
       } else {
         DADOS.produtos = data;
         renderProdutos();
@@ -611,7 +599,6 @@
       document.getElementById('loading-produtos').style.display = 'none';
     }
 
-    // Busca Pedidos (Kanban)
     async function carregarPedidosDaNuvem() {
       document.getElementById('loading-pedidos').style.display = 'block';
       
@@ -632,19 +619,15 @@
       marcarConexaoAtiva();
     }
 
-    // WebSocket: A Mágica do Tempo Real
     function iniciarEscutaRealtime() {
       supabase.channel('custom-all-channel')
         .on(
           'postgres_changes', 
           { event: '*', schema: 'public', table: 'pedidos' }, 
           (payload) => {
-            console.log('Novo evento na cozinha!', payload);
-            carregarPedidosDaNuvem(); // Atualiza a tela
-            
-            // Se for um INSERT (novo pedido chegando do cliente)
+            carregarPedidosDaNuvem();
             if (payload.eventType === 'INSERT') {
-              beep(); // Toca o alarme da cozinha
+              beep();
             }
           }
         )
@@ -653,7 +636,6 @@
 
     function marcarConexaoAtiva() {
       const el = document.getElementById('status-nuvem');
-      const dot = document.getElementById('dot-nuvem');
       el.innerHTML = `<span style="width:6px; height:6px; background:var(--success); border-radius:50%; display:inline-block; margin-right:6px;" id="dot-nuvem"></span> Online (Nuvem Ativa)`;
     }
 
@@ -700,7 +682,7 @@
 
       if (aba === 'admin') renderAdmin();
       if (aba === 'estoque') renderEstoque();
-      if (aba === 'cozinha') carregarPedidosDaNuvem(); // Garante ver os últimos pedidos ao abrir o kanban
+      if (aba === 'cozinha') carregarPedidosDaNuvem(); 
     }
 
     function renderCategorias() {
@@ -717,7 +699,6 @@
 
     function renderProdutos() {
       const el = document.getElementById('prod-list');
-      // Atenção: A propriedade que vem do BD é 'categoria' e não 'cat'
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
       
       if (list.length === 0) {
@@ -820,7 +801,7 @@
       document.getElementById('box-novo-estoque').style.display = document.getElementById('novo-tipo').value === 'uni' ? 'block' : 'none';
     }
 
-    // SALVAR PRODUTO NA NUVEM (SUPABASE)
+    // SALVAR PRODUTO NA NUVEM
     async function salvarNovoProduto(e) {
       e.preventDefault();
       
@@ -837,7 +818,6 @@
 
       const estQtd = document.getElementById('novo-estoque').value;
 
-      // Objeto preparado para a tabela 'produtos' no Supabase
       const novoProdutoDB = {
         restaurante_id: RESTAURANTE_ID,
         categoria: cat,
@@ -851,13 +831,11 @@
         ativo: true
       };
 
-      // Inserção no Supabase
       const { data, error } = await supabase.from('produtos').insert([novoProdutoDB]).select();
 
       if (error) {
         alert('Erro ao salvar no banco: ' + error.message);
       } else {
-        // Sucesso: Limpa os campos e recarrega a lista
         document.getElementById('novo-nome').value = '';
         document.getElementById('novo-preco').value = '';
         document.getElementById('novo-desc').value = '';
@@ -865,7 +843,7 @@
         document.getElementById('novo-estoque').value = '';
         
         fecharModalNovoProduto();
-        await carregarProdutosDaNuvem(); // Atualiza a tela puxando do BD
+        await carregarProdutosDaNuvem();
         alert('Produto adicionado ao cardápio com sucesso!');
       }
 
@@ -873,7 +851,7 @@
       btn.disabled = false;
     }
 
-    // REMOVER PRODUTO DA NUVEM (SUPABASE)
+    // REMOVER PRODUTO DA NUVEM
     async function removerProdutoDaNuvem(id) {
       if (confirm('Tem certeza que deseja apagar este item permanentemente do banco de dados?')) {
         const { error } = await supabase.from('produtos').delete().eq('id', id);
@@ -899,7 +877,6 @@
       const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00;
       const total = sub + taxa;
 
-      // Monta o objeto exato da tabela 'pedidos' no Supabase
       const novoPedidoDB = {
         restaurante_id: RESTAURANTE_ID,
         codigo_curto: Math.floor(1000 + Math.random() * 9000).toString(),
@@ -915,7 +892,6 @@
         status: 'novo'
       };
 
-      // Dispara para o banco de dados
       const { data, error } = await supabase.from('pedidos').insert([novoPedidoDB]);
 
       if (error) {
@@ -925,7 +901,6 @@
         return;
       }
 
-      // Se passou, limpa sacola e continua o fluxo UI
       sacola = [];
       btn.innerText = 'Confirmar e Enviar Pedido';
       btn.disabled = false;
@@ -997,7 +972,6 @@
       }).join('');
     }
 
-    // Atualiza status do pedido no Banco de Dados
     async function mudarStatusNaNuvem(id_bd, novo_status) {
       const { error } = await supabase
         .from('pedidos')
@@ -1008,7 +982,6 @@
         alert("Erro ao mudar status: " + error.message);
       } else {
         if (novo_status === 'preparando') imprimirComanda(id_bd);
-        // Não precisa chamar carregarPedidosDaNuvem() aqui porque o WebSocket (Realtime) já fará isso sozinho!
       }
     }
 
@@ -1199,21 +1172,19 @@
       `).join('');
     }
 
-    // Atualiza estoque diretamente na Nuvem
     async function altEstoqueNaNuvem(id_bd, delta) {
       const p = DADOS.produtos.find(i => i.id === id_bd);
       if (p) {
         const novoEstoque = Math.max(0, p.estoque + delta);
         const novoAtivo = novoEstoque > 0;
         
-        // Atualiza no banco
         const { error } = await supabase
           .from('produtos')
           .update({ estoque: novoEstoque, ativo: novoAtivo })
           .eq('id', id_bd);
 
         if(!error) {
-          await carregarProdutosDaNuvem(); // Atualiza a tela puxando do BD
+          await carregarProdutosDaNuvem(); 
         } else {
           alert('Erro ao atualizar estoque: ' + error.message);
         }
