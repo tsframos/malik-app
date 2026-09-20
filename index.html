@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Malik Culinária - Sistema Cloud</title>
+  <title>Malik Culinária - Delivery</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,11 +39,12 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
-    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-bottom: 90px; }
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-bottom: 90px; display: flex; flex-direction: column;}
 
     h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-sacola, .btn-submit, .cat-btn, .btn-pizza, .modal-header h3 { font-family: 'Outfit', sans-serif !important; }
     .mono, .prod-price, .badge-time, #chk-sub, #chk-taxa, #chk-tot, #pix-total, .order-id, .stepper-val, .badge-count, td.mono-td { font-family: 'JetBrains Mono', monospace !important; letter-spacing: -0.5px; }
 
+    /* Barra de Navegação */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; gap: 8px; flex-wrap: wrap; }
     .brand { font-weight: 900; font-size: 16px; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
     .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; }
@@ -51,10 +52,13 @@
     .nav-tabs { display: flex; gap: 4px; background: var(--bg-body); padding: 4px; border-radius: 12px; border: 1px solid var(--border-color); }
     .tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .tab-btn.active { background: var(--accent); color: #fff; }
-    .tab-btn i { font-size: 10px; }
+    
+    /* Abas Administrativas (Ocultas para o cliente) */
+    .admin-only { display: none; } 
 
     .theme-toggle-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
+    /* Cabeçalho da Loja */
     .store-header { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); padding: 24px 16px; }
     .store-info { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
     .store-title { font-size: 26px; font-weight: 900; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
@@ -63,13 +67,15 @@
     .badges-deliv { display: flex; gap: 8px; font-size: 11px; }
     .badge-time { background: var(--bg-subsurface); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; }
 
+    /* Menu de Categorias */
     .cat-nav { background: var(--bg-body); border-bottom: 1px solid var(--border-color); padding: 10px 16px; position: sticky; top: 56px; z-index: 40; }
     .cat-scroll { max-width: 900px; margin: 0 auto; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
     .cat-scroll::-webkit-scrollbar { display: none; }
     .cat-btn { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; letter-spacing: 0.2px; }
     .cat-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    .container { max-width: 900px; margin: 0 auto; padding: 16px; }
+    /* Grid de Produtos */
+    .container { max-width: 900px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
     .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
     .prod-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; display: flex; gap: 12px; }
     .prod-card:hover { border-color: var(--accent); background: var(--card-hover); }
@@ -81,80 +87,85 @@
     .prod-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-color); }
     .prod-price { font-size: 14px; font-weight: 800; color: var(--accent); }
     .btn-pizza { background: var(--accent); color: #fff; border: none; padding: 6px 16px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; letter-spacing: 0.5px; }
-    .btn-pizza:hover { background: var(--accent-hover); }
     
     .stepper { display: flex; align-items: center; gap: 6px; background: var(--bg-body); padding: 2px 6px; border-radius: 8px; border: 1px solid var(--border-color); }
     .stepper-btn { background: none; border: none; color: var(--accent); font-weight: 800; cursor: pointer; font-size: 16px; padding: 0 4px; }
     .stepper-val { font-size: 13px; font-weight: 800; min-width: 16px; text-align: center; color: var(--text-main); }
 
+    /* Barra Fixa da Sacola */
     .sacola-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(to top, var(--bg-body) 85%, transparent); z-index: 45; }
     .btn-sacola { max-width: 500px; margin: 0 auto; background: var(--accent); color: #fff; border: none; padding: 16px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 900; font-size: 15px; cursor: pointer; box-shadow: 0 8px 25px var(--accent-soft); letter-spacing: 0.5px; text-transform: uppercase; }
     .badge-count { background: #fff; color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
 
+    /* Modais */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
     .modal-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 24px; color: var(--text-main); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px; font-family: 'Outfit', sans-serif; }
+    .form-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px; }
     .opt-card { display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 13px; font-weight: 600; background: var(--bg-surface); color: var(--text-main); }
     .opt-card.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 800; }
     .input-text { width: 100%; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; color: var(--text-main); font-size: 13px; font-weight: 500; outline: none; }
     .input-text:focus { border-color: var(--accent); }
-    .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 12px; letter-spacing: 0.5px; }
+    .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 12px; }
 
+    /* Estilos do Admin */
     .color-picker-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
-    .color-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s; }
-    .color-btn:hover { transform: scale(1.1); }
+    .color-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
     .color-btn.active { border-color: var(--text-main); }
     .admin-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
     .btn-action { background: var(--accent); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Outfit', sans-serif;}
     .table-container { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow-x: auto; margin-top: 14px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    th { padding: 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; }
+    th { padding: 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 800; }
     td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; }
     
-    /* Botões da Tabela Admin */
-    .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; }
-    .btn-edit { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid var(--info); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; margin-right: 6px; }
+    /* Botões da Tabela Administrativa corrigidos */
+    .td-acoes { display: flex; gap: 6px; justify-content: flex-end; align-items: center; }
+    .btn-edit { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid var(--info); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 
+    /* Kanban */
     .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 14px; }
     .kanban-col { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 420px; }
-    .col-header { padding: 14px; font-weight: 800; font-size: 14px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-subsurface); font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;}
+    .col-header { padding: 14px; font-weight: 800; font-size: 14px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-subsurface); text-transform: uppercase; }
     .col-body { padding: 12px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
     .order-card { background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .order-card.novo { border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
     
-    .order-client-name { font-weight: 700; font-size: 14px; color: var(--text-main); }
-    .order-item-row { margin: 8px 0; padding: 6px 0; border-top: 1px dashed var(--border-color); }
-    .order-item-text { font-size: 12px; font-weight: 600; color: var(--text-main); }
-    .order-item-obs { font-size: 11px; color: var(--accent); font-weight: 600; display: block; margin-top: 2px; }
-
-    /* Usuário Logado Info */
+    /* Utilitários Usuário Logado */
     #user-info { font-size: 11px; font-weight: 700; color: var(--text-muted); display: none; align-items: center; gap: 8px; }
     .btn-logout { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 10px; }
+    
+    /* Rodapé Discreto */
+    .footer-discreto { margin-top: auto; padding: 30px; text-align: center; }
+    .link-lojista { background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; }
+    .link-lojista:hover { color: var(--accent); }
 
     @media screen { #comanda-impressao { display: none; } }
     @media print {
       body * { visibility: hidden; }
       #comanda-impressao, #comanda-impressao * { visibility: visible; }
-      #comanda-impressao { position: absolute; left: 0; top: 0; width: 72mm; color: #000; background: #fff; font-family: 'JetBrains Mono', Consolas, monospace !important; font-size: 11px; padding: 4px; font-weight: 600; }
+      #comanda-impressao { position: absolute; left: 0; top: 0; width: 72mm; color: #000; background: #fff; font-family: 'JetBrains Mono', monospace !important; font-size: 11px; padding: 4px; font-weight: 600; }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAVEGAÇÃO SUPERIOR -->
   <header class="top-nav">
     <div class="brand">
-      <span class="dot"></span>
       MALIK APP
-      <span class="mono" style="font-size:10px; background:var(--bg-subsurface); color:var(--text-muted); padding:2px 6px; border-radius:4px; font-weight:normal;">SaaS V2</span>
+      <span class="mono" style="font-size:10px; background:var(--bg-subsurface); color:var(--text-muted); padding:2px 6px; border-radius:4px; font-weight:normal;">SaaS V3</span>
     </div>
 
-    <div class="nav-tabs">
-      <button class="tab-btn active" id="tab-cardapio" onclick="mostrarAba('cardapio')">Cardápio Público</button>
-      <button class="tab-btn" id="tab-admin" onclick="mostrarAba('admin')">🔒 Admin</button>
-      <button class="tab-btn" id="tab-cozinha" onclick="mostrarAba('cozinha')">🔒 Cozinha</button>
-      <button class="tab-btn" id="tab-estoque" onclick="mostrarAba('estoque')">🔒 Estoque</button>
+    <div class="nav-tabs" id="main-nav-tabs">
+      <button class="tab-btn active" id="tab-cardapio" onclick="mostrarAba('cardapio')">Cardápio</button>
+      
+      <!-- Estas abas só aparecem quando o Lojista faz o Login -->
+      <button class="tab-btn admin-only" id="tab-admin" onclick="mostrarAba('admin')">Gestão do Lojista</button>
+      <button class="tab-btn admin-only" id="tab-cozinha" onclick="mostrarAba('cozinha')">Cozinha / Pedidos</button>
+      <button class="tab-btn admin-only" id="tab-estoque" onclick="mostrarAba('estoque')">Estoque</button>
     </div>
 
     <div style="display:flex; align-items:center; gap:12px;">
@@ -169,9 +180,9 @@
   </header>
 
   <!-- ============================================== -->
-  <!-- 1. ABA: CARDÁPIO (PÚBLICO)                     -->
+  <!-- 1. ABA: CARDÁPIO (PÚBLICO PARA O CLIENTE)      -->
   <!-- ============================================== -->
-  <section id="sec-cardapio">
+  <section id="sec-cardapio" style="flex:1;">
     <div class="store-header">
       <div class="store-info">
         <div>
@@ -187,19 +198,26 @@
         </div>
       </div>
     </div>
+    
     <div class="cat-nav">
       <div class="cat-scroll" id="cat-list"></div>
     </div>
+    
     <main class="container">
       <div id="loading-produtos" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:bold; display:none;">
-        <span style="font-size:24px;">🔄</span><br>A carregar o sistema...
+        <span style="font-size:24px;">🔄</span><br>A carregar o cardápio...
       </div>
       <div class="grid-produtos" id="prod-list"></div>
     </main>
+
+    <!-- Rodapé Invisível para o Cliente, mas o Dono sabe que está lá -->
+    <div class="footer-discreto">
+      <button class="link-lojista" id="btn-footer-login" onclick="abrirModalLogin()">🔒 Acesso Restrito (Lojista)</button>
+    </div>
   </section>
 
   <!-- ============================================== -->
-  <!-- 2. ABA: ADMIN (PROTEGIDA)                      -->
+  <!-- 2. ABA: ADMINISTRAÇÃO (PROTEGIDA)              -->
   <!-- ============================================== -->
   <section id="sec-admin" style="display:none;" class="container">
     <div class="color-picker-box">
@@ -219,16 +237,18 @@
         </div>
       </div>
     </div>
+    
     <div class="admin-bar">
       <div>
         <h2 style="font-size:20px; color:var(--accent);">GERENCIADOR DO CARDÁPIO</h2>
       </div>
       <button class="btn-action" onclick="abrirModalProduto()">+ Novo Produto</button>
     </div>
+    
     <div class="table-container">
       <table>
         <thead>
-          <tr><th>Foto / Ícone</th><th>Item</th><th>Categoria</th><th>Tipo</th><th>Preço Base</th><th style="text-align:right;">Ações</th></tr>
+          <tr><th>Foto / Ícone</th><th>Item</th><th>Categoria</th><th>Preço</th><th style="text-align:right;">Ações</th></tr>
         </thead>
         <tbody id="admin-prod-rows"></tbody>
       </table>
@@ -236,7 +256,7 @@
   </section>
 
   <!-- ============================================== -->
-  <!-- 3. ABA: CHECKOUT (PÚBLICA)                     -->
+  <!-- 3. ABA: CHECKOUT DO CLIENTE                    -->
   <!-- ============================================== -->
   <section id="sec-checkout" style="display:none;" class="container">
     <div style="max-width: 480px; margin: 0 auto;">
@@ -246,7 +266,7 @@
       </div>
 
       <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:20px; text-align:center; margin-bottom:16px;">
-        <div style="color:var(--success); font-weight:900; font-size:18px; margin-bottom:4px; font-family:'Outfit', sans-serif;">Pix Gerado!</div>
+        <div style="color:var(--success); font-weight:900; font-size:18px; margin-bottom:4px; font-family:'Outfit', sans-serif;">Pix Gerado com Sucesso!</div>
         <div style="width:180px; height:180px; background:#fff; padding:12px; border-radius:16px; margin:0 auto 16px;">
           <svg viewBox="0 0 100 100" width="100%" height="100%"><path fill="#000" d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z M40,10 h20 v10 h-20 z M10,40 h10 v20 h-10 z M40,40 h20 v20 h-20 z M70,40 h10 v30 h-10 z M40,70 h20 v10 h-20 z M70,80 h20 v20 h-20 z M80,60 h20 v10 h-20 z"/></svg>
         </div>
@@ -308,7 +328,6 @@
         <button onclick="testeBeepNativo()" style="background:var(--bg-surface); border:1px solid var(--border-color); color:var(--success); font-size:12px; font-weight:800; padding:6px 12px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme iFood</button>
       </div>
     </div>
-    <div id="loading-pedidos" style="text-align:center; padding:40px; display:none;">Sincronizando...</div>
     <div class="kanban-grid" id="kanban-cols"></div>
   </section>
 
@@ -327,6 +346,7 @@
     </div>
   </section>
 
+  <!-- BARRA DE COMPRA FIXA -->
   <div class="sacola-bar" id="bar-sacola" style="display:none;">
     <button class="btn-sacola" onclick="abrirCheckout()">
       <div style="display:flex; align-items:center; gap:10px;"><span class="badge-count mono" id="sacola-count">0</span><span>Avançar para o Pedido</span></div>
@@ -335,12 +355,12 @@
   </div>
 
   <!-- ============================================== -->
-  <!-- MODAL DE LOGIN / SAAS CAIXA FORTE              -->
+  <!-- MODAL: LOGIN DO LOJISTA                        -->
   <!-- ============================================== -->
   <div class="modal-overlay" id="modal-login" style="display:none; z-index: 9999;">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
       <h2 style="color:var(--accent); font-size: 24px; margin-bottom: 8px;">🔒 Acesso Restrito</h2>
-      <p style="font-size: 13px; color:var(--text-muted); margin-bottom: 24px;">Painel exclusivo para gerentes e proprietários.</p>
+      <p style="font-size: 13px; color:var(--text-muted); margin-bottom: 24px;">Painel exclusivo para gerentes do restaurante.</p>
       
       <form onsubmit="realizarLogin(event)">
         <div class="form-group" style="text-align: left;">
@@ -355,13 +375,14 @@
       </form>
       
       <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
-        <p style="font-size: 12px; color:var(--text-muted);">Não tem conta?</p>
-        <button onclick="criarContaRestaurante()" style="background:transparent; border:none; color:var(--accent); font-weight:bold; font-size:13px; cursor:pointer; margin-top:4px;">Criar Conta Gratuita</button>
+        <button onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:12px; cursor:pointer; margin-top:4px;">Cancelar e voltar ao Cardápio</button>
       </div>
     </div>
   </div>
 
-  <!-- Demais Modais -->
+  <!-- ============================================== -->
+  <!-- MODAL: PIZZA DO CLIENTE                        -->
+  <!-- ============================================== -->
   <div class="modal-overlay" id="modal-pizza" style="display:none;">
     <div class="modal-box">
       <div class="modal-header">
@@ -394,6 +415,9 @@
     </div>
   </div>
 
+  <!-- ============================================== -->
+  <!-- MODAL: EDITAR / CRIAR PRODUTO (LOJISTA)        -->
+  <!-- ============================================== -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none;">
     <div class="modal-box">
       <div class="modal-header">
@@ -403,22 +427,30 @@
       <form onsubmit="salvarProduto(event)">
         <div class="form-group">
           <label class="form-label">URL da Imagem / Foto</label>
-          <input type="url" id="novo-img" placeholder="https://..." class="input-text">
+          <input type="url" id="novo-img" placeholder="Cole o link da imagem aqui..." class="input-text">
         </div>
         <div class="form-group"><label class="form-label">Nome</label><input type="text" id="novo-nome" required class="input-text"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div class="form-group">
             <label class="form-label">Categoria</label>
-            <select id="novo-cat" class="input-text"><option value="pizzas">🍕 Pizzas</option><option value="esfihas">🥟 Esfihas</option><option value="bebidas">🥤 Bebidas</option><option value="doces">🍬 Doces</option></select>
+            <select id="novo-cat" class="input-text">
+              <option value="pizzas">🍕 Pizzas</option>
+              <option value="esfihas">🥟 Esfihas</option>
+              <option value="bebidas">🥤 Bebidas</option>
+              <option value="doces">🍬 Doces</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">Tipo</label>
-            <select id="novo-tipo" class="input-text" onchange="toggleEstoqueField()"><option value="pizza">Montável</option><option value="uni">Unidade</option></select>
+            <select id="novo-tipo" class="input-text" onchange="toggleEstoqueField()">
+              <option value="pizza">Montável</option>
+              <option value="uni">Unidade</option>
+            </select>
           </div>
         </div>
         <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text"></div>
         <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.50" id="novo-preco" required class="input-text mono"></div>
-        <div class="form-group" id="box-novo-estoque" style="display:none;"><label class="form-label">Estoque (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono"></div>
+        <div class="form-group" id="box-novo-estoque" style="display:none;"><label class="form-label">Estoque Inicial</label><input type="number" id="novo-estoque" class="input-text mono"></div>
         <button type="submit" class="btn-submit" id="btn-submit-produto">Guardar na Nuvem</button>
       </form>
     </div>
@@ -432,11 +464,11 @@
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
     const malikDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
-    // Para simplificar no protótipo, vamos forçar o ID do restaurante principal
+    // Forçamos o ID do restaurante principal
     const RESTAURANTE_ID = '11111111-1111-1111-1111-111111111111';
 
     let temaAtual = 'dark';
-    let catAtiva = 'pizzas';
+    let catAtiva = 'esfihas'; // Alterado para esfihas como predefinição
     let sacola = [];
     let tipoConsumo = 'delivery';
     let pizzaAtual = null;
@@ -446,11 +478,9 @@
     let DADOS = { categorias: [], produtos: [], bordas: [] };
     let pedidos = [];
     let usuarioAtual = null;
-    
-    // Variável para controlar se estamos a criar ou a editar um produto
     let produtoEmEdicaoId = null;
 
-    DADOS.categorias = [{ id: 'pizzas', nome: '🍕 Pizzas' }, { id: 'esfihas', nome: '🥟 Esfihas' }, { id: 'bebidas', nome: '🥤 Bebidas' }, { id: 'doces', nome: '🍬 Doces' }];
+    DADOS.categorias = [{ id: 'esfihas', nome: '🥟 Esfihas' }, { id: 'pizzas', nome: '🍕 Pizzas' }, { id: 'bebidas', nome: '🥤 Bebidas' }, { id: 'doces', nome: '🍬 Doces' }];
     DADOS.bordas = [{ id: 'sem-borda', nome: 'Sem Borda', preco: 0 }, { id: 'catupiry', nome: 'Catupiry', preco: 12.00 }, { id: 'alho-poro', nome: 'Alho Poró', preco: 14.00 }];
 
     window.onload = async () => {
@@ -463,7 +493,7 @@
     };
 
     // ==========================================
-    // AUTENTICAÇÃO E LOGIN SAAS
+    // CONTROLE DE NAVEGAÇÃO E SESSÃO (SAAS)
     // ==========================================
     async function verificarSessao() {
       const { data: { session } } = await malikDB.auth.getSession();
@@ -472,13 +502,21 @@
     }
 
     function atualizarUINavegacao() {
+      const abasAdmin = document.querySelectorAll('.admin-only');
       if (usuarioAtual) {
         document.getElementById('user-info').style.display = 'flex';
         document.getElementById('user-email').innerText = usuarioAtual.email;
+        document.getElementById('btn-footer-login').style.display = 'none'; // Esconde o botão do rodapé
+        abasAdmin.forEach(el => el.style.display = 'flex'); // Mostra abas no topo
       } else {
         document.getElementById('user-info').style.display = 'none';
+        document.getElementById('btn-footer-login').style.display = 'inline-block';
+        abasAdmin.forEach(el => el.style.display = 'none');
       }
     }
+
+    function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
+    function fecharModalLogin() { document.getElementById('modal-login').style.display = 'none'; }
 
     async function realizarLogin(e) {
       e.preventDefault();
@@ -488,33 +526,14 @@
       btn.innerText = 'Autenticando...';
       
       const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha });
-      
       if (error) {
         alert("Erro no login: " + error.message);
         btn.innerText = 'Entrar no Painel';
       } else {
         usuarioAtual = data.user;
         atualizarUINavegacao();
-        document.getElementById('modal-login').style.display = 'none';
-        mostrarAba('cozinha');
-      }
-    }
-
-    async function criarContaRestaurante() {
-      const email = document.getElementById('login-email').value;
-      const senha = document.getElementById('login-senha').value;
-      if(!email || !senha || senha.length < 6) {
-        alert("Preencha o e-mail e uma senha com no mínimo 6 caracteres para criar a conta.");
-        return;
-      }
-      const { data, error } = await malikDB.auth.signUp({ email, password: senha });
-      if(error) alert("Erro ao criar conta: " + error.message);
-      else {
-        alert("Conta criada com sucesso! Você já está logado.");
-        usuarioAtual = data.user;
-        atualizarUINavegacao();
-        document.getElementById('modal-login').style.display = 'none';
-        mostrarAba('admin');
+        fecharModalLogin();
+        mostrarAba('admin'); // Leva o gestor direto para o seu painel
       }
     }
 
@@ -522,17 +541,10 @@
       await malikDB.auth.signOut();
       usuarioAtual = null;
       atualizarUINavegacao();
-      mostrarAba('cardapio');
+      mostrarAba('cardapio'); // Devolve para a visão de cliente
     }
 
     function mostrarAba(aba) {
-      // PROTEÇÃO DE ROTAS (SaaS)
-      const abasProtegidas = ['admin', 'cozinha', 'estoque'];
-      if (abasProtegidas.includes(aba) && !usuarioAtual) {
-        document.getElementById('modal-login').style.display = 'flex';
-        return;
-      }
-
       ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-cozinha', 'sec-estoque'].forEach(id => document.getElementById(id).style.display = 'none');
       document.getElementById('sec-' + aba).style.display = 'block';
 
@@ -551,7 +563,7 @@
     }
 
     // ==========================================
-    // ÁUDIO IFOOD SINTETIZADO (NUNCA FALHA)
+    // ÁUDIO IFOOD SINTETIZADO
     // ==========================================
     function testeBeepNativo() {
       try {
@@ -563,24 +575,20 @@
           osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
           gain.gain.setValueAtTime(0.1, ctx.currentTime + startTime);
           gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + startTime);
-          osc.stop(ctx.currentTime + startTime + duration);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + startTime); osc.stop(ctx.currentTime + startTime + duration);
         }
-        playNote(1046.50, 0, 0.15);
-        playNote(1046.50, 0.25, 0.15);
-      } catch (e) { console.log(e); }
+        playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15);
+      } catch (e) {}
     }
-
     function beep() { testeBeepNativo(); }
 
     // ==========================================
-    // DEMAIS FUNÇÕES (PRODUTOS E PEDIDOS)
+    // FUNÇÕES DE DADOS (SUPABASE)
     // ==========================================
     async function carregarProdutosDaNuvem() {
       const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false });
-      if (!error) { DADOS.produtos = data || []; renderProdutos(); }
+      if (!error) { DADOS.produtos = data || []; renderProdutos(); if(usuarioAtual) renderAdmin(); }
       document.getElementById('loading-produtos').style.display = 'none';
     }
 
@@ -600,7 +608,7 @@
 
     function marcarConexaoAtiva() {
       const el = document.getElementById('status-nuvem');
-      if(el) el.innerHTML = `<span style="width:6px; height:6px; background:var(--success); border-radius:50%; display:inline-block; margin-right:6px;" id="dot-nuvem"></span> Nuvem Ativa`;
+      if(el) el.innerHTML = `<span style="width:6px; height:6px; background:var(--success); border-radius:50%; display:inline-block; margin-right:6px;" id="dot-nuvem"></span> Conectado`;
     }
 
     function alternarTema() {
@@ -616,6 +624,9 @@
       if (botaoAtivo) botaoAtivo.classList.add('active');
     }
 
+    // ==========================================
+    // CARDÁPIO DO CLIENTE
+    // ==========================================
     function renderCategorias() {
       document.getElementById('cat-list').innerHTML = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">${c.nome}</button>`).join('');
     }
@@ -624,7 +635,8 @@
     function renderProdutos() {
       const el = document.getElementById('prod-list');
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
-      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px; grid-column: 1/-1;">Vazio.</div>'; return; }
+      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px; grid-column: 1/-1;">Nenhum item adicionado a esta categoria ainda.</div>'; return; }
+      
       el.innerHTML = list.map(p => {
         const inCart = sacola.find(s => s.prodId === p.id);
         const qtd = inCart ? inCart.qtd : 0;
@@ -664,7 +676,7 @@
     }
 
     // ==========================================
-    // SISTEMA DE EDIÇÃO DE PRODUTOS
+    // SISTEMA DE EDIÇÃO DE PRODUTOS (ADMIN)
     // ==========================================
     function renderAdmin() {
       document.getElementById('admin-prod-rows').innerHTML = DADOS.produtos.map(p => {
@@ -675,9 +687,11 @@
             <td><b>${p.nome}</b></td>
             <td>${p.categoria}</td>
             <td class="mono-td">R$ ${parseFloat(p.preco).toFixed(2)}</td>
-            <td style="text-align:right; white-space:nowrap;">
-              <button class="btn-edit" onclick="abrirModalProduto('${p.id}')">Editar</button>
-              <button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">Excluir</button>
+            <td>
+              <div class="td-acoes">
+                <button class="btn-edit" onclick="abrirModalProduto('${p.id}')">✏️ Editar</button>
+                <button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">Excluir</button>
+              </div>
             </td>
           </tr>
         `;
@@ -703,8 +717,8 @@
         titulo.innerText = 'Novo Produto';
         document.getElementById('novo-img').value = '';
         document.getElementById('novo-nome').value = '';
-        document.getElementById('novo-cat').value = 'pizzas';
-        document.getElementById('novo-tipo').value = 'pizza';
+        document.getElementById('novo-cat').value = 'esfihas';
+        document.getElementById('novo-tipo').value = 'uni';
         document.getElementById('novo-preco').value = '';
         document.getElementById('novo-desc').value = '';
         document.getElementById('novo-estoque').value = '';
@@ -754,7 +768,6 @@
       } else {
         fecharModalNovoProduto(); 
         await carregarProdutosDaNuvem();
-        alert(produtoEmEdicaoId ? 'Produto atualizado com sucesso!' : 'Produto adicionado com sucesso!');
       }
       
       btn.innerText = 'Guardar na Nuvem';
@@ -762,9 +775,12 @@
     }
 
     async function removerProdutoDaNuvem(id) {
-      if (confirm('Tem a certeza que quer apagar?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); }
+      if (confirm('Tem a certeza que quer apagar permanentemente?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); }
     }
 
+    // ==========================================
+    // CHECKOUT E ENVIAR PEDIDO
+    // ==========================================
     async function enviarPedido(e) {
       e.preventDefault();
       const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
@@ -775,9 +791,12 @@
       await malikDB.from('pedidos').insert([novoPedidoDB]);
       sacola = [];
       if (novoPedidoDB.forma_pagamento === 'pix') { document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`; }
-      else { alert('Pedido enviado!'); mostrarAba('cardapio'); } 
+      else { alert('Pedido recebido pela nossa cozinha com sucesso!'); mostrarAba('cardapio'); } 
     }
 
+    // ==========================================
+    // KANBAN DA COZINHA E MODAIS SECUNDÁRIOS
+    // ==========================================
     function renderKanban() {
       const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'No Forno', cor: 'var(--accent)' }, { id: 'entrega', t: 'Em Entrega', cor: '#3b82f6' }, { id: 'fim', t: 'Concluído', cor: 'var(--success)' }];
       document.getElementById('kanban-cols').innerHTML = cols.map(c => {
