@@ -25,6 +25,7 @@
       --card-hover: #212121;
       --danger: #ef4444;
       --success: #10b981;
+      --info: #3b82f6;
     }
 
     [data-theme="light"] {
@@ -111,7 +112,10 @@
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { padding: 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; }
     td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; }
+    
+    /* Botões da Tabela Admin */
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; }
+    .btn-edit { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid var(--info); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; margin-right: 6px; }
 
     .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 14px; }
     .kanban-col { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 420px; }
@@ -219,7 +223,7 @@
       <div>
         <h2 style="font-size:20px; color:var(--accent);">GERENCIADOR DO CARDÁPIO</h2>
       </div>
-      <button class="btn-action" onclick="abrirModalNovoProduto()">+ Novo Produto</button>
+      <button class="btn-action" onclick="abrirModalProduto()">+ Novo Produto</button>
     </div>
     <div class="table-container">
       <table>
@@ -393,10 +397,14 @@
   <div class="modal-overlay" id="modal-novo-produto" style="display:none;">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 style="font-size:18px; color:var(--accent);">Novo Produto</h3>
+        <h3 id="modal-produto-titulo" style="font-size:18px; color:var(--accent);">Novo Produto</h3>
         <button onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
-      <form onsubmit="salvarNovoProduto(event)">
+      <form onsubmit="salvarProduto(event)">
+        <div class="form-group">
+          <label class="form-label">URL da Imagem / Foto</label>
+          <input type="url" id="novo-img" placeholder="https://..." class="input-text">
+        </div>
         <div class="form-group"><label class="form-label">Nome</label><input type="text" id="novo-nome" required class="input-text"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div class="form-group">
@@ -405,11 +413,13 @@
           </div>
           <div class="form-group">
             <label class="form-label">Tipo</label>
-            <select id="novo-tipo" class="input-text"><option value="pizza">Montável</option><option value="uni">Unidade</option></select>
+            <select id="novo-tipo" class="input-text" onchange="toggleEstoqueField()"><option value="pizza">Montável</option><option value="uni">Unidade</option></select>
           </div>
         </div>
+        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text"></div>
         <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.50" id="novo-preco" required class="input-text mono"></div>
-        <button type="submit" class="btn-submit">Salvar</button>
+        <div class="form-group" id="box-novo-estoque" style="display:none;"><label class="form-label">Estoque (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono"></div>
+        <button type="submit" class="btn-submit" id="btn-submit-produto">Guardar na Nuvem</button>
       </form>
     </div>
   </div>
@@ -436,6 +446,9 @@
     let DADOS = { categorias: [], produtos: [], bordas: [] };
     let pedidos = [];
     let usuarioAtual = null;
+    
+    // Variável para controlar se estamos a criar ou a editar um produto
+    let produtoEmEdicaoId = null;
 
     DADOS.categorias = [{ id: 'pizzas', nome: '🍕 Pizzas' }, { id: 'esfihas', nome: '🥟 Esfihas' }, { id: 'bebidas', nome: '🥤 Bebidas' }, { id: 'doces', nome: '🍬 Doces' }];
     DADOS.bordas = [{ id: 'sem-borda', nome: 'Sem Borda', preco: 0 }, { id: 'catupiry', nome: 'Catupiry', preco: 12.00 }, { id: 'alho-poro', nome: 'Alho Poró', preco: 14.00 }];
@@ -483,7 +496,7 @@
         usuarioAtual = data.user;
         atualizarUINavegacao();
         document.getElementById('modal-login').style.display = 'none';
-        mostrarAba('cozinha'); // Direciona pra cozinha ao logar
+        mostrarAba('cozinha');
       }
     }
 
@@ -555,16 +568,12 @@
           osc.start(ctx.currentTime + startTime);
           osc.stop(ctx.currentTime + startTime + duration);
         }
-        // Toca duas notas curtas e agudas (Estilo iFood)
-        playNote(1046.50, 0, 0.15);    // Nota Dó (C6)
-        playNote(1046.50, 0.25, 0.15); // Repete a Nota
+        playNote(1046.50, 0, 0.15);
+        playNote(1046.50, 0.25, 0.15);
       } catch (e) { console.log(e); }
     }
 
-    function beep() {
-      // Chama o sintetizador nativo
-      testeBeepNativo();
-    }
+    function beep() { testeBeepNativo(); }
 
     // ==========================================
     // DEMAIS FUNÇÕES (PRODUTOS E PEDIDOS)
@@ -619,7 +628,7 @@
       el.innerHTML = list.map(p => {
         const inCart = sacola.find(s => s.prodId === p.id);
         const qtd = inCart ? inCart.qtd : 0;
-        const img = (p.img_url) ? `<img src="${p.img_url}" class="prod-img">` : `<div class="prod-icon-box">${p.icone || '🍽️'}</div>`;
+        const img = (p.img_url) ? `<img src="${p.img_url}" class="prod-img" onerror="this.outerHTML='<div class=\\'prod-icon-box\\'>🍽️</div>'">` : `<div class="prod-icon-box">${p.icone || '🍽️'}</div>`;
         return `
           <div class="prod-card" style="${!p.ativo ? 'opacity:0.4' : ''}">
             ${img}
@@ -654,22 +663,106 @@
       else bar.style.display = 'none';
     }
 
+    // ==========================================
+    // SISTEMA DE EDIÇÃO DE PRODUTOS
+    // ==========================================
     function renderAdmin() {
-      document.getElementById('admin-prod-rows').innerHTML = DADOS.produtos.map(p => `<tr><td>${p.icone}</td><td><b>${p.nome}</b></td><td>${p.categoria}</td><td class="mono-td">R$ ${parseFloat(p.preco).toFixed(2)}</td><td style="text-align:right;"><button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">Excluir</button></td></tr>`).join('');
+      document.getElementById('admin-prod-rows').innerHTML = DADOS.produtos.map(p => {
+        const img = (p.img_url) ? `<img src="${p.img_url}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;" onerror="this.outerHTML='🍽️'">` : `<div style="width:36px; height:36px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">${p.icone || '🍽️'}</div>`;
+        return `
+          <tr>
+            <td>${img}</td>
+            <td><b>${p.nome}</b></td>
+            <td>${p.categoria}</td>
+            <td class="mono-td">R$ ${parseFloat(p.preco).toFixed(2)}</td>
+            <td style="text-align:right; white-space:nowrap;">
+              <button class="btn-edit" onclick="abrirModalProduto('${p.id}')">Editar</button>
+              <button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">Excluir</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
-    function abrirModalNovoProduto() { document.getElementById('modal-novo-produto').style.display = 'flex'; }
+    // Modal agora serve para Criar ou Editar
+    function abrirModalProduto(id = null) {
+      produtoEmEdicaoId = id;
+      const titulo = document.getElementById('modal-produto-titulo');
+      
+      if (id) {
+        titulo.innerText = 'Editar Produto';
+        const p = DADOS.produtos.find(item => item.id === id);
+        document.getElementById('novo-img').value = p.img_url || '';
+        document.getElementById('novo-nome').value = p.nome || '';
+        document.getElementById('novo-cat').value = p.categoria || 'pizzas';
+        document.getElementById('novo-tipo').value = p.tipo || 'pizza';
+        document.getElementById('novo-preco').value = p.preco || '';
+        document.getElementById('novo-desc').value = p.descricao || '';
+        document.getElementById('novo-estoque').value = p.estoque !== null ? p.estoque : '';
+      } else {
+        titulo.innerText = 'Novo Produto';
+        document.getElementById('novo-img').value = '';
+        document.getElementById('novo-nome').value = '';
+        document.getElementById('novo-cat').value = 'pizzas';
+        document.getElementById('novo-tipo').value = 'pizza';
+        document.getElementById('novo-preco').value = '';
+        document.getElementById('novo-desc').value = '';
+        document.getElementById('novo-estoque').value = '';
+      }
+      toggleEstoqueField();
+      document.getElementById('modal-novo-produto').style.display = 'flex';
+    }
+
     function fecharModalNovoProduto() { document.getElementById('modal-novo-produto').style.display = 'none'; }
+    function toggleEstoqueField() { document.getElementById('box-novo-estoque').style.display = document.getElementById('novo-tipo').value === 'uni' ? 'block' : 'none'; }
     
-    async function salvarNovoProduto(e) {
+    async function salvarProduto(e) {
       e.preventDefault();
-      const novo = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, preco: parseFloat(document.getElementById('novo-preco').value), tipo: document.getElementById('novo-tipo').value, icone: '🍽️', ativo: true };
-      await malikDB.from('produtos').insert([novo]);
-      fecharModalNovoProduto(); await carregarProdutosDaNuvem();
+      const btn = document.getElementById('btn-submit-produto');
+      btn.innerText = 'Guardando na Nuvem...';
+      btn.disabled = true;
+
+      const cat = document.getElementById('novo-cat').value;
+      let icon = '🍽️';
+      if (cat === 'pizzas') icon = '🍕'; else if (cat === 'esfihas') icon = '🥟'; else if (cat === 'bebidas') icon = '🥤'; else if (cat === 'doces') icon = '🍬';
+      const estQtd = document.getElementById('novo-estoque').value;
+
+      const dadosProduto = { 
+        restaurante_id: RESTAURANTE_ID, 
+        categoria: cat, 
+        nome: document.getElementById('novo-nome').value, 
+        descricao: document.getElementById('novo-desc').value || null,
+        img_url: document.getElementById('novo-img').value || null,
+        preco: parseFloat(document.getElementById('novo-preco').value), 
+        tipo: document.getElementById('novo-tipo').value, 
+        icone: icon, 
+        estoque: (document.getElementById('novo-tipo').value === 'uni' && estQtd !== '') ? parseInt(estQtd, 10) : null,
+        ativo: true 
+      };
+
+      let erroDb;
+      if (produtoEmEdicaoId) {
+        const { error } = await malikDB.from('produtos').update(dadosProduto).eq('id', produtoEmEdicaoId);
+        erroDb = error;
+      } else {
+        const { error } = await malikDB.from('produtos').insert([dadosProduto]);
+        erroDb = error;
+      }
+
+      if (erroDb) {
+        alert('Erro ao guardar: ' + erroDb.message);
+      } else {
+        fecharModalNovoProduto(); 
+        await carregarProdutosDaNuvem();
+        alert(produtoEmEdicaoId ? 'Produto atualizado com sucesso!' : 'Produto adicionado com sucesso!');
+      }
+      
+      btn.innerText = 'Guardar na Nuvem';
+      btn.disabled = false;
     }
 
     async function removerProdutoDaNuvem(id) {
-      if (confirm('Apagar?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); }
+      if (confirm('Tem a certeza que quer apagar?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); }
     }
 
     async function enviarPedido(e) {
@@ -682,7 +775,7 @@
       await malikDB.from('pedidos').insert([novoPedidoDB]);
       sacola = [];
       if (novoPedidoDB.forma_pagamento === 'pix') { document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`; }
-      else { alert('Pedido enviado!'); mostrarAba('cardapio'); } // Cliente fica na tela pública
+      else { alert('Pedido enviado!'); mostrarAba('cardapio'); } 
     }
 
     function renderKanban() {
