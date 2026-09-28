@@ -7,26 +7,24 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Biblioteca do Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
       --bg-body: #ffffff;
       --bg-surface: #ffffff;
-      --bg-subsurface: #f7f7f7;
-      --border-color: #e5e5e5; 
-      --text-main: #3e3e3e;
-      --text-muted: #717171;
-      --accent: #ea1d2c;
-      --accent-hover: #c91825;
-      --accent-soft: rgba(234, 29, 44, 0.1);
-      --card-hover: #fafafa;
-      --danger: #ea1d2c;
-      --success: #50a773;
-      --info: #3b82f6;
+      --bg-subsurface: #f9f9f9;
+      --border-color: #f0f0f0; 
+      --text-main: #1a1a1a;
+      --text-muted: #757575;
+      --accent: #d92d20; /* Vermelho OlaClick/Malik */
+      --accent-hover: #b42218;
+      --accent-soft: rgba(217, 45, 32, 0.08);
+      --danger: #d92d20;
+      --success: #12b76a;
+      --info: #0ba5ec;
     }
 
     [data-theme="dark"] {
@@ -36,123 +34,114 @@
       --border-color: #333333;
       --text-main: #f5f5f5;
       --text-muted: #a3a3a3;
-      --card-hover: #212121;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
     body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-bottom: 90px; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;}
 
-    h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-sacola, .btn-submit, .cat-btn, .modal-header h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
-    .mono, .badge-time, #chk-sub, #chk-taxa, #chk-tot, #pix-total, .order-id, .stepper-val, .badge-count, td.mono-td { font-family: 'JetBrains Mono', monospace !important; letter-spacing: -0.5px; }
+    h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-submit, .modal-header h3 { font-family: 'Outfit', sans-serif; font-weight: 800; }
+    .mono { font-variant-numeric: tabular-nums; font-weight: 700;}
 
-    /* Barra de Navegação Admin */
+    /* Barra de Navegação Admin (Oculta Cliente) */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: none; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
-    .brand { font-weight: 800; font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-    
+    .brand { font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     .nav-tabs { display: flex; gap: 4px; background: var(--bg-subsurface); padding: 4px; border-radius: 12px; flex-wrap: wrap;}
     .tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; }
     .tab-btn.active { background: var(--bg-surface); color: var(--text-main); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    
     .admin-only { display: none; } 
     #user-info { display: none; align-items: center; gap: 8px; }
     .theme-toggle-btn { background: var(--bg-subsurface); border: none; color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
 
-    /* LAYOUT LARGO ESTILO IFOOD (1200px) */
-    .store-layout-container { max-width: 1200px; margin: 0 auto; width: 100%; }
+    /* LAYOUT DA LOJA CLIENTE */
+    .store-layout-container { max-width: 900px; margin: 0 auto; width: 100%; position: relative;}
 
-    .banner-container { width: 100%; height: 200px; background-color: var(--bg-subsurface); background-size: cover; background-position: center; border-radius: 0; }
-    @media(min-width: 768px) { .banner-container { margin-top: 32px; border-radius: 12px; height: 300px; } }
+    /* Capa e Logo (Estilo OlaClick Centralizado) */
+    .banner-container { width: 100%; height: 220px; background-color: var(--bg-subsurface); background-size: cover; background-position: center; border-radius: 0; }
+    @media(min-width: 768px) { .banner-container { margin-top: 24px; border-radius: 16px; height: 320px; } }
 
-    .store-header { padding: 0 16px 24px 16px; background: transparent; }
-    .store-info-wrapper { display: flex; gap: 24px; align-items: flex-start; margin-top: -40px; }
+    .store-header { padding: 0 16px 24px 16px; background: transparent; display: flex; flex-direction: column; align-items: center; margin-top: -60px; text-align: center;}
+    @media(min-width: 768px) { .store-header { margin-top: -80px; } }
+
+    .store-logo { width: 110px; height: 110px; border-radius: 20px; border: 4px solid var(--bg-surface); background: var(--bg-surface); box-shadow: 0 4px 12px rgba(0,0,0,0.08); object-fit: cover; }
+    @media(min-width: 768px) { .store-logo { width: 140px; height: 140px; border-width: 6px; border-radius: 24px;} }
+
+    .store-title { font-size: 28px; color: var(--text-main); letter-spacing: -0.5px; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;}
+    @media(min-width: 768px) { .store-title { font-size: 36px; } }
+
+    .badge-open { font-size: 11px; background: rgba(18, 183, 106, 0.1); color: var(--success); padding: 4px 10px; border-radius: 100px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(18, 183, 106, 0.2);}
+    .badge-closed { font-size: 11px; background: var(--accent-soft); color: var(--danger); padding: 4px 10px; border-radius: 100px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(217, 45, 32, 0.2);}
     
-    .store-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-body); background: var(--bg-subsurface); box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
-    @media(min-width: 768px) { .store-logo { width: 110px; height: 110px; border-width: 6px; margin-top: -10px; } }
+    .store-address { font-size: 14px; color: var(--text-muted); margin-top: 8px; font-weight: 500;}
 
-    .store-details { padding-top: 48px; flex: 1;}
-    .store-title-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;}
-    .store-title { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
-    @media(min-width: 768px) { .store-title { font-size: 32px; } .store-details { padding-top: 56px; } }
+    /* Botões de Ação do Restaurante (Infos e Contatos) */
+    .store-actions-bar { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;}
+    .btn-store-action { display: flex; align-items: center; gap: 6px; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 100px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+    .btn-store-action:hover { background: var(--bg-subsurface); }
+    .btn-social-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-size: 18px; cursor: pointer; text-decoration: none;}
+    .btn-social-circle:hover { background: var(--bg-subsurface); color: var(--accent);}
 
-    .badge-open { font-size: 11px; background: rgba(80, 167, 115, 0.15); color: var(--success); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-closed { font-size: 11px; background: rgba(234, 29, 44, 0.15); color: var(--danger); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    /* Menu de Categorias Deslizante e Colante (Sticky) */
+    .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0px; z-index: 40; }
+    .cat-nav { max-width: 900px; margin: 0 auto; padding: 0 16px;}
+    .cat-scroll { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; align-items: center;}
+    .cat-scroll::-webkit-scrollbar { display: none; }
     
-    .store-address { font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px;}
+    .cat-btn { background: transparent; border: none; color: var(--text-muted); padding: 16px 4px; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; }
+    .cat-btn:hover { color: var(--text-main); }
+    .cat-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 800; }
 
-    /* Slider de Destaques Largo */
-    .destaques-box { padding: 32px 16px 8px 16px; position: relative; }
-    .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-behavior: smooth; }
+    /* Destaques (Horizontal Scroll) */
+    .destaques-box { padding: 24px 16px 0 16px; max-width: 900px; margin: 0 auto;}
+    .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 16px; scroll-behavior: smooth; }
     .destaques-scroll::-webkit-scrollbar { display: none; }
     
-    .destaque-card { min-width: 280px; max-width: 280px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s;}
-    @media(min-width: 768px) { .destaque-card { min-width: 340px; max-width: 340px; border-radius: 12px; } }
+    .destaque-card { min-width: 240px; max-width: 240px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
+    .destaque-card:hover { border-color: var(--text-muted); }
+    @media(min-width: 768px) { .destaque-card { min-width: 280px; max-width: 280px;} }
     
-    .destaque-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px);}
-    .destaque-img { width: 100%; height: 140px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
-    @media(min-width: 768px) { .destaque-img { height: 160px; } }
-
+    .destaque-img { width: 100%; height: 160px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
     .destaque-info { padding: 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;}
-    .destaque-nome { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
-    .destaque-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; min-height: 36px;}
-    .destaque-preco { font-size: 15px; font-weight: 800; color: #50a773; }
-    @media(min-width: 768px) { .destaque-nome { font-size: 16px; } .destaque-preco { font-size: 16px; } }
+    .destaque-nome { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; line-height: 1.3;}
+    .destaque-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 500;}
+    .destaque-preco { font-size: 16px; font-weight: 800; color: var(--text-main); }
 
-    .slider-arrow { position: absolute; top: 55%; transform: translateY(-50%); width: 40px; height: 40px; background: #fff; border: 1px solid var(--border-color); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-weight: bold; color: var(--text-muted); font-size: 18px; transition: all 0.2s;}
-    .slider-arrow:hover { background: var(--bg-subsurface); color: var(--text-main); }
-    .slider-prev { left: 0px; }
-    .slider-next { right: 0px; }
-    @media(max-width: 768px) { .slider-arrow { display: none; } } 
-
-    /* Menu de Categorias Largo */
-    .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0px; z-index: 40; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
-    .cat-nav { max-width: 1200px; margin: 0 auto; padding: 12px 16px;}
-    .cat-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
-    .cat-scroll::-webkit-scrollbar { display: none; }
-    .cat-btn { background: var(--bg-subsurface); border: none; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
-    .cat-btn.active { background: var(--text-main); color: var(--bg-surface); }
-
-    /* GRID DE PRODUTOS LARGOS (2 Colunas no Desktop) */
-    .container { max-width: 1200px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
-    .grid-produtos { display: grid; grid-template-columns: 1fr; gap: 0; }
-    .prod-card { display: flex; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); gap: 16px; text-decoration: none; cursor: pointer; background: transparent; border-radius: 0;}
-    .prod-card:hover { opacity: 0.8; }
-    .prod-card:last-child { border-bottom: none; }
+    /* Grid Principal de Produtos (Estilo Lista Larga) */
+    .container { max-width: 900px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
+    .grid-produtos { display: flex; flex-direction: column; gap: 16px; }
     
-    /* Configuração 2 Colunas Desktop */
+    .prod-card { display: flex; justify-content: space-between; padding: 16px; border: 1px solid var(--border-color); border-radius: 16px; gap: 16px; text-decoration: none; cursor: pointer; background: var(--bg-surface); box-shadow: 0 2px 4px rgba(0,0,0,0.01);}
+    .prod-card:hover { border-color: var(--text-muted); }
+    
     @media(min-width: 768px) {
-        .grid-produtos { grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 16px; }
-        .prod-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; transition: box-shadow 0.2s; }
-        .prod-card:last-child { border-bottom: 1px solid var(--border-color); } 
-        .prod-card:hover { opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .grid-produtos { grid-template-columns: 1fr 1fr; display: grid; gap: 24px; padding-top: 16px; }
+        .prod-card { padding: 20px; }
     }
     
     .prod-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
-    .prod-name { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display:flex; align-items:center; gap:6px;}
-    .prod-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400;}
-    .prod-price { font-size: 15px; font-weight: 600; color: var(--text-main); }
+    .prod-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; display:flex; align-items:center; gap:6px; font-family: 'Outfit', sans-serif;}
+    .prod-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 500;}
+    .prod-price { font-size: 16px; font-weight: 800; color: var(--text-main); }
     .prod-bottom { display: flex; align-items: center; gap: 12px; margin-top: auto;}
     
-    .prod-img-wrap { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: var(--bg-subsurface); display: flex; align-items: center; justify-content: center; font-size: 32px;}
+    .prod-img-wrap { width: 110px; height: 110px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: var(--bg-subsurface); display: flex; align-items: center; justify-content: center; font-size: 32px;}
     .prod-img { width: 100%; height: 100%; object-fit: cover; }
-    
-    @media(min-width: 768px) {
-        .prod-name { font-size: 18px; margin-bottom: 8px;}
-        .prod-desc { font-size: 14px; margin-bottom: 16px;}
-        .prod-price { font-size: 16px; }
-        .prod-img-wrap { width: 140px; height: 140px; }
-    }
+    @media(min-width: 768px) { .prod-img-wrap { width: 130px; height: 130px; } }
 
     .tag-destaque { background: var(--accent); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
 
-    .btn-pizza { background: var(--accent-soft); color: var(--accent); border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
-    .stepper { display: flex; align-items: center; gap: 10px; background: var(--bg-subsurface); padding: 4px 10px; border-radius: 8px; }
-    .stepper-btn { background: none; border: none; color: var(--accent); font-weight: 800; cursor: pointer; font-size: 18px; padding: 0 4px; }
-    .stepper-val { font-size: 14px; font-weight: 600; min-width: 16px; text-align: center; color: var(--text-main); }
+    /* Controles Stepper e Botões */
+    .btn-pizza { background: var(--accent-soft); color: var(--accent); border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .btn-pizza:hover { background: var(--accent); color: #fff;}
+    
+    .stepper { display: flex; align-items: center; gap: 12px; background: var(--bg-subsurface); padding: 6px 12px; border-radius: 100px; border: 1px solid var(--border-color);}
+    .stepper-btn { background: none; border: none; color: var(--accent); font-weight: 800; cursor: pointer; font-size: 20px; padding: 0 4px; line-height: 1; display:flex; align-items:center; justify-content:center;}
+    .stepper-val { font-size: 15px; font-weight: 700; min-width: 20px; text-align: center; color: var(--text-main); }
 
     .sacola-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(to top, var(--bg-body) 90%, transparent); z-index: 45; border-top: 1px solid var(--border-color);}
-    .btn-sacola { max-width: 600px; margin: 0 auto; background: var(--accent); color: #fff; border: none; padding: 18px 24px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px var(--accent-soft); letter-spacing: 0.5px; }
-    .badge-count { background: #fff; color: var(--accent); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
+    .btn-sacola { max-width: 600px; margin: 0 auto; background: var(--accent); color: #fff; border: none; padding: 18px 24px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px var(--accent-soft); letter-spacing: 0.5px; }
+    .badge-count { background: #fff; color: var(--accent); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
 
+    /* Tabelas e Paineis Admin (Estilo Oculto) */
     .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px;}
@@ -162,45 +151,47 @@
 
     .table-container { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow-x: auto; margin-top: 14px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    th { padding: 16px 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 700; }
+    th { padding: 16px 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid var(--border-color);}
     td { padding: 16px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; vertical-align: middle; }
     .btn-action { background: var(--text-main); color: var(--bg-surface); border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;}
-    .btn-excel { background: #107c41; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(16, 124, 65, 0.2); }
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
-    .modal-box { background: var(--bg-surface); border-radius: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 24px; color: var(--text-main); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; }
-    .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;}
-    .form-help { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 400;}
-    .input-text { width: 100%; background: var(--bg-subsurface); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 14px; outline: none; transition: 0.2s;}
-    .input-text:focus { border-color: var(--accent); background: var(--bg-surface);}
-    .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 12px; }
-
-    .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
-    .kanban-col { background: var(--bg-subsurface); border-radius: 16px; display: flex; flex-direction: column; min-height: 420px; }
-    .col-header { padding: 16px; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .order-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    /* Modais */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .modal-box { background: var(--bg-surface); border-radius: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 32px; color: var(--text-main); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3); }
     
-    .crm-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px;}
-    @media(min-width: 768px) { .crm-grid { grid-template-columns: 1fr 2fr; } }
-    .crm-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 24px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;}
+    .input-text { width: 100%; background: var(--bg-subsurface); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; color: var(--text-main); font-size: 15px; outline: none; transition: 0.2s;}
+    .input-text:focus { border-color: var(--accent); background: var(--bg-surface);}
+    .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 16px; }
 
-    .img-upload-preview { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
-    .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
+    /* Modal de Infos do Restaurante */
+    .info-modal-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; font-size: 14px; font-weight: 500; color: var(--text-main);}
+    .info-modal-icon { font-size: 20px; flex-shrink: 0; color: var(--text-muted);}
 
-    /* Rodapé Profissional Largo */
-    .site-footer { margin-top: auto; padding: 40px 20px; background: var(--bg-surface); border-top: 1px solid var(--border-color); text-align: center; }
+    /* Rodapé Profissional */
+    .site-footer { margin-top: auto; padding: 40px 20px; background: var(--bg-subsurface); border-top: 1px solid var(--border-color); text-align: center; }
     .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-    .social-links { display: flex; gap: 16px; justify-content: center; }
-    .social-icon { font-size: 24px; color: var(--text-muted); text-decoration: none; transition: transform 0.2s; }
-    .social-icon:hover { transform: scale(1.1); color: var(--accent); }
     .footer-copy { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;}
     .link-lojista-hidden { background: none; border: none; color: inherit; cursor: pointer; padding: 4px; opacity: 0.5;}
     .link-lojista-hidden:hover { opacity: 1;}
+
+    .img-upload-preview { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
+    .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
   </style>
 </head>
 <body>
+
+  <!-- DETETIVE VISUAL -->
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+        const loading = document.getElementById('loading-produtos');
+        if(loading) loading.style.display = 'none';
+        console.error("🚨 Erro Detectado:", msg);
+        return false; 
+    };
+  </script>
 
   <!-- NAVEGAÇÃO SUPERIOR ADMIN (Oculta para Cliente) -->
   <header class="top-nav" id="main-header-nav">
@@ -209,9 +200,8 @@
       <button class="tab-btn active" id="tab-cardapio" onclick="mostrarAba('cardapio')">Visão Cliente</button>
       <button class="tab-btn admin-only" id="tab-admin" onclick="mostrarAba('admin')">Cardápio</button>
       <button class="tab-btn admin-only" id="tab-estoque" onclick="mostrarAba('estoque')">Estoque</button>
-      <button class="tab-btn admin-only" id="tab-crm" onclick="mostrarAba('crm')">Clientes</button>
-      <button class="tab-btn admin-only" id="tab-cozinha" onclick="mostrarAba('cozinha')">Pedidos</button>
-      <button class="tab-btn admin-only" id="tab-config" onclick="mostrarAba('config')" style="color:var(--accent);">⚙️ Config</button>
+      <button class="tab-btn admin-only" id="tab-config" onclick="mostrarAba('config')" style="color:var(--accent);">⚙️ Configurações</button>
+      <button class="tab-btn admin-only" id="tab-crm" onclick="mostrarAba('crm')">Métricas</button>
     </div>
 
     <div style="display:flex; align-items:center; gap:16px;">
@@ -223,34 +213,45 @@
     </div>
   </header>
 
-  <!-- ABA: CARDÁPIO -->
+  <!-- ========================================================================= -->
+  <!-- 1. ABA: CARDÁPIO (PÚBLICA - ESTILO OLACLICK)                              -->
+  <!-- ========================================================================= -->
   <section id="sec-cardapio" style="flex:1;">
     <div class="store-layout-container">
         
+        <!-- Banner -->
         <div class="banner-container" id="loja-banner-view"></div>
+        
+        <!-- Info da Loja -->
         <div class="store-header">
-          <div class="store-info-wrapper">
-            <img src="https://ui-avatars.com/api/?name=Malik+Culinária&background=ea1d2c&color=fff&size=150" class="store-logo" id="loja-logo-view" alt="Logo">
-            <div class="store-details">
-              <div class="store-title-row">
-                <h1 class="store-title"><span id="loja-nome-view">Carregando...</span> <span class="badge-open" id="badge-status-loja-cliente">Aberto</span></h1>
-              </div>
-              <div class="store-address" id="loja-endereco-view">Aguarde...</div>
+            <img src="https://ui-avatars.com/api/?name=Loja&background=d92d20&color=fff&size=150" class="store-logo" id="loja-logo-view" alt="Logo">
+            
+            <h1 class="store-title">
+                <span id="loja-nome-view">Carregando...</span> 
+                <span class="badge-open" id="badge-status-loja-cliente">Aberto</span>
+            </h1>
+            
+            <div class="store-address" id="loja-endereco-view">Aguarde...</div>
+
+            <!-- Botões de Ação (Infos e Redes) -->
+            <div class="store-actions-bar">
+                <button class="btn-store-action" onclick="abrirModalInfoLoja()">
+                    ℹ️ Informação
+                </button>
+                <div style="display:flex; gap:8px;" id="client-social-links">
+                    <!-- Gerados via JS -->
+                </div>
             </div>
-          </div>
         </div>
         
+        <!-- Destaques -->
         <div class="destaques-box" id="box-destaques" style="display:none;">
-          <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color:var(--text-main);">Destaques</h2>
-          <div style="position: relative;">
-              <button class="slider-arrow slider-prev" onclick="rolarDestaques(-1)">❮</button>
-              <div class="destaques-scroll" id="destaques-list"></div>
-              <button class="slider-arrow slider-next" onclick="rolarDestaques(1)">❯</button>
-          </div>
+          <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px; color:var(--text-main); font-family: 'Outfit', sans-serif;">Destaques</h2>
+          <div class="destaques-scroll" id="destaques-list"></div>
         </div>
     </div>
 
-    <!-- Navegação de Categorias Gruda no Topo -->
+    <!-- Categorias Dinâmicas no Topo -->
     <div class="cat-nav-wrapper" id="sticky-cat-nav">
         <div class="cat-nav">
           <div class="cat-scroll" id="cat-list"></div>
@@ -258,84 +259,100 @@
     </div>
     
     <main class="container" style="padding-top: 0;">
-      
-      <!-- LOADING INFO E CAIXA DE ERRO SEGURO -->
       <div id="loading-produtos" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:bold; font-size:16px;">
-         🔄 Conectando ao Banco de Dados...
+         🔄 Carregando Produtos...
       </div>
-      <div id="debug-console" style="display:none; background:#fee2e2; color:#b91c1c; padding:20px; border-radius:12px; margin-top:20px; border: 2px solid #b91c1c; text-align:left; font-size:14px;"></div>
       
+      <!-- Listagem de Produtos -->
       <div class="grid-produtos" id="prod-list"></div>
-      
     </main>
 
     <footer class="site-footer">
         <div class="footer-content">
-            <div class="social-links" id="social-links-container"></div>
             <div class="footer-copy">
-                &copy; <span id="ano-atual"></span> <span id="footer-nome-loja">Malik</span>. Todos os direitos reservados.
+                &copy; <span id="ano-atual"></span> <span id="footer-nome-loja">Sistema</span>. Todos os direitos reservados.
                 <button class="link-lojista-hidden" onclick="abrirModalLogin()" title="Acesso Administrativo">⚙️</button>
             </div>
         </div>
     </footer>
   </section>
 
-  <!-- ABA: CONFIGURAÇÕES DA LOJA -->
+  <!-- ========================================================================= -->
+  <!-- 2. ABA: CONFIGURAÇÕES DA LOJA (ADMIN)                                     -->
+  <!-- ========================================================================= -->
   <section id="sec-config" style="display:none;" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-      <div><h2 style="font-size:24px;">⚙️ Configurações da Loja</h2><p style="font-size:14px; color:var(--text-muted);">Identidade visual e redes sociais.</p></div>
+    <div style="margin-bottom: 24px;">
+      <h2 style="font-size:26px;">⚙️ Configurações e Identidade</h2>
+      <p style="font-size:14px; color:var(--text-muted);">Altere os textos, imagens, redes sociais e gerencie as categorias do cardápio.</p>
     </div>
 
-    <form onsubmit="salvarConfiguracoes(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
+    <form onsubmit="salvarConfiguracoes(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:24px; padding:32px;">
         
+        <h3 style="font-size: 18px; margin-bottom: 16px; color:var(--text-main);">Informações Básicas</h3>
         <div class="form-group"><label class="form-label">Nome do Restaurante</label><input type="text" id="conf-nome" required class="input-text"></div>
-        <div class="form-group"><label class="form-label">Endereço e Informações de Entrega (Topo da Página)</label><input type="text" id="conf-endereco" required class="input-text" placeholder="Ex: Rua XYZ, 123 - Centro • Entrega 35-50 min"></div>
+        <div class="form-group"><label class="form-label">Endereço Completo</label><input type="text" id="conf-endereco" required class="input-text" placeholder="Ex: Rua XYZ, 123 - Centro, São Paulo"></div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; padding-top:24px; border-top:1px solid var(--border-color);">
+        <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Imagens da Loja</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
             <div class="form-group">
-                <label class="form-label">Logomarca</label><span class="form-help">Formato Recomendado: Quadrado (Ex: 512x512px)</span>
+                <label class="form-label">Logomarca</label><span class="form-help">Formato: Quadrado (Ex: 512x512px)</span>
                 <div class="file-input-wrapper" style="margin-top:12px;">
                     <img id="conf-logo-preview" class="img-upload-preview" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64'); document.getElementById('conf-logo-preview').style.display='block';">
+                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64'); document.getElementById('conf-logo-preview').style.display='flex';">
                         <input type="hidden" id="conf-logo-b64">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Formato Recomendado: Retangular (Ex: 1200x400px)</span>
+                <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Formato: Retangular (Ex: 1200x400px)</span>
                 <div class="file-input-wrapper" style="margin-top:12px;">
                     <img id="conf-banner-preview" class="img-upload-preview" style="width:140px;" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64'); document.getElementById('conf-banner-preview').style.display='block';">
+                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64'); document.getElementById('conf-banner-preview').style.display='flex';">
                         <input type="hidden" id="conf-banner-b64">
                     </div>
                 </div>
             </div>
         </div>
 
-        <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 20px; border-top: 1px solid var(--border-color); padding-top: 32px;">Redes Sociais (Rodapé)</h3>
+        <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Redes Sociais e Contatos</h3>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
             <div class="form-group"><label class="form-label">WhatsApp (Apenas Números)</label><input type="text" id="conf-whatsapp" class="input-text" placeholder="5511999999999"></div>
             <div class="form-group"><label class="form-label">Link do Instagram</label><input type="url" id="conf-instagram" class="input-text" placeholder="https://instagram.com/sua_loja"></div>
             <div class="form-group"><label class="form-label">Link do Facebook</label><input type="url" id="conf-facebook" class="input-text" placeholder="https://facebook.com/sua_loja"></div>
         </div>
 
-        <button type="submit" class="btn-submit" id="btn-submit-config" style="margin-top: 24px; max-width:300px;">Salvar Configurações</button>
+        <!-- GESTÃO DE CATEGORIAS -->
+        <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Gerenciar Categorias do Cardápio</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">As categorias ativas aparecerão no menu principal do cliente.</p>
+        
+        <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:12px; padding:16px;">
+            <div id="lista-categorias-admin" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
+            
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="nova-cat-nome" class="input-text" placeholder="Nome da nova categoria (Ex: Combos)" style="padding:10px;">
+                <button type="button" onclick="adicionarCategoriaAdmin()" class="btn-action">Adicionar</button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-submit-config" style="margin-top: 32px; max-width:300px;">Salvar Todas as Configurações</button>
     </form>
   </section>
 
-  <!-- ABA: ADMINISTRAÇÃO DO CARDÁPIO -->
+  <!-- ABA: ADMINISTRAÇÃO DO CARDÁPIO (PRODUTOS) -->
   <section id="sec-admin" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap:wrap; gap:16px;">
-      <div><h2 style="font-size:24px;">Gestão de Produtos</h2></div>
-      <div style="display:flex; align-items:center; gap:12px; background:var(--bg-subsurface); padding:12px 20px; border-radius:12px;">
-        <span style="font-size:14px; font-weight:700;">Status da Loja:</span>
+      <div><h2 style="font-size:26px;">Gestão de Produtos</h2></div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg-subsurface); padding:12px 20px; border-radius:16px; border:1px solid var(--border-color);">
+        <span style="font-size:14px; font-weight:700;">Status do Restaurante:</span>
         <label class="switch"><input type="checkbox" id="toggle-mestre-loja" checked onchange="alterarStatusLojaAdmin(this.checked)"><span class="slider"></span></label>
         <span id="label-mestre-loja" style="font-size:14px; font-weight:700; color:var(--success);">Aberto</span>
       </div>
     </div>
-    <div style="margin-bottom:16px;"><button class="btn-action" onclick="abrirModalProduto()">+ Novo Produto</button></div>
+    
+    <div style="margin-bottom:24px;"><button class="btn-submit" style="width:auto; padding:12px 24px; margin:0;" onclick="abrirModalProduto()">+ Novo Produto</button></div>
+    
     <div class="table-container">
       <table>
         <thead><tr><th>Foto</th><th>Item</th><th>Categoria</th><th>Preço</th><th style="text-align:center;">Destaque 🌟</th><th style="text-align:center;">Visível</th><th style="text-align:right;">Ações</th></tr></thead>
@@ -344,72 +361,78 @@
     </div>
   </section>
 
-  <!-- ABA: CRM -->
+  <!-- OUTRAS ABAS (CRM, Estoque, Checkout) MANTIDAS OCULTAS -->
   <section id="sec-crm" style="display:none;" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
-      <h2 style="font-size:24px;">Métricas e Clientes</h2><button class="btn-excel" onclick="exportarClientesCSV()">⬇️ Exportar Excel</button>
-    </div>
-    <div class="crm-grid">
-        <div class="crm-card"><h3 style="font-size: 18px; margin-bottom: 20px; color:var(--accent);">🔥 Top 5 Mais Vendidos</h3><table style="width: 100%;"><thead><tr><th>Produto</th><th style="text-align:right;">Qtd</th></tr></thead><tbody id="crm-top-produtos"></tbody></table></div>
-        <div class="crm-card"><h3 style="font-size: 18px; margin-bottom: 20px;">👥 Cadastro de Clientes</h3><div style="overflow-x: auto;"><table style="width: 100%; min-width: 500px;"><thead><tr><th>Nome</th><th>Telefone</th><th>Último Endereço</th><th style="text-align:center;">Pedidos</th><th style="text-align:right;">Gasto</th></tr></thead><tbody id="crm-lista-clientes"></tbody></table></div></div>
-    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;"><h2 style="font-size:24px;">Métricas e Clientes</h2></div>
+    <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:20px; text-align:center; color:var(--text-muted);">Módulo de CRM (Puxando dados dos pedidos...)</div>
   </section>
-
-  <!-- ABA: ESTOQUE -->
   <section id="sec-estoque" style="display:none;" class="container">
     <div style="margin-bottom: 24px;"><h2 style="font-size:24px;">Controle de Estoque</h2></div>
     <div class="table-container"><table><thead><tr><th>Item</th><th style="text-align:center;">Saldo</th><th style="text-align:center;">Status</th><th style="text-align:right;">Ações</th></tr></thead><tbody id="estoque-rows"></tbody></table></div>
   </section>
-
-  <!-- ABA: CHECKOUT -->
   <section id="sec-checkout" style="display:none;" class="container">
-    <div style="max-width: 500px; margin: 0 auto;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
-        <button onclick="mostrarAba('cardapio')" style="background:none; border:none; color:var(--accent); font-size:15px; font-weight:700; cursor:pointer;">← Voltar</button>
-        <h2 style="font-size:22px;">Finalizar Pedido</h2>
-      </div>
-      <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px; text-align:center; margin-bottom:24px;">
-        <div style="color:var(--success); font-weight:800; font-size:20px; margin-bottom:12px;">Pedido Concluído! Copie o Pix:</div>
-        <div id="pix-total" style="font-size:32px; font-weight:800; color:var(--text-main); margin-bottom:24px;" class="mono">R$ 0,00</div>
-        <button type="button" onclick="alert('Pagamento via Pix confirmado no painel!')" class="btn-submit" style="background:var(--success);">Confirmar Pagamento</button>
-      </div>
-      <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
-        <div class="form-group">
-          <label class="form-label">Modalidade de Entrega</label>
-          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
-            <button type="button" class="tab-btn active" id="btn-cons-deliv" onclick="setConsumo('delivery')" style="border:1px solid var(--border-color); padding:10px;">Entrega</button>
-            <button type="button" class="tab-btn" id="btn-cons-balcao" onclick="setConsumo('balcao')" style="border:1px solid var(--border-color); padding:10px;">Balcão</button>
-            <button type="button" class="tab-btn" id="btn-cons-mesa" onclick="setConsumo('mesa')" style="border:1px solid var(--border-color); padding:10px;">Mesa</button>
-          </div>
-        </div>
-        <div class="form-group"><input type="text" id="chk-nome" required placeholder="Seu Nome Completo" class="input-text" style="margin-bottom:16px;"><input type="tel" id="chk-tel" required placeholder="Telefone / WhatsApp" class="input-text"></div>
-        <div class="form-group" id="chk-endereco-box"><input type="text" id="chk-rua" placeholder="Endereço e Número" class="input-text" style="margin-bottom:16px;"><input type="text" id="chk-bairro" placeholder="Bairro" class="input-text"></div>
-        <div style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:24px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:12px; color:var(--text-muted); font-size:15px;"><span>Subtotal:</span><span id="chk-sub" class="mono">R$ 0,00</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:20px; color:var(--text-muted); font-size:15px;"><span>Taxa de Entrega:</span><span id="chk-taxa" class="mono">R$ 7,00</span></div>
-          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 20px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 28px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
-        </div>
-        <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
-      </form>
+    <!-- Formulário Simplificado de Checkout Oculto -->
+    <div style="max-width: 500px; margin: 0 auto; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:24px; padding:32px; text-align:center;">
+        <h2 style="font-size:22px; margin-bottom:20px;">Finalizar Pedido</h2>
+        <button onclick="mostrarAba('cardapio')" class="btn-action" style="margin: 0 auto;">Voltar ao Cardápio</button>
     </div>
   </section>
 
-  <!-- ABA: COZINHA -->
-  <section id="sec-cozinha" style="display:none;" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-      <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
-    </div>
-    <div class="kanban-grid" id="kanban-cols"></div>
-  </section>
-
+  <!-- BARRA DE SACOLA FLUTUANTE -->
   <div class="sacola-bar" id="bar-sacola" style="display:none;">
-    <button class="btn-sacola" onclick="abrirCheckout()">
+    <button class="btn-sacola" onclick="mostrarAba('checkout')">
       <div style="display:flex; align-items:center; gap:12px;"><span class="badge-count mono" id="sacola-count">0</span><span>Ver Sacola</span></div>
       <span id="sacola-val" class="mono">R$ 0,00</span>
     </button>
   </div>
 
-  <!-- MODAIS -->
+  <!-- ========================================================================= -->
+  <!-- MODAIS DO SISTEMA                                                         -->
+  <!-- ========================================================================= -->
+
+  <!-- Modal: Informação da Loja (Para o Cliente) -->
+  <div class="modal-overlay" id="modal-info-loja" style="display:none; z-index: 1000;">
+    <div class="modal-box" style="max-width: 450px;">
+      <div class="modal-header">
+          <h3 style="font-size:22px;">Informações</h3>
+          <button type="button" onclick="fecharModalInfoLoja()" style="background:none; border:none; cursor:pointer; font-size:24px;">✕</button>
+      </div>
+      
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border-color);">
+          <img id="info-modal-logo" src="" style="width:64px; height:64px; border-radius:12px; object-fit:cover; border:1px solid var(--border-color);">
+          <div>
+              <div style="font-size:18px; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="info-modal-nome">Restaurante</div>
+              <div id="info-modal-status" class="badge-open">ABERTO</div>
+          </div>
+      </div>
+
+      <div class="info-modal-row">
+          <div class="info-modal-icon">📍</div>
+          <div id="info-modal-endereco">Rua Exemplo, 123 - Centro</div>
+      </div>
+
+      <h4 style="font-size:16px; font-weight:800; margin-top:32px; margin-bottom:16px;">Tipos de Serviço</h4>
+      
+      <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px; margin-bottom:12px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛵 Delivery</div>
+              <div style="color:var(--success); font-weight:800;">✓</div>
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
+              <div>⏱ Tempo de entrega: <b>35 - 50 min</b></div>
+          </div>
+      </div>
+
+      <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️ Retirada no Balcão</div>
+              <div style="color:var(--success); font-weight:800;">✓</div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Login Admin -->
   <div class="modal-overlay" id="modal-login" style="display:none; z-index: 9999;">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
       <h2 style="font-size: 26px; margin-bottom: 8px;">Acesso Restrito</h2>
@@ -417,22 +440,23 @@
       <form onsubmit="realizarLogin(event)">
         <input type="email" id="login-email" required placeholder="E-mail" class="input-text" style="margin-bottom:16px; text-align:center;">
         <input type="password" id="login-senha" required placeholder="Senha" class="input-text" style="text-align:center;">
-        <button type="submit" id="btn-login" class="btn-submit" style="margin-top: 24px;">Entrar</button>
+        <button type="submit" id="btn-login" class="btn-submit">Entrar</button>
       </form>
-      <button type="button" onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:14px; font-weight:600; cursor:pointer; margin-top:24px;">Cancelar</button>
+      <button type="button" onclick="document.getElementById('modal-login').style.display='none'" style="background:transparent; border:none; color:var(--text-muted); font-size:14px; font-weight:600; cursor:pointer; margin-top:24px;">Cancelar</button>
     </div>
   </div>
 
+  <!-- Modal: Novo Produto -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
     <div class="modal-box" style="max-width: 600px;">
-      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
+      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="document.getElementById('modal-novo-produto').style.display='none'" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
       <form onsubmit="salvarProduto(event)">
-        <div class="form-group" style="background:var(--bg-subsurface); padding:20px; border-radius:12px; border:1px solid var(--border-color);">
-            <label class="form-label" style="font-size:14px;">Foto do Produto</label>
+        <div class="form-group" style="background:var(--bg-subsurface); padding:20px; border-radius:16px; border:1px solid var(--border-color);">
+            <label class="form-label">Foto do Produto</label>
             <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
                 <img id="novo-img-preview" class="img-upload-preview" src="">
                 <div style="flex:1;">
-                    <input type="text" id="novo-img" class="input-text" placeholder="Cole o link (URL) da foto..." oninput="document.getElementById('novo-img-preview').src = this.value; document.getElementById('novo-img-preview').style.display = 'flex';" style="margin-bottom:12px; padding:12px;">
+                    <input type="text" id="novo-img" class="input-text" placeholder="Cole o link (URL)..." oninput="document.getElementById('novo-img-preview').src = this.value; document.getElementById('novo-img-preview').style.display = 'flex';" style="margin-bottom:12px;">
                     <div style="font-size:12px; font-weight:700; margin-bottom:8px;">OU ESCOLHA DO COMPUTADOR:</div>
                     <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'novo-img-preview', 'novo-img'); document.getElementById('novo-img-preview').style.display='flex';">
                 </div>
@@ -440,30 +464,27 @@
         </div>
 
         <div class="form-group"><label class="form-label">Nome do Item</label><input type="text" id="novo-nome" required class="input-text"></div>
+        
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-            <div class="form-group"><label class="form-label">Categoria</label><select id="novo-cat" class="input-text"><option value="pizzas">Pizzas</option><option value="esfihas">Esfihas</option><option value="bebidas">Bebidas</option><option value="doces">Doces</option></select></div>
+            <!-- Select Categoria Dinâmico -->
+            <div class="form-group"><label class="form-label">Categoria</label><select id="novo-cat" class="input-text"></select></div>
             <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
-        <div class="form-group"><label class="form-label">Descrição (Aparece no Destaque)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha refrigerante 600ml"></div>
-        <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:12px; margin-bottom:24px; border:1px solid rgba(234, 29, 44, 0.3);">
+        
+        <div class="form-group"><label class="form-label">Descrição (Aparece no Destaque e na Lista)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha molho especial"></div>
+        
+        <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:16px; margin-bottom:24px; border:1px solid rgba(217, 45, 32, 0.2);">
             <label class="switch"><input type="checkbox" id="novo-destaque"><span class="slider"></span></label>
-            <div style="margin-left:16px;"><div style="font-size:16px; font-weight:800; color:var(--danger);">🌟 Destaque</div><div style="font-size:13px; color:var(--text-muted);">Aparece no carrossel superior largo.</div></div>
+            <div style="margin-left:16px;"><div style="font-size:16px; font-weight:800; color:var(--danger);">🌟 Destaque</div><div style="font-size:13px; color:var(--text-muted);">Aparece grande no topo da loja.</div></div>
         </div>
-        <div style="background:var(--bg-subsurface); padding:20px; border-radius:12px; margin-bottom:24px;"><label class="form-label">Estoque Limitado (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono" placeholder="Deixe em branco se infinito"></div>
-        <button type="submit" class="btn-submit" id="btn-submit-produto" style="font-size: 16px;">Salvar Alterações</button>
+        
+        <div style="background:var(--bg-subsurface); padding:20px; border-radius:16px; margin-bottom:24px;"><label class="form-label">Estoque Limitado (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono" placeholder="Deixe em branco se infinito"></div>
+        <button type="submit" class="btn-submit" id="btn-submit-produto">Salvar Alterações</button>
       </form>
     </div>
   </div>
 
-  <div class="modal-overlay" id="modal-pizza" style="display:none;">
-    <div class="modal-box">
-      <div class="modal-header"><h3 id="pizza-modal-nome" style="font-size: 22px;">Montar Pizza</h3><button type="button" onclick="fecharModalPizza()" style="background:none; border:none; cursor:pointer; font-size:24px; font-weight:bold;">✕</button></div>
-      <div class="form-group"><label class="form-label">Tamanho</label><div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"><button type="button" class="tab-btn active" id="tam-grande" onclick="setTamPizza('grande')" style="border:1px solid var(--border-color); padding: 12px;">Grande</button><button type="button" class="tab-btn" id="tam-media" onclick="setTamPizza('media')" style="border:1px solid var(--border-color); padding: 12px;">Média</button></div></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:24px; margin-top: 12px;"><span id="pizza-modal-total" class="mono" style="font-size:26px; font-weight:800; color:var(--accent);">R$ 0,00</span><button type="button" onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:14px 28px; font-size:15px;">Adicionar</button></div>
-    </div>
-  </div>
-
-  <!-- SCRIPT CENTRAL E PROTEGIDO -->
+  <!-- SCRIPT CENTRAL BLINDADO E COM LÓGICA DE CATEGORIAS DINÂMICAS -->
   <script>
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
@@ -471,51 +492,47 @@
 
     let malikDB = null;
     let temaAtual = 'light';
-    let catAtiva = 'esfihas'; 
-    let sacola = [];
-    let tipoConsumo = 'delivery';
-    let DADOS = { categorias: [{ id: 'esfihas', nome: 'Esfihas' }, { id: 'pizzas', nome: 'Pizzas' }, { id: 'bebidas', nome: 'Bebidas' }, { id: 'doces', nome: 'Doces' }], produtos: [] };
+    
+    let DADOS = { categorias: [], produtos: [] };
     let CONFIG_LOJA = {};
-    let pedidos = [];
+    
+    let catAtiva = ''; 
+    let sacola = [];
     let usuarioAtual = null;
     let produtoEmEdicaoId = null;
     let lojaAberta = true; 
-    let pizzaAtual = null;
-    let tamPizza = 'grande';
 
     document.getElementById('ano-atual').innerText = new Date().getFullYear();
 
-    // A ARQUITETURA BLINDADA
+    // INICIALIZAÇÃO SEGURA
     async function ligarAplicativo() {
       try {
-          if (typeof window.supabase === 'undefined') throw new Error("Supabase não carregou. Verifique sua conexão ou desative o bloqueador de anúncios.");
+          if (typeof window.supabase === 'undefined') throw new Error("Supabase bloqueado.");
           malikDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-          
           document.documentElement.setAttribute('data-theme', 'light');
-          renderCategorias(); 
           
-          // O "catch" interno permite que se uma função falhar silenciosamente, ela não pare a próxima!
-          await carregarConfigDaNuvem().catch(e => console.log("Config Error:", e));
-          await verificarSessao().catch(e => console.log("Sessao Error:", e));
-          await carregarProdutosDaNuvem().catch(e => console.log("Produtos Error:", e));
-          await carregarPedidosDaNuvem().catch(e => console.log("Pedidos Error:", e));
+          // Ordem de carregamento para garantir a UI
+          await carregarConfigDaNuvem().catch(e => console.warn(e));
+          await carregarCategorias().catch(e => console.warn(e));
+          await carregarProdutosDaNuvem().catch(e => console.warn(e));
+          await verificarSessao().catch(e => console.warn(e));
           
-          iniciarEscutaRealtime();
       } catch (e) { 
           console.error(e); 
-          const debug = document.getElementById('debug-console');
-          if(debug) { debug.style.display = 'block'; debug.innerHTML += `<p><b>Falha Crítica de Conexão:</b> ${e.message}</p>`; }
       } finally {
           const loading = document.getElementById('loading-produtos');
           if(loading) loading.style.display = 'none';
           
-          // Força a renderização do cardápio vazio se a nuvem falhou
+          // Força a renderização inicial mesmo se o DB estiver atrasado
+          renderCategoriasUI();
           renderProdutos();
+          renderDestaques();
       }
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', ligarAplicativo); } else { ligarAplicativo(); }
 
+    // Compressão de Imagens
     function processarImagem(inputElement, previewId, targetInputId) {
         const file = inputElement.files[0];
         if (!file) return;
@@ -538,6 +555,70 @@
         reader.readAsDataURL(file);
     }
 
+    // ===== CATEGORIAS DINÂMICAS =====
+    async function carregarCategorias() {
+        const { data, error } = await malikDB.from('categorias').select('*').eq('restaurante_id', RESTAURANTE_ID).order('ordem', { ascending: true });
+        if (data && data.length > 0) { 
+            DADOS.categorias = data.filter(c => c.ativa !== false);
+            if(!catAtiva) catAtiva = DADOS.categorias[0].nome; // Define a primeira como ativa padrão
+            renderCategoriasUI();
+            renderAdminCategorias();
+        } else {
+            // Fallback caso não haja banco criado
+            DADOS.categorias = [{ id: '1', nome: 'Pizzas' }, { id: '2', nome: 'Esfihas' }, { id: '3', nome: 'Bebidas' }];
+            catAtiva = 'Pizzas';
+            renderCategoriasUI();
+        }
+    }
+
+    function renderCategoriasUI() {
+        // Renderiza no Menu Superior do Cliente
+        const htmlCats = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.nome ? 'active' : ''}" onclick="setCat('${c.nome}')">${c.nome}</button>`).join('');
+        document.getElementById('cat-list').innerHTML = htmlCats;
+        
+        // Preenche o Select dentro do Modal de Novo Produto
+        const selectCats = DADOS.categorias.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+        document.getElementById('novo-cat').innerHTML = selectCats;
+    }
+
+    function setCat(nomeCategoria) { 
+        catAtiva = nomeCategoria; 
+        renderCategoriasUI(); 
+        renderProdutos(); 
+    }
+
+    // Gestão de Categorias pelo Admin
+    function renderAdminCategorias() {
+        const listaEl = document.getElementById('lista-categorias-admin');
+        if(!listaEl) return;
+        listaEl.innerHTML = DADOS.categorias.map(c => `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:10px 16px; border-radius:8px; border:1px solid var(--border-color);">
+                <div style="font-weight:700;">${c.nome}</div>
+                <button type="button" onclick="excluirCategoriaAdmin('${c.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:bold;">Remover</button>
+            </div>
+        `).join('');
+    }
+
+    async function adicionarCategoriaAdmin() {
+        const input = document.getElementById('nova-cat-nome');
+        const nomeNova = input.value.trim();
+        if(!nomeNova) return;
+        
+        const novaCatDB = { restaurante_id: RESTAURANTE_ID, nome: nomeNova, ordem: DADOS.categorias.length + 1, ativa: true };
+        await malikDB.from('categorias').insert([novaCatDB]);
+        input.value = '';
+        await carregarCategorias();
+    }
+
+    async function excluirCategoriaAdmin(idCat) {
+        if(confirm("Remover esta categoria? (Os produtos dela não serão apagados, mas ficarão sem categoria no menu principal)")) {
+            await malikDB.from('categorias').delete().eq('id', idCat);
+            await carregarCategorias();
+        }
+    }
+
+
+    // ===== LOGIN E SESSÃO =====
     async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session ? session.user : null; atualizarUINavegacao(); }
     
     function atualizarUINavegacao() { 
@@ -559,6 +640,26 @@
         } 
     }
 
+    function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
+    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
+    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); mostrarAba('cardapio'); }
+
+
+    // ===== NAVEGAÇÃO DE ABAS =====
+    function mostrarAba(aba) {
+      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-estoque', 'sec-crm', 'sec-config'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+      const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
+      
+      ['tab-cardapio', 'tab-admin', 'tab-estoque', 'tab-crm', 'tab-config'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
+      const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
+      
+      if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
+      if (aba === 'admin') renderAdmin(); if (aba === 'estoque') renderEstoque(); 
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+
+    // ===== CONFIGURAÇÕES DA LOJA (Banners, Contatos) =====
     async function carregarConfigDaNuvem() {
         const { data, error } = await malikDB.from('configuracoes').select('*').eq('restaurante_id', RESTAURANTE_ID).single();
         if (data) { CONFIG_LOJA = data; aplicarConfiguracoesNoVisual(); }
@@ -567,14 +668,17 @@
     function aplicarConfiguracoesNoVisual() {
         const nomeFinal = CONFIG_LOJA.nome || 'Malik Culinária';
         document.getElementById('loja-nome-view').innerText = nomeFinal; 
+        document.getElementById('info-modal-nome').innerText = nomeFinal; 
         document.getElementById('footer-nome-loja').innerText = nomeFinal;
         document.getElementById('conf-nome').value = CONFIG_LOJA.nome || '';
         
         document.getElementById('loja-endereco-view').innerText = CONFIG_LOJA.endereco || ''; 
+        document.getElementById('info-modal-endereco').innerText = CONFIG_LOJA.endereco || ''; 
         document.getElementById('conf-endereco').value = CONFIG_LOJA.endereco || '';
         
         if(CONFIG_LOJA.logo_url) { 
             document.getElementById('loja-logo-view').src = CONFIG_LOJA.logo_url; 
+            document.getElementById('info-modal-logo').src = CONFIG_LOJA.logo_url; 
             document.getElementById('conf-logo-preview').src = CONFIG_LOJA.logo_url;
             document.getElementById('conf-logo-preview').style.display = 'block';
             document.getElementById('conf-logo-b64').value = CONFIG_LOJA.logo_url;
@@ -586,24 +690,38 @@
             document.getElementById('conf-banner-b64').value = CONFIG_LOJA.banner_url;
         }
 
+        // Redes Sociais com try/catch seguro
         try {
             document.getElementById('conf-whatsapp').value = CONFIG_LOJA.whatsapp || '';
             document.getElementById('conf-instagram').value = CONFIG_LOJA.instagram || '';
             document.getElementById('conf-facebook').value = CONFIG_LOJA.facebook || '';
         } catch(e){}
 
-        const containerRedes = document.getElementById('social-links-container');
-        let htmlRedes = '';
-        if(CONFIG_LOJA.whatsapp) htmlRedes += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`;
-        if(CONFIG_LOJA.instagram) htmlRedes += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`;
-        if(CONFIG_LOJA.facebook) htmlRedes += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`;
-        if(containerRedes) containerRedes.innerHTML = htmlRedes;
+        // Botões Sociais Visão Cliente
+        const containerRedesRodape = document.getElementById('social-links-container');
+        const containerRedesTopo = document.getElementById('client-social-links');
+        
+        let htmlTopo = ''; let htmlRodape = '';
+        
+        if(CONFIG_LOJA.whatsapp) {
+            htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-circle">📱</a>`;
+            htmlRodape += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`;
+        }
+        if(CONFIG_LOJA.instagram) {
+            htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-circle">📸</a>`;
+            htmlRodape += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`;
+        }
+        if(CONFIG_LOJA.facebook) {
+            htmlRodape += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`;
+        }
+
+        if(containerRedesTopo) containerRedesTopo.innerHTML = htmlTopo;
+        if(containerRedesRodape) containerRedesRodape.innerHTML = htmlRodape;
     }
 
     async function salvarConfiguracoes(e) {
         e.preventDefault();
-        const btn = document.getElementById('btn-submit-config');
-        btn.innerText = 'Salvando...'; btn.disabled = true;
+        const btn = document.getElementById('btn-submit-config'); btn.innerText = 'Salvando...'; btn.disabled = true;
 
         const dadosConfig = {
             restaurante_id: RESTAURANTE_ID,
@@ -620,49 +738,22 @@
         }catch(e){}
 
         const { error } = await malikDB.from('configuracoes').upsert(dadosConfig);
-        if(error) { alert('Erro: ' + error.message); } 
-        else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
-        btn.innerText = 'Salvar Configurações'; btn.disabled = false;
+        if(error) { alert('Erro: ' + error.message); } else { alert('Configurações atualizadas!'); await carregarConfigDaNuvem(); }
+        btn.innerText = 'Salvar Todas as Configurações'; btn.disabled = false;
+    }
+
+    // Modal de Informações do Cliente (Estilo OlaClick)
+    function abrirModalInfoLoja() { document.getElementById('modal-info-loja').style.display = 'flex'; }
+    function fecharModalInfoLoja() { document.getElementById('modal-info-loja').style.display = 'none'; }
+    function alterarStatusLojaAdmin(status) { lojaAberta = status; const labelAdmin = document.getElementById('label-mestre-loja'); if(status) { labelAdmin.innerText = 'Aberto'; labelAdmin.style.color = 'var(--success)'; } else { labelAdmin.innerText = 'Fechado'; labelAdmin.style.color = 'var(--danger)'; } const badgeCliente = document.getElementById('badge-status-loja-cliente'); const badgeInfo = document.getElementById('info-modal-status'); if(status) { badgeCliente.innerText = 'Aberto'; badgeCliente.className = 'badge-open'; badgeInfo.innerText = 'Aberto'; badgeInfo.className = 'badge-open'; } else { badgeCliente.innerText = 'Fechado'; badgeCliente.className = 'badge-closed'; badgeInfo.innerText = 'Fechado'; badgeInfo.className = 'badge-closed'; } renderProdutos(); renderDestaques(); }
+
+    // ===== PRODUTOS E DESTAQUES =====
+    async function carregarProdutosDaNuvem() { 
+        const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
+        if (!error && data) { DADOS.produtos = data; renderProdutos(); renderDestaques(); if(usuarioAtual) { renderAdmin(); renderEstoque(); } } 
     }
 
     function rolarDestaques(direcao) { const container = document.getElementById('destaques-list'); container.scrollBy({ left: direcao * 300, behavior: 'smooth' }); }
-    function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
-    function alterarStatusLojaAdmin(status) { lojaAberta = status; const labelAdmin = document.getElementById('label-mestre-loja'); if(status) { labelAdmin.innerText = 'Aberto'; labelAdmin.style.color = 'var(--success)'; } else { labelAdmin.innerText = 'Fechado'; labelAdmin.style.color = 'var(--danger)'; } const badgeCliente = document.getElementById('badge-status-loja-cliente'); if(status) { badgeCliente.innerText = 'Aberto'; badgeCliente.className = 'badge-open'; } else { badgeCliente.innerText = 'Fechado'; badgeCliente.className = 'badge-closed'; } renderProdutos(); renderDestaques(); }
-
-    function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    function fecharModalLogin() { document.getElementById('modal-login').style.display = 'none'; }
-
-    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); fecharModalLogin(); mostrarAba('admin'); } }
-    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); mostrarAba('cardapio'); }
-
-    function mostrarAba(aba) {
-      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-cozinha', 'sec-estoque', 'sec-crm', 'sec-config'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
-      const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
-      ['tab-cardapio', 'tab-admin', 'tab-cozinha', 'tab-estoque', 'tab-crm', 'tab-config'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
-      const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
-      if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
-      if (aba === 'admin') renderAdmin(); if (aba === 'estoque') renderEstoque(); if (aba === 'crm') renderCRM();
-    }
-
-    let audioCtx = null;
-    function inicializarAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if (audioCtx.state === 'suspended') { audioCtx.resume(); } }
-    function testeBeepNativo() { try { inicializarAudio(); function playNote(freq, start, dur) { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start); gain.gain.setValueAtTime(0.1, audioCtx.currentTime + start); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + start + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(audioCtx.currentTime + start); osc.stop(audioCtx.currentTime + start + dur); } playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15); } catch (e) {} }
-    function beep() { testeBeepNativo(); }
-
-    async function carregarProdutosDaNuvem() { 
-        const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
-        if (!error && data) { DADOS.produtos = data; renderProdutos(); renderDestaques(); if(usuarioAtual) { renderAdmin(); renderEstoque(); } } else { DADOS.produtos = []; }
-    }
-
-    async function carregarPedidosDaNuvem() { 
-        const { data, error } = await malikDB.from('pedidos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
-        if (!error && data) { pedidos = data; renderKanban(); if(document.getElementById('sec-crm').style.display === 'block') renderCRM(); } 
-    }
-    
-    function iniciarEscutaRealtime() { malikDB.channel('custom-all').on('postgres_changes', { event: '*', schema: 'public', table: 'pedidos' }, (p) => { carregarPedidosDaNuvem(); if (p.eventType === 'INSERT') beep(); }).subscribe(); }
-
-    function renderCategorias() { document.getElementById('cat-list').innerHTML = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">${c.nome}</button>`).join(''); }
-    function setCat(id) { catAtiva = id; renderCategorias(); renderProdutos(); }
 
     function renderDestaques() {
         if(!DADOS.produtos) return;
@@ -675,9 +766,10 @@
                 const precoF = parseFloat(p.preco) || 0;
                 const img = (p.img_url) ? `<img src="${p.img_url}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
                 const isDisponivel = p.ativo !== false && lojaAberta;
-                let onclickCode = ''; if (isDisponivel) { if (p.tipo === 'pizza') { onclickCode = `abrirPizzaModal('${p.id}')`; } else { onclickCode = `alterarQtd('${p.id}', 1)`; } }
-                const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '';
+                let onclickCode = ''; if (isDisponivel) { onclickCode = `alterarQtd('${p.id}', 1)`; }
+                const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
+                
                 htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${p.nome || 'Produto'}</div><div class="destaque-desc">${p.descricao || ''}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
             });
             list.innerHTML = htmlDestaques;
@@ -689,7 +781,7 @@
       if(!DADOS.produtos) DADOS.produtos = [];
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
       
-      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 40px; grid-column: 1 / -1; font-size:16px;">Nenhum item adicionado a esta categoria ainda.</div>'; return; }
+      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 60px 20px; grid-column: 1 / -1; font-size:15px; background:var(--bg-surface); border-radius:16px; border:1px dashed var(--border-color);">Nenhum produto nesta categoria.</div>'; return; }
       
       let htmlFinal = '';
       list.forEach(p => {
@@ -699,13 +791,10 @@
         
         let acaoHTML = '';
         if(!lojaAberta) { acaoHTML = `<span style="font-size:12px; color:var(--text-muted); font-weight:600;">Fechado</span>`; } 
-        else if (!p.ativo) { acaoHTML = `<span style="font-size:12px; color:var(--danger); font-weight:700;">Esgotado</span>`; } 
+        else if (!p.ativo) { acaoHTML = `<span style="font-size:11px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:4px 8px; border-radius:6px;">ESGOTADO</span>`; } 
         else {
-            if(p.tipo === 'pizza') { acaoHTML = `<button onclick="abrirPizzaModal('${p.id}')" style="background:transparent; border:1px solid var(--border-color); padding: 8px 16px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Montar</button>`; } 
-            else {
-                if (qtd > 0) { acaoHTML = `<div class="stepper"><button class="stepper-btn" onclick="alterarQtd('${p.id}', -1)">-</button><span class="stepper-val mono">${qtd}</span><button class="stepper-btn" onclick="alterarQtd('${p.id}', 1)">+</button></div>`; } 
-                else { acaoHTML = `<button onclick="alterarQtd('${p.id}', 1)" style="background:transparent; border:1px solid var(--border-color); padding: 8px 16px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Adicionar</button>`; }
-            }
+            if (qtd > 0) { acaoHTML = `<div class="stepper"><button class="stepper-btn" onclick="alterarQtd('${p.id}', -1)">-</button><span class="stepper-val mono">${qtd}</span><button class="stepper-btn" onclick="alterarQtd('${p.id}', 1)">+</button></div>`; } 
+            else { acaoHTML = `<button onclick="alterarQtd('${p.id}', 1)" class="btn-pizza">Adicionar</button>`; }
         }
         
         const nomeFinal = p.nome || 'Produto'; const destaqueSelo = p.destaque === true ? '<span class="tag-destaque">Destaque</span>' : '';
@@ -730,22 +819,32 @@
       else bar.style.display = 'none';
     }
 
+    // Modal Admin Produto
     function abrirModalProduto(id = null) {
       produtoEmEdicaoId = id; const t = document.getElementById('modal-produto-titulo');
       
-      document.getElementById('novo-img-preview').src = ''; document.getElementById('novo-img-preview').style.display = 'none';
-      document.getElementById('novo-img').value = '';
+      document.getElementById('novo-img-preview').src = ''; document.getElementById('novo-img-preview').style.display = 'none'; document.getElementById('novo-img').value = '';
       
       if (id) {
         t.innerText = 'Editar Produto'; const p = DADOS.produtos.find(i => i.id === id);
         if(p.img_url) { document.getElementById('novo-img-preview').src = p.img_url; document.getElementById('novo-img-preview').style.display = 'flex'; document.getElementById('novo-img').value = p.img_url; }
         document.getElementById('novo-nome').value = p.nome || '';
-        document.getElementById('novo-cat').value = p.categoria || 'esfihas'; document.getElementById('novo-preco').value = p.preco || '';
+        
+        // Categoria dinâmica
+        const selectCat = document.getElementById('novo-cat');
+        if(selectCat.querySelector(`option[value="${p.categoria}"]`)) {
+            selectCat.value = p.categoria;
+        } else if(DADOS.categorias && DADOS.categorias.length > 0) {
+            selectCat.value = DADOS.categorias[0].nome;
+        }
+        
+        document.getElementById('novo-preco').value = p.preco || '';
         document.getElementById('novo-desc').value = p.descricao || ''; document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
         document.getElementById('novo-destaque').checked = p.destaque === true;
       } else {
         t.innerText = 'Novo Produto';
-        document.getElementById('novo-nome').value = ''; document.getElementById('novo-cat').value = 'esfihas'; document.getElementById('novo-preco').value = ''; document.getElementById('novo-desc').value = ''; document.getElementById('novo-estoque').value = ''; document.getElementById('novo-destaque').checked = false;
+        document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = ''; document.getElementById('novo-desc').value = ''; document.getElementById('novo-estoque').value = ''; document.getElementById('novo-destaque').checked = false;
+        if(DADOS.categorias && DADOS.categorias.length > 0) document.getElementById('novo-cat').value = DADOS.categorias[0].nome;
       }
       document.getElementById('modal-novo-produto').style.display = 'flex';
     }
@@ -758,8 +857,7 @@
       const estQtd = document.getElementById('novo-estoque').value; const precoF = parseFloat(document.getElementById('novo-preco').value) || 0;
       const imgFinal = document.getElementById('novo-img').value; 
 
-      const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null };
-      if(document.getElementById('novo-destaque').checked) { dados.destaque = true; } else { dados.destaque = false; }
+      const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null, destaque: document.getElementById('novo-destaque').checked };
       
       if (produtoEmEdicaoId) await malikDB.from('produtos').update(dados).eq('id', produtoEmEdicaoId);
       else { dados.ativo = true; await malikDB.from('produtos').insert([dados]); }
@@ -814,64 +912,7 @@
       const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00; document.getElementById('chk-taxa').innerText = `R$ ${taxa.toFixed(2)}`; document.getElementById('chk-tot').innerText = `R$ ${(sub + taxa).toFixed(2)}`;
     }
 
-    async function enviarPedido(e) {
-      e.preventDefault(); const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0); const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00; const total = sub + taxa;
-      const enderecoCompleto = tipoConsumo === 'delivery' ? `${document.getElementById('chk-rua').value} - ${document.getElementById('chk-bairro').value}` : `Retirada (${tipoConsumo})`;
-      const novoPedidoDB = { restaurante_id: RESTAURANTE_ID, codigo_curto: Math.floor(1000 + Math.random()*9000).toString(), cliente: document.getElementById('chk-nome').value, telefone: document.getElementById('chk-tel').value, endereco: enderecoCompleto, tipo_entrega: tipoConsumo, subtotal: sub, taxa_entrega: taxa, total: total, forma_pagamento: 'pix', itens: sacola, status: 'novo' };
-      await malikDB.from('pedidos').insert([novoPedidoDB]); sacola = [];
-      document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`;
-    }
-
-    function renderKanban() {
-      const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
-      let htmlFinal = '';
-      cols.forEach(c => {
-          const list = pedidos.filter(p => p.status === c.id);
-          let cardsHtml = '';
-          list.forEach(p => {
-              const itensSeguros = Array.isArray(p.itens) ? p.itens : []; const totalF = parseFloat(p.total) || 0;
-              let itensListHtml = ''; itensSeguros.forEach(i => { itensListHtml += `<div style="margin-bottom:4px; font-size:12px;"><span class="mono" style="color:var(--text-muted);">${i.qtd}x</span> ${i.nome}</div>`; });
-              let acoesHtml = '';
-              if (p.status === 'novo') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`; } 
-              else if (p.status === 'preparando') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`; }
-              cardsHtml += `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span><span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span></div><div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div><div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div><div>${itensListHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);"><span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span><div style="display:flex; gap:6px;">${acoesHtml}</div></div></div>`;
-          });
-          htmlFinal += `<div class="kanban-col"><div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">${cardsHtml}</div></div>`;
-      });
-      document.getElementById('kanban-cols').innerHTML = htmlFinal;
-    }
-    
-    async function mudarStatusNaNuvem(id, status) { await malikDB.from('pedidos').update({ status: status }).eq('id', id); }
-
-    let dadosExportacaoCRM = [];
-    function renderCRM() {
-        const clientesMap = {}; const produtosMap = {};
-        pedidos.forEach(p => {
-            const tel = p.telefone || 'Sem Número';
-            if(!clientesMap[tel]) { clientesMap[tel] = { nome: p.cliente || 'Sem Nome', telefone: tel, endereco: p.endereco || '', total_pedidos: 0, total_gasto: 0 }; }
-            clientesMap[tel].total_pedidos += 1; clientesMap[tel].total_gasto += (parseFloat(p.total) || 0);
-            if(p.endereco && p.tipo_entrega === 'delivery') clientesMap[tel].endereco = p.endereco;
-            const itensSeguros = Array.isArray(p.itens) ? p.itens : [];
-            itensSeguros.forEach(item => { if(!produtosMap[item.nome]) produtosMap[item.nome] = 0; produtosMap[item.nome] += (item.qtd || 1); });
-        });
-        const clientesArr = Object.values(clientesMap).sort((a, b) => b.total_gasto - a.total_gasto); dadosExportacaoCRM = clientesArr; 
-        const produtosArr = Object.keys(produtosMap).map(nome => ({nome, qtd: produtosMap[nome]})).sort((a, b) => b.qtd - a.qtd).slice(0, 5);
-        let clientesHtml = ''; clientesArr.forEach(c => { clientesHtml += `<tr><td><b>${c.nome}</b></td><td class="mono">${c.telefone}</td><td style="font-size:12px; color:var(--text-muted); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.endereco}</td><td class="mono" style="text-align:center;">${c.total_pedidos}</td><td class="mono" style="text-align:right;">R$ ${c.total_gasto.toFixed(2)}</td></tr>`; }); document.getElementById('crm-lista-clientes').innerHTML = clientesHtml; if(clientesArr.length === 0) document.getElementById('crm-lista-clientes').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Nenhum pedido registrado.</td></tr>';
-        let produtosHtml = ''; produtosArr.forEach((p, index) => { produtosHtml += `<tr><td><span style="color:var(--accent); font-weight:800; margin-right:8px;">#${index+1}</span> <b>${p.nome}</b></td><td class="mono" style="text-align:right;">${p.qtd} unid.</td></tr>`; }); document.getElementById('crm-top-produtos').innerHTML = produtosHtml; if(produtosArr.length === 0) document.getElementById('crm-top-produtos').innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px;">Nenhuma venda registrada.</td></tr>';
-    }
-
-    function exportarClientesCSV() {
-        if(dadosExportacaoCRM.length === 0) { alert("Não há clientes para exportar."); return; }
-        let csvContent = "data:text/csv;charset=utf-8,Nome,Telefone,Ultimo Endereco,Total de Pedidos,Total Gasto (R$)\n";
-        dadosExportacaoCRM.forEach(c => { const row = `"${c.nome}","${c.telefone}","${c.endereco}",${c.total_pedidos},${c.total_gasto.toFixed(2)}`; csvContent += row + "\r\n"; });
-        const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "malik_clientes_crm.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    }
-
-    function abrirPizzaModal(id) { pizzaAtual = DADOS.produtos.find(p => p.id === id); document.getElementById('pizza-modal-nome').innerText = pizzaAtual.nome || 'Pizza'; calcPizzaModal(); document.getElementById('modal-pizza').style.display = 'flex'; }
-    function fecharModalPizza() { document.getElementById('modal-pizza').style.display = 'none'; }
-    function setTamPizza(t) { tamPizza = t; ['tam-grande', 'tam-media'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; }); const btn = document.getElementById('tam-' + t); if(btn) { btn.classList.add('active'); btn.style.background = 'var(--bg-subsurface)'; btn.style.color = 'var(--text-main)'; } calcPizzaModal(); }
-    function calcPizzaModal() { let preco = parseFloat(pizzaAtual.preco) || 0; const tot = preco * (tamPizza === 'media' ? 1.0 : 1.25); document.getElementById('pizza-modal-total').innerText = `R$ ${tot.toFixed(2).replace('.', ',')}`; }
-    function adicionarPizzaCarrinho() { sacola.push({ prodId: pizzaAtual.id, nome: `Pizza ${tamPizza.toUpperCase()}`, det: '', qtd: 1, preco: parseFloat(document.getElementById('pizza-modal-total').innerText.replace('R$ ', '').replace(',', '.')) }); fecharModalPizza(); atualizarSacolaBar(); }
+    function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
 
   </script>
 </body>
