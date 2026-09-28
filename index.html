@@ -44,6 +44,7 @@
 
     /* Barra de Navegação Admin (Oculta Cliente) */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: none; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
+    .brand { font-size: 18px; color: var(--accent); display: none; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     .nav-tabs { display: flex; gap: 4px; background: var(--bg-subsurface); padding: 4px; border-radius: 12px; flex-wrap: wrap; margin: 0 auto;}
     .tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; }
     .tab-btn.active { background: var(--bg-surface); color: var(--text-main); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
@@ -170,23 +171,17 @@
     .img-upload-preview { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
     .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
 
-    /* Admin Categorias Novo Estilo */
     .admin-cat-pill { background: var(--bg-subsurface); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;}
     .admin-cat-pill.active { background: var(--text-main); color: var(--bg-surface); border-color: var(--text-main);}
     .admin-cat-pill .remove-cat { background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: inherit; cursor: pointer; font-size: 10px;}
     .admin-cat-pill .remove-cat:hover { background: var(--danger); color: #fff;}
+    
+    .crm-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px;}
+    @media(min-width: 768px) { .crm-grid { grid-template-columns: 1fr 2fr; } }
+    .crm-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; }
   </style>
 </head>
 <body>
-
-  <script>
-    window.onerror = function(msg, url, line, col, error) {
-        const loading = document.getElementById('loading-produtos');
-        if(loading) loading.style.display = 'none';
-        console.error("🚨 Erro Detectado:", msg);
-        return false; 
-    };
-  </script>
 
   <!-- NAVEGAÇÃO SUPERIOR ADMIN (Oculta para Cliente) -->
   <header class="top-nav" id="main-header-nav">
@@ -212,14 +207,19 @@
   <!-- ========================================================================= -->
   <section id="sec-cardapio" style="flex:1;">
     <div class="store-layout-container">
+        
         <div class="banner-container" id="loja-banner-view"></div>
+        
         <div class="store-header">
             <img src="https://ui-avatars.com/api/?name=Loja&background=d92d20&color=fff&size=150" class="store-logo" id="loja-logo-view" alt="Logo">
+            
             <h1 class="store-title">
                 <span id="loja-nome-view">Carregando...</span> 
                 <span class="badge-open" id="badge-status-loja-cliente">Aberto</span>
             </h1>
+            
             <div class="store-address" id="loja-endereco-view">Aguarde...</div>
+
             <div class="store-actions-bar">
                 <button class="btn-store-action" onclick="abrirModalInfoLoja()">ℹ️ Informação</button>
                 <div style="display:flex; gap:8px;" id="client-social-links"></div>
@@ -272,7 +272,6 @@
       </div>
     </div>
 
-    <!-- NOVO: GESTÃO DE CATEGORIAS DIRETO NA TELA DO CARDÁPIO -->
     <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:20px; margin-bottom:24px;">
         <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase;">Navegar e Editar Categorias</div>
         
@@ -288,6 +287,7 @@
     
     <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:18px;" id="admin-cat-title">Produtos nesta categoria</h3>
+        <!-- Botão Modificado para já abrir na categoria ativa correta -->
         <button class="btn-submit" style="width:auto; padding:10px 20px; margin:0; border-radius:10px;" onclick="abrirModalProduto()">+ Novo Produto Aqui</button>
     </div>
     
@@ -392,6 +392,7 @@
     </div>
   </section>
 
+  <!-- SEÇÃO DA COZINHA QUE ESTAVA VAZANDO -->
   <section id="sec-cozinha" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
       <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
@@ -399,6 +400,7 @@
     <div class="kanban-grid" id="kanban-cols"></div>
   </section>
 
+  <!-- BARRA FLUTUANTE SACOLA -->
   <div class="sacola-bar" id="bar-sacola" style="display:none;">
     <button class="btn-sacola" onclick="mostrarAba('checkout')">
       <div style="display:flex; align-items:center; gap:12px;"><span class="badge-count mono" id="sacola-count">0</span><span>Ver Sacola</span></div>
@@ -407,17 +409,15 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAIS                                                                    -->
+  <!-- MODAIS DO SISTEMA                                                         -->
   <!-- ========================================================================= -->
-  
-  <!-- Modal Info Loja Cliente -->
+
   <div class="modal-overlay" id="modal-info-loja" style="display:none; z-index: 1000;">
     <div class="modal-box" style="max-width: 450px;">
       <div class="modal-header">
           <h3 style="font-size:22px;">Informações</h3>
           <button type="button" onclick="fecharModalInfoLoja()" style="background:none; border:none; cursor:pointer; font-size:24px;">✕</button>
       </div>
-      
       <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border-color);">
           <img id="info-modal-logo" src="" style="width:64px; height:64px; border-radius:12px; object-fit:cover; border:1px solid var(--border-color);">
           <div>
@@ -425,12 +425,10 @@
               <div id="info-modal-status" class="badge-open">ABERTO</div>
           </div>
       </div>
-
       <div class="info-modal-row">
           <div class="info-modal-icon">📍</div>
           <div id="info-modal-endereco">Endereço</div>
       </div>
-
       <h4 style="font-size:16px; font-weight:800; margin-top:32px; margin-bottom:16px;">Tipos de Serviço</h4>
       <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px; margin-bottom:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
@@ -463,12 +461,13 @@
     </div>
   </div>
 
+  <!-- MODAL: NOVO PRODUTO REFEITO PARA EVITAR O BUG DO NOME COMPOSTO -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
     <div class="modal-box" style="max-width: 600px;">
       <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="document.getElementById('modal-novo-produto').style.display='none'" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
       <form onsubmit="salvarProduto(event)">
         <div class="form-group" style="background:var(--bg-subsurface); padding:20px; border-radius:16px; border:1px solid var(--border-color);">
-            <label class="form-label">Foto do Produto</label>
+            <label class="form-label" style="font-size:14px;">Foto do Produto</label>
             <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
                 <img id="novo-img-preview" class="img-upload-preview" src="">
                 <div style="flex:1;">
@@ -512,7 +511,9 @@
     </div>
   </div>
 
-  <!-- SCRIPT CENTRAL BLINDADO -->
+  <!-- ========================================================================= -->
+  <!-- SCRIPT CENTRAL E LÓGICA DE DADOS                                          -->
+  <!-- ========================================================================= -->
   <script>
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
@@ -532,7 +533,7 @@
 
     async function ligarAplicativo() {
       try {
-          if (typeof window.supabase === 'undefined') throw new Error("Supabase bloqueado.");
+          if (typeof window.supabase === 'undefined') return;
           malikDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
           document.documentElement.setAttribute('data-theme', 'light');
           
@@ -541,8 +542,9 @@
           await carregarProdutosDaNuvem().catch(e => console.warn(e));
           await verificarSessao().catch(e => console.warn(e));
           
-      } catch (e) { console.error(e); } 
-      finally {
+      } catch (e) { 
+          console.error(e); 
+      } finally {
           const loading = document.getElementById('loading-produtos');
           if(loading) loading.style.display = 'none';
           
@@ -576,7 +578,7 @@
         reader.readAsDataURL(file);
     }
 
-    // ===== CATEGORIAS DINÂMICAS =====
+    // CATEGORIAS DINÂMICAS
     async function carregarCategorias() {
         const { data, error } = await malikDB.from('categorias').select('*').eq('restaurante_id', RESTAURANTE_ID).order('ordem', { ascending: true });
         if (data && data.length > 0) { 
@@ -600,7 +602,7 @@
         if(modaisNovoCat) modaisNovoCat.innerHTML = selectCats;
     }
 
-    function setCat(nomeCategoria) { catAtiva = nomeCategoria; renderCategoriasUI(); renderProdutos(); }
+    function setCat(nomeCategoria) { catAtiva = nomeCategoria; renderCategoriasUI(); renderProdutos(); renderAdmin(); }
 
     function renderAdminCategorias() {
         const listaEl = document.getElementById('admin-cat-list');
@@ -620,7 +622,6 @@
         const input = document.getElementById('nova-cat-nome');
         const nomeNova = input.value.trim();
         if(!nomeNova) return;
-        
         const novaCatDB = { restaurante_id: RESTAURANTE_ID, nome: nomeNova, ordem: DADOS.categorias.length + 1, ativa: true };
         await malikDB.from('categorias').insert([novaCatDB]);
         input.value = '';
@@ -628,15 +629,15 @@
     }
 
     async function excluirCategoriaAdmin(idCat, event) {
-        event.stopPropagation(); // Evita clicar na pílula inteira
+        event.stopPropagation(); 
         if(confirm("Remover esta categoria? (Os produtos não serão apagados)")) {
             await malikDB.from('categorias').delete().eq('id', idCat);
-            catAtiva = ''; // Reseta para forçar a pegar a primeira
+            catAtiva = ''; 
             await carregarCategorias();
         }
     }
 
-    // ===== SESSÃO =====
+    // SESSÃO E NAVEGAÇÃO
     async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session ? session.user : null; atualizarUINavegacao(); }
     
     function atualizarUINavegacao() { 
@@ -662,12 +663,12 @@
     async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
     async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); mostrarAba('cardapio'); }
 
-    // ===== NAVEGAÇÃO ABAS =====
+    // Correção: A função mostrarAba agora esconde TODAS as seções para evitar sobreposição (incluindo a Cozinha)
     function mostrarAba(aba) {
-      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
       const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
       
-      ['tab-cardapio', 'tab-admin', 'tab-crm', 'tab-config'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
+      ['tab-cardapio', 'tab-admin', 'tab-crm', 'tab-config', 'tab-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
       const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
       
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
@@ -675,7 +676,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // ===== CONFIGURAÇÕES =====
+    // CONFIGURAÇÕES DA LOJA
     async function carregarConfigDaNuvem() {
         const { data, error } = await malikDB.from('configuracoes').select('*').eq('restaurante_id', RESTAURANTE_ID).single();
         if (data) { CONFIG_LOJA = data; aplicarConfiguracoesNoVisual(); }
@@ -714,19 +715,10 @@
 
         const containerRedesRodape = document.getElementById('social-links-container');
         const containerRedesTopo = document.getElementById('client-social-links');
-        
         let htmlTopo = ''; let htmlRodape = '';
-        if(CONFIG_LOJA.whatsapp) {
-            htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-circle">📱</a>`;
-            htmlRodape += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`;
-        }
-        if(CONFIG_LOJA.instagram) {
-            htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-circle">📸</a>`;
-            htmlRodape += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`;
-        }
-        if(CONFIG_LOJA.facebook) {
-            htmlRodape += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`;
-        }
+        if(CONFIG_LOJA.whatsapp) { htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-circle">📱</a>`; htmlRodape += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`; }
+        if(CONFIG_LOJA.instagram) { htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-circle">📸</a>`; htmlRodape += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`; }
+        if(CONFIG_LOJA.facebook) { htmlRodape += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`; }
         if(containerRedesTopo) containerRedesTopo.innerHTML = htmlTopo;
         if(containerRedesRodape) containerRedesRodape.innerHTML = htmlRodape;
     }
@@ -750,8 +742,7 @@
         }catch(e){}
 
         const { error } = await malikDB.from('configuracoes').upsert(dadosConfig);
-        if(error) { alert('Erro! ' + error.message); } 
-        else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
+        if(error) { alert('Erro! ' + error.message); } else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
         btn.innerText = 'Salvar Todas as Configurações'; btn.disabled = false;
     }
 
@@ -768,7 +759,7 @@
         renderProdutos(); renderDestaques(); 
     }
 
-    // ===== PRODUTOS E ADMIN =====
+    // PRODUTOS
     async function carregarProdutosDaNuvem() { 
         const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
         if (!error && data) { DADOS.produtos = data; renderProdutos(); renderDestaques(); if(usuarioAtual) { renderAdmin(); } } 
@@ -787,8 +778,8 @@
                 const precoF = parseFloat(p.preco) || 0;
                 const img = (p.img_url) ? `<img src="${p.img_url}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
                 const isDisponivel = p.ativo !== false && lojaAberta;
-                let onclickCode = ''; if (isDisponivel) { onclickCode = `alterarQtd('${p.id}', 1)`; }
-                const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
+                let onclickCode = ''; if (isDisponivel) { if (p.tipo === 'pizza') { onclickCode = `abrirPizzaModal('${p.id}')`; } else { onclickCode = `alterarQtd('${p.id}', 1)`; } }
+                const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
                 
                 htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${p.nome || 'Produto'}</div><div class="destaque-desc">${p.descricao || ''}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
@@ -840,30 +831,29 @@
       else bar.style.display = 'none';
     }
 
+    // Modal de Edição Consertado!
     function abrirModalProduto(id = null) {
       produtoEmEdicaoId = id; const t = document.getElementById('modal-produto-titulo');
       
       document.getElementById('novo-img-preview').src = ''; document.getElementById('novo-img-preview').style.display = 'none'; document.getElementById('novo-img').value = '';
       
       if (id) {
-        t.innerText = 'Editar Produto'; const p = DADOS.produtos.find(i => i.id === id);
+        t.innerText = 'Editar Produto'; 
+        const p = DADOS.produtos.find(i => i.id === id);
         if(p.img_url) { document.getElementById('novo-img-preview').src = p.img_url; document.getElementById('novo-img-preview').style.display = 'flex'; document.getElementById('novo-img').value = p.img_url; }
+        
         document.getElementById('novo-nome').value = p.nome || '';
-        
-        const selectCat = document.getElementById('novo-cat');
-        if(selectCat.querySelector(`option[value="${p.categoria}"]`)) {
-            selectCat.value = p.categoria;
-        } else if(DADOS.categorias && DADOS.categorias.length > 0) {
-            selectCat.value = DADOS.categorias[0].nome;
-        }
-        
+        document.getElementById('novo-cat').value = p.categoria || catAtiva; // Puxa diretamente sem querySelector falho
         document.getElementById('novo-preco').value = p.preco || '';
-        document.getElementById('novo-desc').value = p.descricao || ''; document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
+        document.getElementById('novo-desc').value = p.descricao || ''; 
+        document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
         document.getElementById('novo-destaque').checked = p.destaque === true;
       } else {
         t.innerText = 'Novo Produto';
         document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = ''; document.getElementById('novo-desc').value = ''; document.getElementById('novo-estoque').value = ''; document.getElementById('novo-destaque').checked = false;
-        if(DADOS.categorias && DADOS.categorias.length > 0) document.getElementById('novo-cat').value = DADOS.categorias[0].nome;
+        
+        // Categoria inteligente: já abre na aba atual do admin
+        document.getElementById('novo-cat').value = catAtiva || (DADOS.categorias.length > 0 ? DADOS.categorias[0].nome : '');
       }
       document.getElementById('modal-novo-produto').style.display = 'flex';
     }
@@ -892,9 +882,7 @@
     function renderAdmin() {
       let htmlFinal = '';
       if(DADOS.produtos) {
-          // Filtra os produtos APENAS da categoria ativa selecionada nas pílulas!
           const produtosDaCategoria = DADOS.produtos.filter(p => p.categoria === catAtiva);
-          
           if(produtosDaCategoria.length === 0) {
               htmlFinal = `<tr><td colspan="7" style="text-align:center; padding: 24px; color:var(--text-muted);">Nenhum produto cadastrado nesta categoria.</td></tr>`;
           } else {
@@ -909,7 +897,10 @@
                 htmlFinal += `
                 <tr style="opacity: ${opacity};">
                     <td>${img}</td>
-                    <td><b>${p.nome || 'Produto'}</b></td>
+                    <td>
+                        <b>${p.nome || 'Produto'}</b>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${p.categoria}</div>
+                    </td>
                     <td class="mono-td">R$ ${precoF.toFixed(2)}</td>
                     <td style="text-align:center;">
                         <input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;">
@@ -931,10 +922,9 @@
           }
       }
       document.getElementById('admin-prod-rows').innerHTML = htmlFinal;
-      renderAdminCategorias(); // Atualiza a UI das pílulas para garantir qual está ativa
+      renderAdminCategorias(); 
     }
 
-    // CHECKOUT
     function setConsumo(c) { 
       tipoConsumo = c; 
       ['btn-cons-deliv', 'btn-cons-balcao', 'btn-cons-mesa'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; });
@@ -957,7 +947,27 @@
       document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`;
     }
 
-    // CRM
+    function renderKanban() {
+      const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
+      let htmlFinal = '';
+      cols.forEach(c => {
+          const list = pedidos.filter(p => p.status === c.id);
+          let cardsHtml = '';
+          list.forEach(p => {
+              const itensSeguros = Array.isArray(p.itens) ? p.itens : []; const totalF = parseFloat(p.total) || 0;
+              let itensListHtml = ''; itensSeguros.forEach(i => { itensListHtml += `<div style="margin-bottom:4px; font-size:12px;"><span class="mono" style="color:var(--text-muted);">${i.qtd}x</span> ${i.nome}</div>`; });
+              let acoesHtml = '';
+              if (p.status === 'novo') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`; } 
+              else if (p.status === 'preparando') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`; }
+              cardsHtml += `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span><span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span></div><div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div><div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div><div>${itensListHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);"><span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span><div style="display:flex; gap:6px;">${acoesHtml}</div></div></div>`;
+          });
+          htmlFinal += `<div class="kanban-col"><div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">${cardsHtml}</div></div>`;
+      });
+      document.getElementById('kanban-cols').innerHTML = htmlFinal;
+    }
+    
+    async function mudarStatusNaNuvem(id, status) { await malikDB.from('pedidos').update({ status: status }).eq('id', id); }
+
     let dadosExportacaoCRM = [];
     function renderCRM() {
         const clientesMap = {}; const produtosMap = {};
@@ -982,7 +992,11 @@
         const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "malik_clientes_crm.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
+    function abrirPizzaModal(id) { pizzaAtual = DADOS.produtos.find(p => p.id === id); document.getElementById('pizza-modal-nome').innerText = pizzaAtual.nome || 'Pizza'; calcPizzaModal(); document.getElementById('modal-pizza').style.display = 'flex'; }
+    function fecharModalPizza() { document.getElementById('modal-pizza').style.display = 'none'; }
+    function setTamPizza(t) { tamPizza = t; ['tam-grande', 'tam-media'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; }); const btn = document.getElementById('tam-' + t); if(btn) { btn.classList.add('active'); btn.style.background = 'var(--bg-subsurface)'; btn.style.color = 'var(--text-main)'; } calcPizzaModal(); }
+    function calcPizzaModal() { let preco = parseFloat(pizzaAtual.preco) || 0; const tot = preco * (tamPizza === 'media' ? 1.0 : 1.25); document.getElementById('pizza-modal-total').innerText = `R$ ${tot.toFixed(2).replace('.', ',')}`; }
+    function adicionarPizzaCarrinho() { sacola.push({ prodId: pizzaAtual.id, nome: `Pizza ${tamPizza.toUpperCase()}`, det: '', qtd: 1, preco: parseFloat(document.getElementById('pizza-modal-total').innerText.replace('R$ ', '').replace(',', '.')) }); fecharModalPizza(); atualizarSacolaBar(); }
 
   </script>
 </body>
