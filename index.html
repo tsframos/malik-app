@@ -118,12 +118,24 @@
     .table-container { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow-x: auto; margin-top: 14px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     th { padding: 12px; background: var(--bg-subsurface); color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 800; }
-    td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; }
+    td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; vertical-align: middle; }
     
-    /* Botões da Tabela Administrativa corrigidos */
     .td-acoes { display: flex; gap: 6px; justify-content: flex-end; align-items: center; }
     .btn-edit { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid var(--info); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; text-transform: uppercase; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+
+    /* NOVO: Estilos dos Blocos Administrativos no Modal */
+    .admin-block { background: var(--bg-body); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+    .admin-block-title { font-size: 12px; font-weight: 900; color: var(--accent); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;}
+    
+    /* NOVO: Toggle Switch (Disponível/Esgotado) */
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--danger); transition: .3s; border-radius: 24px; border: 2px solid var(--border-color);}
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    input:checked + .slider { background-color: var(--success); border-color: transparent; }
+    input:checked + .slider:before { transform: translateX(20px); }
+    .status-label { font-size: 13px; font-weight: 800; margin-left: 10px; }
 
     /* Kanban */
     .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 14px; }
@@ -248,7 +260,7 @@
     <div class="table-container">
       <table>
         <thead>
-          <tr><th>Foto / Ícone</th><th>Item</th><th>Categoria</th><th>Preço</th><th style="text-align:right;">Ações</th></tr>
+          <tr><th>Foto</th><th>Item</th><th>Categoria</th><th>Preço</th><th style="text-align:center;">Status</th><th style="text-align:right;">Ações</th></tr>
         </thead>
         <tbody id="admin-prod-rows"></tbody>
       </table>
@@ -418,40 +430,77 @@
   <!-- ============================================== -->
   <!-- MODAL: EDITAR / CRIAR PRODUTO (LOJISTA)        -->
   <!-- ============================================== -->
-  <div class="modal-overlay" id="modal-novo-produto" style="display:none;">
-    <div class="modal-box">
+  <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
+    <div class="modal-box" style="max-width: 600px;">
       <div class="modal-header">
-        <h3 id="modal-produto-titulo" style="font-size:18px; color:var(--accent);">Novo Produto</h3>
+        <h3 id="modal-produto-titulo" style="font-size:18px; color:var(--accent);">Configurar Produto</h3>
         <button onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
       <form onsubmit="salvarProduto(event)">
-        <div class="form-group">
-          <label class="form-label">URL da Imagem / Foto</label>
-          <input type="url" id="novo-img" placeholder="Cole o link da imagem aqui..." class="input-text">
+        
+        <!-- BLOCO 1: Mídia -->
+        <div class="admin-block">
+            <div class="admin-block-title">📸 Mídia do Produto</div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">URL da Imagem / Foto</label>
+                <input type="url" id="novo-img" placeholder="Cole o link da imagem aqui..." class="input-text">
+            </div>
         </div>
-        <div class="form-group"><label class="form-label">Nome</label><input type="text" id="novo-nome" required class="input-text"></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div class="form-group">
-            <label class="form-label">Categoria</label>
-            <select id="novo-cat" class="input-text">
-              <option value="pizzas">🍕 Pizzas</option>
-              <option value="esfihas">🥟 Esfihas</option>
-              <option value="bebidas">🥤 Bebidas</option>
-              <option value="doces">🍬 Doces</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tipo</label>
-            <select id="novo-tipo" class="input-text" onchange="toggleEstoqueField()">
-              <option value="pizza">Montável</option>
-              <option value="uni">Unidade</option>
-            </select>
-          </div>
+
+        <!-- BLOCO 2: Informações Básicas -->
+        <div class="admin-block">
+            <div class="admin-block-title">📝 Informações Básicas</div>
+            <div class="form-group"><label class="form-label">Nome do Item</label><input type="text" id="novo-nome" required class="input-text" placeholder="Ex: Esfiha de Carne"></div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group">
+                <label class="form-label">Categoria</label>
+                <select id="novo-cat" class="input-text">
+                    <option value="pizzas">🍕 Pizzas</option>
+                    <option value="esfihas">🥟 Esfihas</option>
+                    <option value="bebidas">🥤 Bebidas</option>
+                    <option value="doces">🍬 Doces</option>
+                </select>
+                </div>
+                <div class="form-group">
+                <label class="form-label">Tipo de Venda</label>
+                <select id="novo-tipo" class="input-text" onchange="toggleEstoqueField()">
+                    <option value="pizza">Montável (ex: Pizzas)</option>
+                    <option value="uni">Unidade Simples</option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Descrição (Aparece para o cliente)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ingredientes e detalhes apetitosos..."></div>
         </div>
-        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text"></div>
-        <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.50" id="novo-preco" required class="input-text mono"></div>
-        <div class="form-group" id="box-novo-estoque" style="display:none;"><label class="form-label">Estoque Inicial</label><input type="number" id="novo-estoque" class="input-text mono"></div>
-        <button type="submit" class="btn-submit" id="btn-submit-produto">Guardar na Nuvem</button>
+
+        <!-- BLOCO 3: Preços -->
+        <div class="admin-block">
+            <div class="admin-block-title">💰 Preço</div>
+            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono" placeholder="0.00"></div>
+        </div>
+
+        <!-- BLOCO 4: Inventário e Status -->
+        <div class="admin-block">
+            <div class="admin-block-title">📦 Inventário & Disponibilidade</div>
+            
+            <div style="display:flex; align-items:center; background:var(--bg-subsurface); padding:12px; border-radius:10px; margin-bottom:12px;">
+                <label class="switch">
+                    <input type="checkbox" id="novo-ativo" checked>
+                    <span class="slider"></span>
+                </label>
+                <div style="margin-left:12px;">
+                    <div style="font-size:14px; font-weight:800; color:var(--text-main);">Visível no Cardápio</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Desative para esconder temporariamente.</div>
+                </div>
+            </div>
+
+            <div class="form-group" id="box-novo-estoque" style="display:none; margin-bottom:0;">
+                <label class="form-label">Controle Numérico (Opcional)</label>
+                <input type="number" id="novo-estoque" class="input-text mono" placeholder="Qtd. em estoque (deixe em branco se infinito)">
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-submit-produto" style="font-size:16px;">Salvar Alterações</button>
       </form>
     </div>
   </div>
@@ -468,7 +517,7 @@
     const RESTAURANTE_ID = '11111111-1111-1111-1111-111111111111';
 
     let temaAtual = 'dark';
-    let catAtiva = 'esfihas'; // Alterado para esfihas como predefinição
+    let catAtiva = 'esfihas'; 
     let sacola = [];
     let tipoConsumo = 'delivery';
     let pizzaAtual = null;
@@ -506,8 +555,8 @@
       if (usuarioAtual) {
         document.getElementById('user-info').style.display = 'flex';
         document.getElementById('user-email').innerText = usuarioAtual.email;
-        document.getElementById('btn-footer-login').style.display = 'none'; // Esconde o botão do rodapé
-        abasAdmin.forEach(el => el.style.display = 'flex'); // Mostra abas no topo
+        document.getElementById('btn-footer-login').style.display = 'none'; 
+        abasAdmin.forEach(el => el.style.display = 'flex'); 
       } else {
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('btn-footer-login').style.display = 'inline-block';
@@ -533,7 +582,7 @@
         usuarioAtual = data.user;
         atualizarUINavegacao();
         fecharModalLogin();
-        mostrarAba('admin'); // Leva o gestor direto para o seu painel
+        mostrarAba('admin'); 
       }
     }
 
@@ -541,7 +590,7 @@
       await malikDB.auth.signOut();
       usuarioAtual = null;
       atualizarUINavegacao();
-      mostrarAba('cardapio'); // Devolve para a visão de cliente
+      mostrarAba('cardapio'); 
     }
 
     function mostrarAba(aba) {
@@ -648,7 +697,7 @@
               <div><div class="prod-name">${p.nome}</div><div class="prod-desc">${p.descricao || ''}</div></div>
               <div class="prod-bottom">
                 <span class="prod-price mono">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</span>
-                ${!p.ativo ? '<span style="font-size:10px; color:var(--danger); font-weight:800;">ESGOTADO</span>' :
+                ${!p.ativo ? '<span style="font-size:10px; color:var(--danger); font-weight:800; border:1px solid var(--danger); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' :
                   p.tipo === 'pizza' ? `<button class="btn-pizza" onclick="abrirPizzaModal('${p.id}')">Montar 🍕</button>` :
                   `<div class="stepper">${qtd > 0 ? `<button class="stepper-btn" onclick="alterarQtd('${p.id}', -1)">-</button>` : ''}<span class="stepper-val mono">${qtd}</span><button class="stepper-btn" onclick="alterarQtd('${p.id}', 1)">+</button></div>`
                 }
@@ -680,17 +729,25 @@
     // ==========================================
     function renderAdmin() {
       document.getElementById('admin-prod-rows').innerHTML = DADOS.produtos.map(p => {
-        const img = (p.img_url) ? `<img src="${p.img_url}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;" onerror="this.outerHTML='🍽️'">` : `<div style="width:36px; height:36px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">${p.icone || '🍽️'}</div>`;
+        const img = (p.img_url) ? `<img src="${p.img_url}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;" onerror="this.outerHTML='🍽️'">` : `<div style="width:40px; height:40px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:18px;">${p.icone || '🍽️'}</div>`;
+        const isAtivo = p.ativo !== false; // default true
+        
         return `
-          <tr>
+          <tr style="opacity: ${isAtivo ? '1' : '0.6'};">
             <td>${img}</td>
             <td><b>${p.nome}</b></td>
             <td>${p.categoria}</td>
             <td class="mono-td">R$ ${parseFloat(p.preco).toFixed(2)}</td>
+            <td style="text-align:center;">
+                <label class="switch" title="${isAtivo ? 'Disponível' : 'Esgotado'}">
+                    <input type="checkbox" ${isAtivo ? 'checked' : ''} onchange="toggleStatusProduto('${p.id}', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </td>
             <td>
               <div class="td-acoes">
                 <button class="btn-edit" onclick="abrirModalProduto('${p.id}')">✏️ Editar</button>
-                <button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">Excluir</button>
+                <button class="btn-danger" onclick="removerProdutoDaNuvem('${p.id}')">✕</button>
               </div>
             </td>
           </tr>
@@ -698,7 +755,25 @@
       }).join('');
     }
 
-    // Modal agora serve para Criar ou Editar
+    // Função rápida para ativar/desativar pela tabela
+    async function toggleStatusProduto(id, novoStatus) {
+        // Atualiza a interface instantaneamente
+        const p = DADOS.produtos.find(i => i.id === id);
+        if(p) p.ativo = novoStatus;
+        renderAdmin(); // refaz a tabela com opacidade correta
+
+        // Salva no banco de dados
+        const { error } = await malikDB.from('produtos').update({ ativo: novoStatus }).eq('id', id);
+        if(error) {
+            alert('Erro ao atualizar status: ' + error.message);
+            if(p) p.ativo = !novoStatus; // reverte em caso de erro
+            renderAdmin();
+        } else {
+            // Se estiver na aba do cardápio e mudar via outro dispositivo, re-renderiza
+            if(document.getElementById('sec-cardapio').style.display !== 'none') renderProdutos();
+        }
+    }
+
     function abrirModalProduto(id = null) {
       produtoEmEdicaoId = id;
       const titulo = document.getElementById('modal-produto-titulo');
@@ -713,6 +788,7 @@
         document.getElementById('novo-preco').value = p.preco || '';
         document.getElementById('novo-desc').value = p.descricao || '';
         document.getElementById('novo-estoque').value = p.estoque !== null ? p.estoque : '';
+        document.getElementById('novo-ativo').checked = p.ativo !== false;
       } else {
         titulo.innerText = 'Novo Produto';
         document.getElementById('novo-img').value = '';
@@ -722,6 +798,7 @@
         document.getElementById('novo-preco').value = '';
         document.getElementById('novo-desc').value = '';
         document.getElementById('novo-estoque').value = '';
+        document.getElementById('novo-ativo').checked = true;
       }
       toggleEstoqueField();
       document.getElementById('modal-novo-produto').style.display = 'flex';
@@ -733,7 +810,7 @@
     async function salvarProduto(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit-produto');
-      btn.innerText = 'Guardando na Nuvem...';
+      btn.innerText = 'Salvando...';
       btn.disabled = true;
 
       const cat = document.getElementById('novo-cat').value;
@@ -751,7 +828,7 @@
         tipo: document.getElementById('novo-tipo').value, 
         icone: icon, 
         estoque: (document.getElementById('novo-tipo').value === 'uni' && estQtd !== '') ? parseInt(estQtd, 10) : null,
-        ativo: true 
+        ativo: document.getElementById('novo-ativo').checked 
       };
 
       let erroDb;
@@ -770,12 +847,15 @@
         await carregarProdutosDaNuvem();
       }
       
-      btn.innerText = 'Guardar na Nuvem';
+      btn.innerText = 'Salvar Alterações';
       btn.disabled = false;
     }
 
     async function removerProdutoDaNuvem(id) {
-      if (confirm('Tem a certeza que quer apagar permanentemente?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); }
+      if (confirm('Tem a certeza que quer apagar este produto permanentemente?')) { 
+          await malikDB.from('produtos').delete().eq('id', id); 
+          await carregarProdutosDaNuvem(); 
+      }
     }
 
     // ==========================================
