@@ -45,7 +45,7 @@
     h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-sacola, .btn-submit, .cat-btn, .modal-header h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
     .mono, .badge-time, #chk-sub, #chk-taxa, #chk-tot, #pix-total, .order-id, .stepper-val, .badge-count, td.mono-td { font-family: 'JetBrains Mono', monospace !important; letter-spacing: -0.5px; }
 
-    /* Barra de Navegação (Agora Oculta para Clientes) */
+    /* Barra de Navegação Admin */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: none; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
     .brand { font-weight: 800; font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     
@@ -53,64 +53,77 @@
     .tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; }
     .tab-btn.active { background: var(--bg-surface); color: var(--text-main); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
     
+    .admin-only { display: none; } 
     #user-info { display: none; align-items: center; gap: 8px; }
     .theme-toggle-btn { background: var(--bg-subsurface); border: none; color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
 
-    .store-layout-container { max-width: 900px; margin: 0 auto; width: 100%; }
+    /* LAYOUT LARGO ESTILO IFOOD (1200px) */
+    .store-layout-container { max-width: 1200px; margin: 0 auto; width: 100%; }
 
-    .banner-container { width: 100%; height: 200px; background-color: var(--bg-subsurface); background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 0; }
-    @media(min-width: 768px) { .banner-container { margin-top: 24px; border-radius: 8px; height: 250px; } }
+    .banner-container { width: 100%; height: 200px; background-color: var(--bg-subsurface); background-size: cover; background-position: center; border-radius: 0; }
+    @media(min-width: 768px) { .banner-container { margin-top: 32px; border-radius: 12px; height: 300px; } }
 
     .store-header { padding: 0 16px 24px 16px; background: transparent; }
-    .store-info-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-top: -40px; }
-    .store-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-body); background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
+    .store-info-wrapper { display: flex; gap: 24px; align-items: flex-start; margin-top: -40px; }
     
+    .store-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-body); background: var(--bg-subsurface); box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
+    @media(min-width: 768px) { .store-logo { width: 110px; height: 110px; border-width: 6px; margin-top: -10px; } }
+
     .store-details { padding-top: 48px; flex: 1;}
     .store-title-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;}
     .store-title { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
+    @media(min-width: 768px) { .store-title { font-size: 32px; } .store-details { padding-top: 56px; } }
+
     .badge-open { font-size: 11px; background: rgba(80, 167, 115, 0.15); color: var(--success); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .badge-closed { font-size: 11px; background: rgba(234, 29, 44, 0.15); color: var(--danger); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    .store-address { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 4px;}
+    .store-address { font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px;}
 
-    /* Slider de Destaques */
-    .destaques-box { padding: 24px 16px 8px 16px; position: relative; }
+    /* Slider de Destaques Largo */
+    .destaques-box { padding: 32px 16px 8px 16px; position: relative; }
     .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-behavior: smooth; }
     .destaques-scroll::-webkit-scrollbar { display: none; }
     
     .destaque-card { min-width: 280px; max-width: 280px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s;}
+    @media(min-width: 768px) { .destaque-card { min-width: 340px; max-width: 340px; border-radius: 12px; } }
+    
     .destaque-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px);}
     .destaque-img { width: 100%; height: 140px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
+    @media(min-width: 768px) { .destaque-img { height: 160px; } }
+
     .destaque-info { padding: 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;}
     .destaque-nome { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
     .destaque-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; min-height: 36px;}
     .destaque-preco { font-size: 15px; font-weight: 800; color: #50a773; }
+    @media(min-width: 768px) { .destaque-nome { font-size: 16px; } .destaque-preco { font-size: 16px; } }
 
-    .slider-arrow { position: absolute; top: 60%; transform: translateY(-50%); width: 40px; height: 40px; background: #fff; border: 1px solid var(--border-color); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-weight: bold; color: var(--text-muted); font-size: 18px; transition: all 0.2s;}
+    .slider-arrow { position: absolute; top: 55%; transform: translateY(-50%); width: 40px; height: 40px; background: #fff; border: 1px solid var(--border-color); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-weight: bold; color: var(--text-muted); font-size: 18px; transition: all 0.2s;}
     .slider-arrow:hover { background: var(--bg-subsurface); color: var(--text-main); }
     .slider-prev { left: 0px; }
     .slider-next { right: 0px; }
     @media(max-width: 768px) { .slider-arrow { display: none; } } 
 
-    /* Menu de Categorias */
+    /* Menu de Categorias Largo */
     .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0px; z-index: 40; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
-    .cat-nav { max-width: 900px; margin: 0 auto; padding: 12px 16px;}
+    .cat-nav { max-width: 1200px; margin: 0 auto; padding: 12px 16px;}
     .cat-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
     .cat-scroll::-webkit-scrollbar { display: none; }
-    .cat-btn { background: var(--bg-subsurface); border: none; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+    .cat-btn { background: var(--bg-subsurface); border: none; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .cat-btn.active { background: var(--text-main); color: var(--bg-surface); }
 
-    /* Grid de Produtos */
-    .container { max-width: 900px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
+    /* GRID DE PRODUTOS LARGOS (2 Colunas no Desktop) */
+    .container { max-width: 1200px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
     .grid-produtos { display: grid; grid-template-columns: 1fr; gap: 0; }
     .prod-card { display: flex; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); gap: 16px; text-decoration: none; cursor: pointer; background: transparent; border-radius: 0;}
     .prod-card:hover { opacity: 0.8; }
     .prod-card:last-child { border-bottom: none; }
     
+    /* Configuração 2 Colunas Desktop */
     @media(min-width: 768px) {
-        .grid-produtos { grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 16px; }
-        .prod-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
+        .grid-produtos { grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 16px; }
+        .prod-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; transition: box-shadow 0.2s; }
         .prod-card:last-child { border-bottom: 1px solid var(--border-color); } 
+        .prod-card:hover { opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
     }
     
     .prod-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
@@ -118,17 +131,26 @@
     .prod-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400;}
     .prod-price { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .prod-bottom { display: flex; align-items: center; gap: 12px; margin-top: auto;}
+    
     .prod-img-wrap { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: var(--bg-subsurface); display: flex; align-items: center; justify-content: center; font-size: 32px;}
     .prod-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    @media(min-width: 768px) {
+        .prod-name { font-size: 18px; margin-bottom: 8px;}
+        .prod-desc { font-size: 14px; margin-bottom: 16px;}
+        .prod-price { font-size: 16px; }
+        .prod-img-wrap { width: 140px; height: 140px; }
+    }
+
     .tag-destaque { background: var(--accent); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
 
-    .btn-pizza { background: var(--accent-soft); color: var(--accent); border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .btn-pizza { background: var(--accent-soft); color: var(--accent); border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
     .stepper { display: flex; align-items: center; gap: 10px; background: var(--bg-subsurface); padding: 4px 10px; border-radius: 8px; }
     .stepper-btn { background: none; border: none; color: var(--accent); font-weight: 800; cursor: pointer; font-size: 18px; padding: 0 4px; }
     .stepper-val { font-size: 14px; font-weight: 600; min-width: 16px; text-align: center; color: var(--text-main); }
 
     .sacola-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(to top, var(--bg-body) 90%, transparent); z-index: 45; border-top: 1px solid var(--border-color);}
-    .btn-sacola { max-width: 500px; margin: 0 auto; background: var(--accent); color: #fff; border: none; padding: 18px 24px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px var(--accent-soft); letter-spacing: 0.5px; }
+    .btn-sacola { max-width: 600px; margin: 0 auto; background: var(--accent); color: #fff; border: none; padding: 18px 24px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px var(--accent-soft); letter-spacing: 0.5px; }
     .badge-count { background: #fff; color: var(--accent); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
 
     .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
@@ -149,48 +171,38 @@
     .modal-box { background: var(--bg-surface); border-radius: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 24px; color: var(--text-main); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; }
     .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; display: block;}
-    .form-help { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 400;}
-    .input-text { width: 100%; background: var(--bg-subsurface); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 14px; outline: none; }
+    .form-label { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;}
+    .form-help { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 400;}
+    .input-text { width: 100%; background: var(--bg-subsurface); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 14px; outline: none; transition: 0.2s;}
     .input-text:focus { border-color: var(--accent); background: var(--bg-surface);}
     .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 12px; }
 
-    .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 14px; }
+    .kanban-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
     .kanban-col { background: var(--bg-subsurface); border-radius: 16px; display: flex; flex-direction: column; min-height: 420px; }
     .col-header { padding: 16px; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .order-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-
+    
     .crm-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px;}
     @media(min-width: 768px) { .crm-grid { grid-template-columns: 1fr 2fr; } }
-    .crm-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; }
+    .crm-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; }
 
-    .img-upload-preview { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
+    .img-upload-preview { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
     .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
 
-    /* NOVO: Rodapé Profissional */
+    /* Rodapé Profissional Largo */
     .site-footer { margin-top: auto; padding: 40px 20px; background: var(--bg-surface); border-top: 1px solid var(--border-color); text-align: center; }
-    .footer-content { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .social-links { display: flex; gap: 16px; justify-content: center; }
-    .social-icon { font-size: 24px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .social-icon:hover { color: var(--text-main); }
-    .footer-copy { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;}
+    .social-icon { font-size: 24px; color: var(--text-muted); text-decoration: none; transition: transform 0.2s; }
+    .social-icon:hover { transform: scale(1.1); color: var(--accent); }
+    .footer-copy { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;}
     .link-lojista-hidden { background: none; border: none; color: inherit; cursor: pointer; padding: 4px; opacity: 0.5;}
     .link-lojista-hidden:hover { opacity: 1;}
   </style>
 </head>
 <body>
 
-  <script>
-    window.onerror = function(msg, url, line, col, error) {
-        const loading = document.getElementById('loading-produtos');
-        if(loading) loading.style.display = 'none';
-        const debug = document.getElementById('debug-console');
-        if(debug) { debug.style.display = 'block'; debug.innerHTML += `<p style="margin-bottom:8px;"><b>🚨 Erro Detectado (Linha ${line}):</b> ${msg}</p>`; }
-        return false; 
-    };
-  </script>
-
-  <!-- NAVEGAÇÃO SUPERIOR (Oculta para Cliente, Visível para Admin) -->
+  <!-- NAVEGAÇÃO SUPERIOR ADMIN (Oculta para Cliente) -->
   <header class="top-nav" id="main-header-nav">
     <div class="brand">Malik Admin</div>
     <div class="nav-tabs" id="main-nav-tabs">
@@ -199,7 +211,7 @@
       <button class="tab-btn admin-only" id="tab-estoque" onclick="mostrarAba('estoque')">Estoque</button>
       <button class="tab-btn admin-only" id="tab-crm" onclick="mostrarAba('crm')">Clientes</button>
       <button class="tab-btn admin-only" id="tab-cozinha" onclick="mostrarAba('cozinha')">Pedidos</button>
-      <button class="tab-btn admin-only" id="tab-config" onclick="mostrarAba('config')" style="color:var(--accent);">⚙️ Configurações</button>
+      <button class="tab-btn admin-only" id="tab-config" onclick="mostrarAba('config')" style="color:var(--accent);">⚙️ Config</button>
     </div>
 
     <div style="display:flex; align-items:center; gap:16px;">
@@ -214,7 +226,7 @@
   <!-- ABA: CARDÁPIO -->
   <section id="sec-cardapio" style="flex:1;">
     <div class="store-layout-container">
-        <!-- Banner e Logo -->
+        
         <div class="banner-container" id="loja-banner-view"></div>
         <div class="store-header">
           <div class="store-info-wrapper">
@@ -238,7 +250,7 @@
         </div>
     </div>
 
-    <!-- Categoria agora gruda no topo se o Header admin estiver invisível -->
+    <!-- Navegação de Categorias Gruda no Topo -->
     <div class="cat-nav-wrapper" id="sticky-cat-nav">
         <div class="cat-nav">
           <div class="cat-scroll" id="cat-list"></div>
@@ -246,22 +258,22 @@
     </div>
     
     <main class="container" style="padding-top: 0;">
-      <div id="loading-produtos" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:bold;">
+      
+      <!-- LOADING INFO E CAIXA DE ERRO SEGURO -->
+      <div id="loading-produtos" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:bold; font-size:16px;">
          🔄 Conectando ao Banco de Dados...
       </div>
-      <div id="debug-console" style="display:none; background:#fee2e2; color:#b91c1c; padding:20px; border-radius:12px; margin-top:20px; border: 2px solid #b91c1c; text-align:left; font-family:monospace; font-size:13px;"></div>
+      <div id="debug-console" style="display:none; background:#fee2e2; color:#b91c1c; padding:20px; border-radius:12px; margin-top:20px; border: 2px solid #b91c1c; text-align:left; font-size:14px;"></div>
+      
       <div class="grid-produtos" id="prod-list"></div>
+      
     </main>
 
-    <!-- NOVO: RODAPÉ DO CLIENTE (FOOTER) -->
     <footer class="site-footer">
         <div class="footer-content">
-            <div class="social-links" id="social-links-container">
-                <!-- Ícones injetados via JS -->
-            </div>
+            <div class="social-links" id="social-links-container"></div>
             <div class="footer-copy">
                 &copy; <span id="ano-atual"></span> <span id="footer-nome-loja">Malik</span>. Todos os direitos reservados.
-                <!-- Botão oculto do admin -->
                 <button class="link-lojista-hidden" onclick="abrirModalLogin()" title="Acesso Administrativo">⚙️</button>
             </div>
         </div>
@@ -271,55 +283,54 @@
   <!-- ABA: CONFIGURAÇÕES DA LOJA -->
   <section id="sec-config" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-      <div><h2 style="font-size:22px;">⚙️ Configurações da Loja</h2><p style="font-size:14px; color:var(--text-muted);">Altere a identidade visual e o endereço do seu delivery.</p></div>
+      <div><h2 style="font-size:24px;">⚙️ Configurações da Loja</h2><p style="font-size:14px; color:var(--text-muted);">Identidade visual e redes sociais.</p></div>
     </div>
 
-    <form onsubmit="salvarConfiguracoes(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:24px;">
+    <form onsubmit="salvarConfiguracoes(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
         
         <div class="form-group"><label class="form-label">Nome do Restaurante</label><input type="text" id="conf-nome" required class="input-text"></div>
         <div class="form-group"><label class="form-label">Endereço e Informações de Entrega (Topo da Página)</label><input type="text" id="conf-endereco" required class="input-text" placeholder="Ex: Rua XYZ, 123 - Centro • Entrega 35-50 min"></div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:24px; padding-top:24px; border-top:1px solid var(--border-color);">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; padding-top:24px; border-top:1px solid var(--border-color);">
             <div class="form-group">
                 <label class="form-label">Logomarca</label><span class="form-help">Formato Recomendado: Quadrado (Ex: 512x512px)</span>
-                <div class="file-input-wrapper" style="margin-top:8px;">
+                <div class="file-input-wrapper" style="margin-top:12px;">
                     <img id="conf-logo-preview" class="img-upload-preview" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:12px;" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64'); document.getElementById('conf-logo-preview').style.display='block';">
+                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64'); document.getElementById('conf-logo-preview').style.display='block';">
                         <input type="hidden" id="conf-logo-b64">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Formato Recomendado: Retangular (Ex: 1200x400px)</span>
-                <div class="file-input-wrapper" style="margin-top:8px;">
-                    <img id="conf-banner-preview" class="img-upload-preview" style="width:120px;" src="">
+                <div class="file-input-wrapper" style="margin-top:12px;">
+                    <img id="conf-banner-preview" class="img-upload-preview" style="width:140px;" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:12px;" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64'); document.getElementById('conf-banner-preview').style.display='block';">
+                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64'); document.getElementById('conf-banner-preview').style.display='block';">
                         <input type="hidden" id="conf-banner-b64">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- NOVO: Redes Sociais no Rodapé -->
-        <h3 style="font-size: 16px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 24px;">Redes Sociais (Rodapé)</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+        <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 20px; border-top: 1px solid var(--border-color); padding-top: 32px;">Redes Sociais (Rodapé)</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
             <div class="form-group"><label class="form-label">WhatsApp (Apenas Números)</label><input type="text" id="conf-whatsapp" class="input-text" placeholder="5511999999999"></div>
             <div class="form-group"><label class="form-label">Link do Instagram</label><input type="url" id="conf-instagram" class="input-text" placeholder="https://instagram.com/sua_loja"></div>
             <div class="form-group"><label class="form-label">Link do Facebook</label><input type="url" id="conf-facebook" class="input-text" placeholder="https://facebook.com/sua_loja"></div>
         </div>
 
-        <button type="submit" class="btn-submit" id="btn-submit-config" style="margin-top: 24px; max-width:250px;">Salvar Configurações</button>
+        <button type="submit" class="btn-submit" id="btn-submit-config" style="margin-top: 24px; max-width:300px;">Salvar Configurações</button>
     </form>
   </section>
 
   <!-- ABA: ADMINISTRAÇÃO DO CARDÁPIO -->
   <section id="sec-admin" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap:wrap; gap:16px;">
-      <div><h2 style="font-size:22px;">Gestão de Produtos</h2></div>
+      <div><h2 style="font-size:24px;">Gestão de Produtos</h2></div>
       <div style="display:flex; align-items:center; gap:12px; background:var(--bg-subsurface); padding:12px 20px; border-radius:12px;">
-        <span style="font-size:14px; font-weight:700;">Status do Restaurante:</span>
+        <span style="font-size:14px; font-weight:700;">Status da Loja:</span>
         <label class="switch"><input type="checkbox" id="toggle-mestre-loja" checked onchange="alterarStatusLojaAdmin(this.checked)"><span class="slider"></span></label>
         <span id="label-mestre-loja" style="font-size:14px; font-weight:700; color:var(--success);">Aberto</span>
       </div>
@@ -335,50 +346,50 @@
 
   <!-- ABA: CRM -->
   <section id="sec-crm" style="display:none;" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-      <h2 style="font-size:22px;">Métricas e Clientes</h2><button class="btn-excel" onclick="exportarClientesCSV()">⬇️ Exportar Excel</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+      <h2 style="font-size:24px;">Métricas e Clientes</h2><button class="btn-excel" onclick="exportarClientesCSV()">⬇️ Exportar Excel</button>
     </div>
     <div class="crm-grid">
-        <div class="crm-card"><h3 style="font-size: 16px; margin-bottom: 16px; color:var(--accent);">🔥 Top 5 Mais Vendidos</h3><table style="width: 100%;"><thead><tr><th>Produto</th><th style="text-align:right;">Qtd</th></tr></thead><tbody id="crm-top-produtos"></tbody></table></div>
-        <div class="crm-card"><h3 style="font-size: 16px; margin-bottom: 16px;">👥 Cadastro de Clientes</h3><div style="overflow-x: auto;"><table style="width: 100%; min-width: 500px;"><thead><tr><th>Nome</th><th>Telefone</th><th>Último Endereço</th><th style="text-align:center;">Pedidos</th><th style="text-align:right;">Gasto</th></tr></thead><tbody id="crm-lista-clientes"></tbody></table></div></div>
+        <div class="crm-card"><h3 style="font-size: 18px; margin-bottom: 20px; color:var(--accent);">🔥 Top 5 Mais Vendidos</h3><table style="width: 100%;"><thead><tr><th>Produto</th><th style="text-align:right;">Qtd</th></tr></thead><tbody id="crm-top-produtos"></tbody></table></div>
+        <div class="crm-card"><h3 style="font-size: 18px; margin-bottom: 20px;">👥 Cadastro de Clientes</h3><div style="overflow-x: auto;"><table style="width: 100%; min-width: 500px;"><thead><tr><th>Nome</th><th>Telefone</th><th>Último Endereço</th><th style="text-align:center;">Pedidos</th><th style="text-align:right;">Gasto</th></tr></thead><tbody id="crm-lista-clientes"></tbody></table></div></div>
     </div>
   </section>
 
   <!-- ABA: ESTOQUE -->
   <section id="sec-estoque" style="display:none;" class="container">
-    <div style="margin-bottom: 24px;"><h2 style="font-size:22px;">Controle de Estoque</h2></div>
+    <div style="margin-bottom: 24px;"><h2 style="font-size:24px;">Controle de Estoque</h2></div>
     <div class="table-container"><table><thead><tr><th>Item</th><th style="text-align:center;">Saldo</th><th style="text-align:center;">Status</th><th style="text-align:right;">Ações</th></tr></thead><tbody id="estoque-rows"></tbody></table></div>
   </section>
 
   <!-- ABA: CHECKOUT -->
   <section id="sec-checkout" style="display:none;" class="container">
-    <div style="max-width: 480px; margin: 0 auto;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-        <button onclick="mostrarAba('cardapio')" style="background:none; border:none; color:var(--accent); font-size:14px; font-weight:700; cursor:pointer;">← Voltar</button>
-        <h2 style="font-size:20px;">Finalizar Pedido</h2>
+    <div style="max-width: 500px; margin: 0 auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+        <button onclick="mostrarAba('cardapio')" style="background:none; border:none; color:var(--accent); font-size:15px; font-weight:700; cursor:pointer;">← Voltar</button>
+        <h2 style="font-size:22px;">Finalizar Pedido</h2>
       </div>
-      <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:24px; text-align:center; margin-bottom:16px;">
-        <div style="color:var(--success); font-weight:800; font-size:18px; margin-bottom:8px;">Pedido Concluído! Copie o Pix:</div>
-        <div id="pix-total" style="font-size:28px; font-weight:800; color:var(--text-main); margin-bottom:20px;" class="mono">R$ 0,00</div>
+      <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px; text-align:center; margin-bottom:24px;">
+        <div style="color:var(--success); font-weight:800; font-size:20px; margin-bottom:12px;">Pedido Concluído! Copie o Pix:</div>
+        <div id="pix-total" style="font-size:32px; font-weight:800; color:var(--text-main); margin-bottom:24px;" class="mono">R$ 0,00</div>
         <button type="button" onclick="alert('Pagamento via Pix confirmado no painel!')" class="btn-submit" style="background:var(--success);">Confirmar Pagamento</button>
       </div>
-      <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:24px;">
+      <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
         <div class="form-group">
           <label class="form-label">Modalidade de Entrega</label>
-          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
-            <button type="button" class="tab-btn active" id="btn-cons-deliv" onclick="setConsumo('delivery')" style="border:1px solid var(--border-color);">Entrega</button>
-            <button type="button" class="tab-btn" id="btn-cons-balcao" onclick="setConsumo('balcao')" style="border:1px solid var(--border-color);">Balcão</button>
-            <button type="button" class="tab-btn" id="btn-cons-mesa" onclick="setConsumo('mesa')" style="border:1px solid var(--border-color);">Mesa</button>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+            <button type="button" class="tab-btn active" id="btn-cons-deliv" onclick="setConsumo('delivery')" style="border:1px solid var(--border-color); padding:10px;">Entrega</button>
+            <button type="button" class="tab-btn" id="btn-cons-balcao" onclick="setConsumo('balcao')" style="border:1px solid var(--border-color); padding:10px;">Balcão</button>
+            <button type="button" class="tab-btn" id="btn-cons-mesa" onclick="setConsumo('mesa')" style="border:1px solid var(--border-color); padding:10px;">Mesa</button>
           </div>
         </div>
-        <div class="form-group"><input type="text" id="chk-nome" required placeholder="Seu Nome Completo" class="input-text" style="margin-bottom:12px;"><input type="tel" id="chk-tel" required placeholder="Telefone / WhatsApp" class="input-text"></div>
-        <div class="form-group" id="chk-endereco-box"><input type="text" id="chk-rua" placeholder="Endereço e Número" class="input-text" style="margin-bottom:12px;"><input type="text" id="chk-bairro" placeholder="Bairro" class="input-text"></div>
-        <div style="border-top:1px solid var(--border-color); padding-top:20px; margin-top:20px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px; color:var(--text-muted); font-size:14px;"><span>Subtotal:</span><span id="chk-sub" class="mono">R$ 0,00</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:16px; color:var(--text-muted); font-size:14px;"><span>Taxa de Entrega:</span><span id="chk-taxa" class="mono">R$ 7,00</span></div>
-          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 18px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 24px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
+        <div class="form-group"><input type="text" id="chk-nome" required placeholder="Seu Nome Completo" class="input-text" style="margin-bottom:16px;"><input type="tel" id="chk-tel" required placeholder="Telefone / WhatsApp" class="input-text"></div>
+        <div class="form-group" id="chk-endereco-box"><input type="text" id="chk-rua" placeholder="Endereço e Número" class="input-text" style="margin-bottom:16px;"><input type="text" id="chk-bairro" placeholder="Bairro" class="input-text"></div>
+        <div style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:24px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:12px; color:var(--text-muted); font-size:15px;"><span>Subtotal:</span><span id="chk-sub" class="mono">R$ 0,00</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:20px; color:var(--text-muted); font-size:15px;"><span>Taxa de Entrega:</span><span id="chk-taxa" class="mono">R$ 7,00</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 20px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 28px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
         </div>
-        <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 24px;">Confirmar Pedido</button>
+        <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
       </form>
     </div>
   </section>
@@ -386,7 +397,7 @@
   <!-- ABA: COZINHA -->
   <section id="sec-cozinha" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-      <h2 style="font-size:22px;">Pedidos</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:12px; font-weight:700; padding:8px 16px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
+      <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
     </div>
     <div class="kanban-grid" id="kanban-cols"></div>
   </section>
@@ -401,60 +412,58 @@
   <!-- MODAIS -->
   <div class="modal-overlay" id="modal-login" style="display:none; z-index: 9999;">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
-      <h2 style="font-size: 24px; margin-bottom: 8px;">Acesso Restrito</h2>
-      <p style="font-size: 14px; color:var(--text-muted); margin-bottom: 24px;">Painel exclusivo para gerentes.</p>
+      <h2 style="font-size: 26px; margin-bottom: 8px;">Acesso Restrito</h2>
+      <p style="font-size: 15px; color:var(--text-muted); margin-bottom: 24px;">Painel exclusivo para gerentes.</p>
       <form onsubmit="realizarLogin(event)">
-        <input type="email" id="login-email" required placeholder="E-mail" class="input-text" style="margin-bottom:12px; text-align:center;">
+        <input type="email" id="login-email" required placeholder="E-mail" class="input-text" style="margin-bottom:16px; text-align:center;">
         <input type="password" id="login-senha" required placeholder="Senha" class="input-text" style="text-align:center;">
-        <button type="submit" id="btn-login" class="btn-submit" style="margin-top: 20px;">Entrar</button>
+        <button type="submit" id="btn-login" class="btn-submit" style="margin-top: 24px;">Entrar</button>
       </form>
-      <button type="button" onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:13px; font-weight:600; cursor:pointer; margin-top:20px;">Voltar ao Cardápio</button>
+      <button type="button" onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:14px; font-weight:600; cursor:pointer; margin-top:24px;">Cancelar</button>
     </div>
   </div>
 
-  <!-- MODAL: NOVO PRODUTO -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
     <div class="modal-box" style="max-width: 600px;">
-      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:20px;">Configurar Produto</h3><button type="button" onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">✕</button></div>
+      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
       <form onsubmit="salvarProduto(event)">
-        
-        <div class="form-group" style="background:var(--bg-subsurface); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
+        <div class="form-group" style="background:var(--bg-subsurface); padding:20px; border-radius:12px; border:1px solid var(--border-color);">
             <label class="form-label" style="font-size:14px;">Foto do Produto</label>
             <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
                 <img id="novo-img-preview" class="img-upload-preview" src="">
                 <div style="flex:1;">
-                    <input type="text" id="novo-img" class="input-text" placeholder="Cole o link da foto aqui (URL)..." oninput="document.getElementById('novo-img-preview').src = this.value; document.getElementById('novo-img-preview').style.display = 'flex';" style="margin-bottom:12px; padding:10px;">
-                    <div style="font-size:11px; font-weight:700; margin-bottom:6px;">OU ESCOLHA UM ARQUIVO:</div>
-                    <input type="file" accept="image/png, image/jpeg" style="font-size:12px;" onchange="processarImagem(this, 'novo-img-preview', 'novo-img'); document.getElementById('novo-img-preview').style.display='flex';">
+                    <input type="text" id="novo-img" class="input-text" placeholder="Cole o link (URL) da foto..." oninput="document.getElementById('novo-img-preview').src = this.value; document.getElementById('novo-img-preview').style.display = 'flex';" style="margin-bottom:12px; padding:12px;">
+                    <div style="font-size:12px; font-weight:700; margin-bottom:8px;">OU ESCOLHA DO COMPUTADOR:</div>
+                    <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'novo-img-preview', 'novo-img'); document.getElementById('novo-img-preview').style.display='flex';">
                 </div>
             </div>
         </div>
 
         <div class="form-group"><label class="form-label">Nome do Item</label><input type="text" id="novo-nome" required class="input-text"></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
             <div class="form-group"><label class="form-label">Categoria</label><select id="novo-cat" class="input-text"><option value="pizzas">Pizzas</option><option value="esfihas">Esfihas</option><option value="bebidas">Bebidas</option><option value="doces">Doces</option></select></div>
             <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
-        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text"></div>
-        <div style="display:flex; align-items:center; background:var(--accent-soft); padding:16px; border-radius:12px; margin-bottom:20px; border:1px solid rgba(234, 29, 44, 0.3);">
+        <div class="form-group"><label class="form-label">Descrição (Aparece no Destaque)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha refrigerante 600ml"></div>
+        <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:12px; margin-bottom:24px; border:1px solid rgba(234, 29, 44, 0.3);">
             <label class="switch"><input type="checkbox" id="novo-destaque"><span class="slider"></span></label>
-            <div style="margin-left:12px;"><div style="font-size:15px; font-weight:800; color:var(--danger);">🌟 Destaque</div><div style="font-size:12px; color:var(--text-muted);">Aparece no carrossel superior.</div></div>
+            <div style="margin-left:16px;"><div style="font-size:16px; font-weight:800; color:var(--danger);">🌟 Destaque</div><div style="font-size:13px; color:var(--text-muted);">Aparece no carrossel superior largo.</div></div>
         </div>
-        <div style="background:var(--bg-subsurface); padding:16px; border-radius:12px; margin-bottom:20px;"><label class="form-label">Estoque Limitado (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono" placeholder="Deixe em branco se infinito"></div>
-        <button type="submit" class="btn-submit" id="btn-submit-produto">Salvar Alterações</button>
+        <div style="background:var(--bg-subsurface); padding:20px; border-radius:12px; margin-bottom:24px;"><label class="form-label">Estoque Limitado (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono" placeholder="Deixe em branco se infinito"></div>
+        <button type="submit" class="btn-submit" id="btn-submit-produto" style="font-size: 16px;">Salvar Alterações</button>
       </form>
     </div>
   </div>
 
   <div class="modal-overlay" id="modal-pizza" style="display:none;">
     <div class="modal-box">
-      <div class="modal-header"><h3 id="pizza-modal-nome">Montar Pizza</h3><button type="button" onclick="fecharModalPizza()" style="background:none; border:none; cursor:pointer; font-size:20px; font-weight:bold;">✕</button></div>
-      <div class="form-group"><label class="form-label">Tamanho</label><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"><button type="button" class="tab-btn active" id="tam-grande" onclick="setTamPizza('grande')" style="border:1px solid var(--border-color);">Grande</button><button type="button" class="tab-btn" id="tam-media" onclick="setTamPizza('media')" style="border:1px solid var(--border-color);">Média</button></div></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;"><span id="pizza-modal-total" class="mono" style="font-size:22px; font-weight:800; color:var(--accent);">R$ 0,00</span><button type="button" onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:12px 24px;">Adicionar</button></div>
+      <div class="modal-header"><h3 id="pizza-modal-nome" style="font-size: 22px;">Montar Pizza</h3><button type="button" onclick="fecharModalPizza()" style="background:none; border:none; cursor:pointer; font-size:24px; font-weight:bold;">✕</button></div>
+      <div class="form-group"><label class="form-label">Tamanho</label><div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"><button type="button" class="tab-btn active" id="tam-grande" onclick="setTamPizza('grande')" style="border:1px solid var(--border-color); padding: 12px;">Grande</button><button type="button" class="tab-btn" id="tam-media" onclick="setTamPizza('media')" style="border:1px solid var(--border-color); padding: 12px;">Média</button></div></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:24px; margin-top: 12px;"><span id="pizza-modal-total" class="mono" style="font-size:26px; font-weight:800; color:var(--accent);">R$ 0,00</span><button type="button" onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:14px 28px; font-size:15px;">Adicionar</button></div>
     </div>
   </div>
 
-  <!-- SCRIPT CENTRAL -->
+  <!-- SCRIPT CENTRAL E PROTEGIDO -->
   <script>
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
@@ -476,23 +485,33 @@
 
     document.getElementById('ano-atual').innerText = new Date().getFullYear();
 
+    // A ARQUITETURA BLINDADA
     async function ligarAplicativo() {
       try {
-          if (typeof window.supabase === 'undefined') throw new Error("Supabase bloqueado.");
+          if (typeof window.supabase === 'undefined') throw new Error("Supabase não carregou. Verifique sua conexão ou desative o bloqueador de anúncios.");
           malikDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
           
           document.documentElement.setAttribute('data-theme', 'light');
           renderCategorias(); 
           
-          await carregarConfigDaNuvem();
-          await verificarSessao();
-          await carregarProdutosDaNuvem();
-          await carregarPedidosDaNuvem();
+          // O "catch" interno permite que se uma função falhar silenciosamente, ela não pare a próxima!
+          await carregarConfigDaNuvem().catch(e => console.log("Config Error:", e));
+          await verificarSessao().catch(e => console.log("Sessao Error:", e));
+          await carregarProdutosDaNuvem().catch(e => console.log("Produtos Error:", e));
+          await carregarPedidosDaNuvem().catch(e => console.log("Pedidos Error:", e));
+          
           iniciarEscutaRealtime();
-
+      } catch (e) { 
+          console.error(e); 
+          const debug = document.getElementById('debug-console');
+          if(debug) { debug.style.display = 'block'; debug.innerHTML += `<p><b>Falha Crítica de Conexão:</b> ${e.message}</p>`; }
+      } finally {
           const loading = document.getElementById('loading-produtos');
           if(loading) loading.style.display = 'none';
-      } catch (e) { console.error(e); }
+          
+          // Força a renderização do cardápio vazio se a nuvem falhou
+          renderProdutos();
+      }
     }
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', ligarAplicativo); } else { ligarAplicativo(); }
@@ -519,7 +538,6 @@
         reader.readAsDataURL(file);
     }
 
-    // A mágica de ocultar coisas do cliente acontece aqui no verificarSessao e no atualizarUINavegacao
     async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session ? session.user : null; atualizarUINavegacao(); }
     
     function atualizarUINavegacao() { 
@@ -528,33 +546,25 @@
         const catNavSticky = document.getElementById('sticky-cat-nav');
 
         if (usuarioAtual) { 
-            // Admin Logado: Mostra o Menu Completo
             navSuperior.style.display = 'flex';
-            catNavSticky.style.top = '62px'; // Afasta o menu de categorias para não cobrir o header admin
-            
+            catNavSticky.style.top = '62px'; 
             document.getElementById('user-info').style.display = 'flex'; 
             document.getElementById('user-email').innerText = 'Admin'; 
-            document.getElementById('btn-footer-login').style.display = 'none'; 
             abasAdmin.forEach(el => el.style.display = 'inline-block'); 
         } else { 
-            // Visão Cliente: Some com o header administrativo
             navSuperior.style.display = 'none';
-            catNavSticky.style.top = '0px'; // Menu de categorias gruda no teto absoluto
-
+            catNavSticky.style.top = '0px'; 
             document.getElementById('user-info').style.display = 'none'; 
-            document.getElementById('btn-footer-login').style.display = 'inline-block'; 
             abasAdmin.forEach(el => el.style.display = 'none'); 
         } 
     }
 
-    // ===== TRATAMENTO DE CONFIGURAÇÕES (AGORA COM REDES SOCIAIS) =====
     async function carregarConfigDaNuvem() {
         const { data, error } = await malikDB.from('configuracoes').select('*').eq('restaurante_id', RESTAURANTE_ID).single();
         if (data) { CONFIG_LOJA = data; aplicarConfiguracoesNoVisual(); }
     }
 
     function aplicarConfiguracoesNoVisual() {
-        // Textos Iniciais
         const nomeFinal = CONFIG_LOJA.nome || 'Malik Culinária';
         document.getElementById('loja-nome-view').innerText = nomeFinal; 
         document.getElementById('footer-nome-loja').innerText = nomeFinal;
@@ -563,7 +573,6 @@
         document.getElementById('loja-endereco-view').innerText = CONFIG_LOJA.endereco || ''; 
         document.getElementById('conf-endereco').value = CONFIG_LOJA.endereco || '';
         
-        // Imagens
         if(CONFIG_LOJA.logo_url) { 
             document.getElementById('loja-logo-view').src = CONFIG_LOJA.logo_url; 
             document.getElementById('conf-logo-preview').src = CONFIG_LOJA.logo_url;
@@ -577,23 +586,18 @@
             document.getElementById('conf-banner-b64').value = CONFIG_LOJA.banner_url;
         }
 
-        // Redes Sociais no Formulário
-        // A propriedade "redes" será gravada como string no banco caso o Supabase não tenha coluna específica Json (usaremos a coluna 'descricao' extra como gambiarra ou podemos apenas garantir o parse)
         try {
-            // Se você quiser ser profissional, no futuro adicione as colunas (whatsapp, instagram, facebook) no banco
-            // Mas vamos fingir que elas existem na Tabela `configuracoes`.
             document.getElementById('conf-whatsapp').value = CONFIG_LOJA.whatsapp || '';
             document.getElementById('conf-instagram').value = CONFIG_LOJA.instagram || '';
             document.getElementById('conf-facebook').value = CONFIG_LOJA.facebook || '';
         } catch(e){}
 
-        // Renderiza Botões Sociais no Rodapé
         const containerRedes = document.getElementById('social-links-container');
         let htmlRedes = '';
         if(CONFIG_LOJA.whatsapp) htmlRedes += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`;
         if(CONFIG_LOJA.instagram) htmlRedes += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`;
         if(CONFIG_LOJA.facebook) htmlRedes += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`;
-        containerRedes.innerHTML = htmlRedes;
+        if(containerRedes) containerRedes.innerHTML = htmlRedes;
     }
 
     async function salvarConfiguracoes(e) {
@@ -609,16 +613,14 @@
             banner_url: document.getElementById('conf-banner-b64').value
         };
 
-        // Envia as Redes Sociais
         try {
-            // Nota: Para isso não dar erro, você precisa rodar aquele "ALTER TABLE" adicionando essas 3 colunas!
             dadosConfig.whatsapp = document.getElementById('conf-whatsapp').value;
             dadosConfig.instagram = document.getElementById('conf-instagram').value;
             dadosConfig.facebook = document.getElementById('conf-facebook').value;
         }catch(e){}
 
         const { error } = await malikDB.from('configuracoes').upsert(dadosConfig);
-        if(error) { alert('Erro! Certifique-se de que a tabela possui as colunas de redes sociais criadas. ' + error.message); } 
+        if(error) { alert('Erro: ' + error.message); } 
         else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
         btn.innerText = 'Salvar Configurações'; btn.disabled = false;
     }
@@ -663,6 +665,7 @@
     function setCat(id) { catAtiva = id; renderCategorias(); renderProdutos(); }
 
     function renderDestaques() {
+        if(!DADOS.produtos) return;
         const destaques = DADOS.produtos.filter(p => p.destaque === true);
         const box = document.getElementById('box-destaques'); const list = document.getElementById('destaques-list');
         
@@ -683,8 +686,10 @@
 
     function renderProdutos() {
       const el = document.getElementById('prod-list');
+      if(!DADOS.produtos) DADOS.produtos = [];
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
-      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 40px; grid-column: 1 / -1;">Nenhum item adicionado a esta categoria ainda.</div>'; return; }
+      
+      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 40px; grid-column: 1 / -1; font-size:16px;">Nenhum item adicionado a esta categoria ainda.</div>'; return; }
       
       let htmlFinal = '';
       list.forEach(p => {
@@ -696,10 +701,10 @@
         if(!lojaAberta) { acaoHTML = `<span style="font-size:12px; color:var(--text-muted); font-weight:600;">Fechado</span>`; } 
         else if (!p.ativo) { acaoHTML = `<span style="font-size:12px; color:var(--danger); font-weight:700;">Esgotado</span>`; } 
         else {
-            if(p.tipo === 'pizza') { acaoHTML = `<button onclick="abrirPizzaModal('${p.id}')" style="background:transparent; border:1px solid var(--border-color); padding: 6px 14px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Montar</button>`; } 
+            if(p.tipo === 'pizza') { acaoHTML = `<button onclick="abrirPizzaModal('${p.id}')" style="background:transparent; border:1px solid var(--border-color); padding: 8px 16px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Montar</button>`; } 
             else {
                 if (qtd > 0) { acaoHTML = `<div class="stepper"><button class="stepper-btn" onclick="alterarQtd('${p.id}', -1)">-</button><span class="stepper-val mono">${qtd}</span><button class="stepper-btn" onclick="alterarQtd('${p.id}', 1)">+</button></div>`; } 
-                else { acaoHTML = `<button onclick="alterarQtd('${p.id}', 1)" style="background:transparent; border:1px solid var(--border-color); padding: 6px 14px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Adicionar</button>`; }
+                else { acaoHTML = `<button onclick="alterarQtd('${p.id}', 1)" style="background:transparent; border:1px solid var(--border-color); padding: 8px 16px; border-radius:8px; font-weight:700; color:var(--text-main); cursor:pointer;">Adicionar</button>`; }
             }
         }
         
@@ -751,7 +756,6 @@
       e.preventDefault();
       const btn = document.getElementById('btn-submit-produto'); btn.innerText = 'Salvando...'; btn.disabled = true;
       const estQtd = document.getElementById('novo-estoque').value; const precoF = parseFloat(document.getElementById('novo-preco').value) || 0;
-      
       const imgFinal = document.getElementById('novo-img').value; 
 
       const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null };
@@ -770,19 +774,22 @@
 
     function renderAdmin() {
       let htmlFinal = '';
-      DADOS.produtos.forEach(p => {
-        const precoF = parseFloat(p.preco) || 0; 
-        const img = (p.img_url) ? `<img src="${p.img_url}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;">` : `<div style="width:44px; height:44px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">🍽️</div>`;
-        const opacity = p.ativo !== false ? '1' : '0.5';
-        const checkedDest = p.destaque === true ? 'checked' : '';
-        const checkedAtiv = p.ativo !== false ? 'checked' : '';
+      if(DADOS.produtos) {
+          DADOS.produtos.forEach(p => {
+            const precoF = parseFloat(p.preco) || 0; 
+            const img = (p.img_url) ? `<img src="${p.img_url}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;">` : `<div style="width:44px; height:44px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">🍽️</div>`;
+            const opacity = p.ativo !== false ? '1' : '0.5';
+            const checkedDest = p.destaque === true ? 'checked' : '';
+            const checkedAtiv = p.ativo !== false ? 'checked' : '';
 
-        htmlFinal += `<tr style="opacity: ${opacity};"><td>${img}</td><td><b>${p.nome || 'Produto'}</b></td><td>${p.categoria}</td><td class="mono-td">R$ ${precoF.toFixed(2)}</td><td style="text-align:center;"><input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;"></td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)"><span class="slider"></span></label></td><td><div style="display:flex; gap:8px; justify-content:flex-end;"><button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;">✏️</button><button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;">🗑️</button></div></td></tr>`;
-      });
+            htmlFinal += `<tr style="opacity: ${opacity};"><td>${img}</td><td><b>${p.nome || 'Produto'}</b></td><td>${p.categoria}</td><td class="mono-td">R$ ${precoF.toFixed(2)}</td><td style="text-align:center;"><input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;"></td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)"><span class="slider"></span></label></td><td><div style="display:flex; gap:8px; justify-content:flex-end;"><button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;">✏️</button><button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;">🗑️</button></div></td></tr>`;
+          });
+      }
       document.getElementById('admin-prod-rows').innerHTML = htmlFinal;
     }
 
     function renderEstoque() { 
+      if(!DADOS.produtos) return;
       const itensEstoque = DADOS.produtos.filter(p => p.estoque !== null || p.ativo === false);
       if(itensEstoque.length === 0) { document.getElementById('estoque-rows').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color:var(--text-muted);">Nenhum item com limite de estoque.</td></tr>`; return; }
       let htmlFinal = '';
