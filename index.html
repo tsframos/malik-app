@@ -283,8 +283,8 @@
           <svg viewBox="0 0 100 100" width="100%" height="100%"><path fill="#000" d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z M40,10 h20 v10 h-20 z M10,40 h10 v20 h-10 z M40,40 h20 v20 h-20 z M70,40 h10 v30 h-10 z M40,70 h20 v10 h-20 z M70,80 h20 v20 h-20 z M80,60 h20 v10 h-20 z"/></svg>
         </div>
         <div id="pix-total" style="font-size:24px; font-weight:900; color:var(--accent); margin-bottom:16px;" class="mono">R$ 0,00</div>
-        <button onclick="copiarPix()" style="width:100%; background:var(--bg-subsurface); border:1px solid var(--border-color); color:var(--text-main); padding:12px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:10px;">Copiar Chave</button>
-        <button onclick="confirmarPixPago()" style="width:100%; background:var(--success); color:#fff; border:none; padding:14px; border-radius:12px; font-size:13px; font-weight:900; cursor:pointer;">Simular Pagamento Confirmado</button>
+        <button type="button" onclick="copiarPix()" style="width:100%; background:var(--bg-subsurface); border:1px solid var(--border-color); color:var(--text-main); padding:12px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:10px;">Copiar Chave</button>
+        <button type="button" onclick="confirmarPixPago()" style="width:100%; background:var(--success); color:#fff; border:none; padding:14px; border-radius:12px; font-size:13px; font-weight:900; cursor:pointer;">Simular Pagamento Confirmado</button>
       </div>
 
       <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:20px;">
@@ -337,7 +337,7 @@
         <span id="status-nuvem" style="font-size:10px; font-family:'JetBrains Mono',monospace; background:var(--bg-subsurface); color:var(--text-muted); padding:6px 10px; border-radius:8px; display:flex; align-items:center;">
           <span style="width:6px; height:6px; background:gray; border-radius:50%; display:inline-block; margin-right:6px;" id="dot-nuvem"></span> Conectando...
         </span>
-        <button onclick="testeBeepNativo()" style="background:var(--bg-surface); border:1px solid var(--border-color); color:var(--success); font-size:12px; font-weight:800; padding:6px 12px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme iFood</button>
+        <button type="button" onclick="testeBeepNativo()" style="background:var(--bg-surface); border:1px solid var(--border-color); color:var(--success); font-size:12px; font-weight:800; padding:6px 12px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme iFood</button>
       </div>
     </div>
     <div class="kanban-grid" id="kanban-cols"></div>
@@ -387,7 +387,7 @@
       </form>
       
       <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
-        <button onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:12px; cursor:pointer; margin-top:4px;">Cancelar e voltar ao Cardápio</button>
+        <button type="button" onclick="fecharModalLogin()" style="background:transparent; border:none; color:var(--text-muted); font-size:12px; cursor:pointer; margin-top:4px;">Cancelar e voltar ao Cardápio</button>
       </div>
     </div>
   </div>
@@ -399,7 +399,7 @@
     <div class="modal-box">
       <div class="modal-header">
         <h3 id="pizza-modal-nome" style="font-size:18px; color:var(--accent);">Montar Pizza</h3>
-        <button onclick="fecharModalPizza()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
+        <button type="button" onclick="fecharModalPizza()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
       <div class="form-group">
         <label class="form-label">1. Tamanho</label>
@@ -422,7 +422,7 @@
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
         <span id="pizza-modal-total" class="mono" style="font-size:22px; font-weight:800; color:var(--accent);">R$ 0,00</span>
-        <button onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:12px 24px;">Adicionar</button>
+        <button type="button" onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:12px 24px;">Adicionar</button>
       </div>
     </div>
   </div>
@@ -434,7 +434,7 @@
     <div class="modal-box" style="max-width: 600px;">
       <div class="modal-header">
         <h3 id="modal-produto-titulo" style="font-size:18px; color:var(--accent);">Configurar Produto</h3>
-        <button onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
+        <button type="button" onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
       <form onsubmit="salvarProduto(event)">
         
@@ -612,24 +612,46 @@
     }
 
     // ==========================================
-    // ÁUDIO IFOOD SINTETIZADO
+    // ÁUDIO IFOOD SINTETIZADO (CORRIGIDO)
     // ==========================================
+    let audioCtx = null;
+    
+    function inicializarAudio() {
+      // Cria o contexto de áudio apenas uma vez
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      // Se o navegador suspender o áudio (comum em celulares), nós forçamos o "resume"
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
     function testeBeepNativo() {
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        inicializarAudio(); // Acorda o áudio do navegador
+        
         function playNote(freq, startTime, duration) {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
-          gain.gain.setValueAtTime(0.1, ctx.currentTime + startTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + startTime); osc.stop(ctx.currentTime + startTime + duration);
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime + startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTime + duration);
+          osc.connect(gain); 
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + startTime); 
+          osc.stop(audioCtx.currentTime + startTime + duration);
         }
-        playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15);
-      } catch (e) {}
+        
+        // Toca dois bipes curtos e agudos (estilo campainha)
+        playNote(1046.50, 0, 0.15); 
+        playNote(1046.50, 0.25, 0.15);
+      } catch (e) {
+        console.error("Áudio bloqueado pelo navegador", e);
+      }
     }
+    
     function beep() { testeBeepNativo(); }
 
     // ==========================================
@@ -861,6 +883,27 @@
     // ==========================================
     // CHECKOUT E ENVIAR PEDIDO
     // ==========================================
+    
+    // CORREÇÃO: Função setConsumo corrigida para o Balcão e Mesa
+    function setConsumo(c) { 
+      tipoConsumo = c; 
+      
+      // 1. Atualiza as cores dos botões
+      document.getElementById('btn-cons-deliv').classList.remove('active');
+      document.getElementById('btn-cons-balcao').classList.remove('active');
+      document.getElementById('btn-cons-mesa').classList.remove('active');
+      
+      if(c === 'delivery') document.getElementById('btn-cons-deliv').classList.add('active');
+      if(c === 'balcao') document.getElementById('btn-cons-balcao').classList.add('active');
+      if(c === 'mesa') document.getElementById('btn-cons-mesa').classList.add('active');
+
+      // 2. Esconde/Mostra os campos de Endereço
+      document.getElementById('chk-endereco-box').style.display = (c === 'delivery') ? 'block' : 'none';
+      
+      // 3. Atualiza os totais se não for delivery
+      abrirCheckout(); 
+    }
+
     async function enviarPedido(e) {
       e.preventDefault();
       const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
@@ -881,7 +924,7 @@
       const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'No Forno', cor: 'var(--accent)' }, { id: 'entrega', t: 'Em Entrega', cor: '#3b82f6' }, { id: 'fim', t: 'Concluído', cor: 'var(--success)' }];
       document.getElementById('kanban-cols').innerHTML = cols.map(c => {
         const list = pedidos.filter(p => p.status === c.id);
-        return `<div class="kanban-col"><div class="col-header" style="color:${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div class="col-body">${list.map(p => `<div class="order-card ${p.status==='novo'?'novo':''}"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><span class="order-id" style="color:var(--accent); font-size:18px; font-weight:800;">#${p.codigo_curto}</span></div><div class="order-client-name">${p.cliente}</div><div class="order-item-row">${p.itens.map(i => `<div><span class="order-item-text"><span class="mono" style="color:var(--accent);">${i.qtd}x</span> ${i.nome}</span></div>`).join('')}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="mono" style="font-weight:800; font-size:15px;">R$ ${parseFloat(p.total).toFixed(2)}</span><div style="display:flex; gap:6px;">${p.status === 'novo' ? `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--accent); color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer;">Aceitar</button>` : ''}${p.status === 'preparando' ? `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer;">Despachar</button>` : ''}</div></div></div>`).join('')}</div></div>`;
+        return `<div class="kanban-col"><div class="col-header" style="color:${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div class="col-body">${list.map(p => `<div class="order-card ${p.status==='novo'?'novo':''}"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><span class="order-id" style="color:var(--accent); font-size:18px; font-weight:800;">#${p.codigo_curto}</span></div><div class="order-client-name"><b>${p.tipo_entrega.toUpperCase()}</b> -${p.cliente}</div><div class="order-item-row">${p.itens.map(i => `<div><span class="order-item-text"><span class="mono" style="color:var(--accent);">${i.qtd}x</span> ${i.nome}</span></div>`).join('')}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="mono" style="font-weight:800; font-size:15px;">R$ ${parseFloat(p.total).toFixed(2)}</span><div style="display:flex; gap:6px;">${p.status === 'novo' ? `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--accent); color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer;">Aceitar</button>` : ''}${p.status === 'preparando' ? `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer;">Despachar</button>` : ''}</div></div></div>`).join('')}</div></div>`;
       }).join('');
     }
 
@@ -907,13 +950,18 @@
       sacola.push({ prodId: pizzaAtual.id, nome: `Pizza ${tamPizza.toUpperCase()}`, det: '', qtd: 1, preco: parseFloat(document.getElementById('pizza-modal-total').innerText.replace('R$ ', '').replace(',', '.')) });
       fecharModalPizza(); atualizarSacolaBar();
     }
+    
     function abrirCheckout() {
       mostrarAba('checkout');
       const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
       document.getElementById('chk-sub').innerText = `R$ ${sub.toFixed(2)}`;
-      document.getElementById('chk-tot').innerText = `R$ ${(sub + (tipoConsumo === 'delivery' ? 7 : 0)).toFixed(2)}`;
+      
+      // O total e a taxa variam conforme a escolha (delivery ou não)
+      const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00;
+      document.getElementById('chk-taxa').innerText = `R$ ${taxa.toFixed(2)}`;
+      document.getElementById('chk-tot').innerText = `R$ ${(sub + taxa).toFixed(2)}`;
     }
-    function setConsumo(c) { tipoConsumo = c; abrirCheckout(); }
+    
     function renderEstoque() { document.getElementById('estoque-rows').innerHTML = DADOS.produtos.filter(p => p.estoque !== null).map(p => `<tr><td><b>${p.nome}</b></td><td class="mono" style="text-align:center;">${p.estoque}</td><td></td><td></td></tr>`).join(''); }
   </script>
 </body>
