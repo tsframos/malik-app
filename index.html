@@ -16,7 +16,7 @@
       --bg-body: #ffffff;
       --bg-surface: #ffffff;
       --bg-subsurface: #f7f7f7;
-      --border-color: #e5e5e5; /* Borda um pouco mais sutil e cinza */
+      --border-color: #e5e5e5; 
       --text-main: #3e3e3e;
       --text-muted: #717171;
       --accent: #ea1d2c;
@@ -56,35 +56,15 @@
     #user-info { display: none; align-items: center; gap: 8px; }
     .theme-toggle-btn { background: var(--bg-subsurface); border: none; color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
 
-    /* Layout Centralizado da Loja (Estilo iFood) */
-    .store-layout-container {
-        max-width: 900px;
-        margin: 0 auto;
-        width: 100%;
-    }
+    .store-layout-container { max-width: 900px; margin: 0 auto; width: 100%; }
 
-    /* NOVO: Capa e Logo (Ajustado para Desktop) */
-    .banner-container { 
-        width: 100%; 
-        height: 200px; /* Um pouco mais alto */
-        background-color: var(--bg-subsurface); 
-        background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop'); 
-        background-size: cover; 
-        background-position: center;
-        border-radius: 0; /* Celular sem borda */
-    }
-    
-    @media(min-width: 768px) {
-        .banner-container {
-            margin-top: 24px;
-            border-radius: 8px; /* Arredondado no Desktop */
-            height: 250px;
-        }
-    }
+    /* Capa e Logo */
+    .banner-container { width: 100%; height: 200px; background-color: var(--bg-subsurface); background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 0; }
+    @media(min-width: 768px) { .banner-container { margin-top: 24px; border-radius: 8px; height: 250px; } }
 
     .store-header { padding: 0 16px 24px 16px; background: transparent; }
     .store-info-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-top: -40px; }
-    .store-logo { width: 88px; height: 88px; border-radius: 50%; /* Logo redonda estilo iFood */ border: 4px solid var(--bg-body); background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
+    .store-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-body); background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
     
     .store-details { padding-top: 48px; flex: 1;}
     .store-title-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;}
@@ -92,8 +72,28 @@
     .badge-open { font-size: 11px; background: rgba(80, 167, 115, 0.15); color: var(--success); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .badge-closed { font-size: 11px; background: rgba(234, 29, 44, 0.15); color: var(--danger); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    .store-desc { font-size: 14px; color: var(--text-muted); margin-top: 6px; font-weight: 400; display:none; /* iFood esconde a descrição na home principal */}
+    .store-desc { font-size: 14px; color: var(--text-muted); margin-top: 6px; font-weight: 400; display:none; }
     .store-address { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 4px;}
+
+    /* NOVO: SLIDER DE DESTAQUES ESTILO IFOOD */
+    .destaques-box { padding: 24px 16px 8px 16px; position: relative; }
+    .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-behavior: smooth; }
+    .destaques-scroll::-webkit-scrollbar { display: none; }
+    
+    .destaque-card { min-width: 280px; max-width: 280px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s;}
+    .destaque-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px);}
+    .destaque-img { width: 100%; height: 140px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
+    .destaque-info { padding: 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;}
+    .destaque-nome { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
+    .destaque-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; min-height: 36px;}
+    .destaque-preco { font-size: 15px; font-weight: 800; color: #50a773; /* Verde para destacar preço como no ifood */}
+
+    /* Setas do Slider */
+    .slider-arrow { position: absolute; top: 60%; transform: translateY(-50%); width: 40px; height: 40px; background: #fff; border: 1px solid var(--border-color); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-weight: bold; color: var(--text-muted); font-size: 18px; transition: all 0.2s;}
+    .slider-arrow:hover { background: var(--bg-subsurface); color: var(--text-main); }
+    .slider-prev { left: 0px; }
+    .slider-next { right: 0px; }
+    @media(max-width: 768px) { .slider-arrow { display: none; } } /* Oculta setas no celular */
 
     /* Menu Horizontal */
     .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 62px; z-index: 40; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
@@ -103,42 +103,18 @@
     .cat-btn { background: var(--bg-subsurface); border: none; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .cat-btn.active { background: var(--text-main); color: var(--bg-surface); }
 
-    /* DESTAQUES HORIZONTAL */
-    .destaques-box { padding: 24px 16px 8px 16px; }
-    .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px;}
-    .destaques-scroll::-webkit-scrollbar { display: none; }
-    .destaque-card { min-width: 220px; max-width: 220px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0;}
-    .destaque-img { width: 100%; height: 130px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
-    .destaque-info { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;}
-    .destaque-nome { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
-    .destaque-preco { font-size: 15px; font-weight: 800; color: var(--accent); }
-
-    /* NOVO: Grid de Produtos (1 coluna mobile, 2 colunas desktop) */
+    /* Grid de Produtos (1 coluna mobile, 2 colunas desktop) */
     .container { max-width: 900px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
-    
-    .grid-produtos { 
-        display: grid; 
-        grid-template-columns: 1fr; /* Padrão Celular: 1 coluna */
-        gap: 0; 
-    }
+    .grid-produtos { display: grid; grid-template-columns: 1fr; gap: 0; }
     
     .prod-card { display: flex; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); gap: 16px; text-decoration: none; cursor: pointer; background: transparent; border-radius: 0;}
     .prod-card:hover { opacity: 0.8; }
     .prod-card:last-child { border-bottom: none; }
     
-    /* Configuração Desktop (2 Colunas com Borda) */
     @media(min-width: 768px) {
-        .grid-produtos {
-            grid-template-columns: 1fr 1fr; /* Desktop: 2 colunas */
-            gap: 20px;
-            padding-top: 16px;
-        }
-        .prod-card {
-            border: 1px solid var(--border-color); /* Borda ao redor do card inteiro */
-            border-radius: 8px; /* Arredondamento suave */
-            padding: 16px; /* Ajuste de espaçamento interno */
-        }
-        .prod-card:last-child { border-bottom: 1px solid var(--border-color); } /* Restaura borda inferior no último item do grid */
+        .grid-produtos { grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 16px; }
+        .prod-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
+        .prod-card:last-child { border-bottom: 1px solid var(--border-color); } 
     }
     
     .prod-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
@@ -237,6 +213,7 @@
   <section id="sec-cardapio" style="flex:1;">
     
     <div class="store-layout-container">
+        <!-- BANNER E LOGO CENTRALIZADOS -->
         <div class="banner-container"></div>
         <div class="store-header">
           <div class="store-info-wrapper">
@@ -251,9 +228,18 @@
           </div>
         </div>
         
+        <!-- DESTAQUES COM SLIDER IFOOD -->
         <div class="destaques-box" id="box-destaques" style="display:none;">
-          <h2 style="font-size: 18px; margin-bottom: 12px; color:var(--text-main);">🌟 Destaques da Casa</h2>
-          <div class="destaques-scroll" id="destaques-list"></div>
+          <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color:var(--text-main);">Destaques</h2>
+          
+          <div style="position: relative;">
+              <!-- Setas de navegação exclusivas para Desktop -->
+              <button class="slider-arrow slider-prev" onclick="rolarDestaques(-1)">❮</button>
+              
+              <div class="destaques-scroll" id="destaques-list"></div>
+              
+              <button class="slider-arrow slider-next" onclick="rolarDestaques(1)">❯</button>
+          </div>
         </div>
     </div>
 
@@ -271,7 +257,7 @@
           <h3 style="margin-bottom:10px;">O aplicativo encontrou um bloqueio técnico:</h3>
       </div>
       
-      <!-- O Grid de Produtos (1 coluna mobile, 2 colunas desktop) -->
+      <!-- Grid de Produtos Responsivo -->
       <div class="grid-produtos" id="prod-list"></div>
       
     </main>
@@ -406,7 +392,7 @@
             <div class="form-group"><label class="form-label">Categoria</label><select id="novo-cat" class="input-text"><option value="pizzas">Pizzas</option><option value="esfihas">Esfihas</option><option value="bebidas">Bebidas</option><option value="doces">Doces</option></select></div>
             <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
-        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text"></div>
+        <div class="form-group"><label class="form-label">Descrição (Aparece no Destaque)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha refrigerante 600ml"></div>
         <div style="background:var(--bg-subsurface); padding:16px; border-radius:12px; margin-bottom:20px;"><label class="form-label">Estoque Limitado (Opcional)</label><input type="number" id="novo-estoque" class="input-text mono" placeholder="Deixe em branco se infinito"></div>
         <button type="submit" class="btn-submit" id="btn-submit-produto">Salvar Alterações</button>
       </form>
@@ -467,6 +453,13 @@
 
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', ligarAplicativo); } else { ligarAplicativo(); }
 
+    // Função de Rolagem do Slider de Destaques
+    function rolarDestaques(direcao) {
+        const container = document.getElementById('destaques-list');
+        const scrollAmount = 300; // Avança cerca de 1 card por clique
+        container.scrollBy({ left: direcao * scrollAmount, behavior: 'smooth' });
+    }
+
     function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
     function alterarStatusLojaAdmin(status) { lojaAberta = status; const labelAdmin = document.getElementById('label-mestre-loja'); if(status) { labelAdmin.innerText = 'Aberto'; labelAdmin.style.color = 'var(--success)'; } else { labelAdmin.innerText = 'Fechado'; labelAdmin.style.color = 'var(--danger)'; } const badgeCliente = document.getElementById('badge-status-loja-cliente'); if(status) { badgeCliente.innerText = 'Aberto'; badgeCliente.className = 'badge-open'; } else { badgeCliente.innerText = 'Fechado'; badgeCliente.className = 'badge-closed'; } renderProdutos(); renderDestaques(); }
 
@@ -507,7 +500,7 @@
     function renderCategorias() { document.getElementById('cat-list').innerHTML = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">${c.nome}</button>`).join(''); }
     function setCat(id) { catAtiva = id; renderCategorias(); renderProdutos(); }
 
-    // RENDER DESTAQUES SEGURO
+    // RENDER DESTAQUES ATUALIZADO (CÓPIA DO IFOOD)
     function renderDestaques() {
         const destaques = DADOS.produtos.filter(p => p.destaque === true);
         const box = document.getElementById('box-destaques');
@@ -527,10 +520,23 @@
                     if (p.tipo === 'pizza') { onclickCode = `abrirPizzaModal('${p.id}')`; } else { onclickCode = `alterarQtd('${p.id}', 1)`; }
                 }
 
-                const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '<span style="font-size:16px; color:var(--accent);">+</span>';
+                const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
 
-                htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div class="destaque-nome">${p.nome || 'Produto'}</div><div style="display:flex; justify-content:space-between; align-items:center;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2)}</span>${selo}</div></div></div>`;
+                htmlDestaques += `
+                <div class="destaque-card" style="${opacity}" onclick="${onclickCode}">
+                    ${img}
+                    <div class="destaque-info">
+                        <div>
+                            <div class="destaque-nome">${p.nome || 'Produto'}</div>
+                            <div class="destaque-desc">${p.descricao || ''}</div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                            <span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>
+                            ${selo}
+                        </div>
+                    </div>
+                </div>`;
             });
             list.innerHTML = htmlDestaques;
         } else {
@@ -538,7 +544,7 @@
         }
     }
 
-    // RENDER PRODUTOS SEGURO (COM A ESTRUTURA DE 2 COLUNAS DO IFOOD)
+    // RENDER PRODUTOS (2 COLUNAS DESKTOP)
     function renderProdutos() {
       const el = document.getElementById('prod-list');
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
@@ -577,7 +583,19 @@
         const destaqueSelo = p.destaque === true ? '<span class="tag-destaque">Destaque</span>' : '';
         const opacity = !isDisponivel ? 'opacity:0.5' : '';
 
-        htmlFinal += `<div class="prod-card" style="${opacity}"><div class="prod-content"><div class="prod-name">${nomeFinal} ${destaqueSelo}</div><div class="prod-desc">${p.descricao || ''}</div><div class="prod-bottom"><span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span><div style="margin-left:auto;">${acaoHTML}</div></div></div><div class="prod-img-wrap">${img}</div></div>`;
+        htmlFinal += `
+          <div class="prod-card" style="${opacity}">
+            <div class="prod-content">
+              <div class="prod-name">${nomeFinal} ${destaqueSelo}</div>
+              <div class="prod-desc">${p.descricao || ''}</div>
+              <div class="prod-bottom">
+                <span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>
+                <div style="margin-left:auto;">${acaoHTML}</div>
+              </div>
+            </div>
+            <div class="prod-img-wrap">${img}</div>
+          </div>
+        `;
       });
       el.innerHTML = htmlFinal;
     }
