@@ -42,7 +42,7 @@
     h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-submit, .modal-header h3 { font-family: 'Outfit', sans-serif; font-weight: 800; }
     .mono { font-variant-numeric: tabular-nums; font-weight: 700;}
 
-    /* Barra de Navegação Admin (Oculta Cliente) */
+    /* Barra de Navegação Admin */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: none; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
     .brand { font-size: 18px; color: var(--accent); display: none; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     .nav-tabs { display: flex; gap: 4px; background: var(--bg-subsurface); padding: 4px; border-radius: 12px; flex-wrap: wrap; margin: 0 auto;}
@@ -171,10 +171,14 @@
     .img-upload-preview { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
     .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
 
-    .admin-cat-pill { background: var(--bg-subsurface); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;}
+    /* CSS DO REORDENAMENTO DE CATEGORIAS */
+    .admin-cat-pill { background: var(--bg-subsurface); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 100px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;}
     .admin-cat-pill.active { background: var(--text-main); color: var(--bg-surface); border-color: var(--text-main);}
     .admin-cat-pill .remove-cat { background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: inherit; cursor: pointer; font-size: 10px;}
     .admin-cat-pill .remove-cat:hover { background: var(--danger); color: #fff;}
+    
+    .admin-cat-pill .move-cat { background: transparent; border: none; color: inherit; cursor: pointer; font-size: 14px; padding: 2px 4px; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
+    .admin-cat-pill .move-cat:hover:not([disabled]) { color: var(--accent); transform: scale(1.2); }
     
     .crm-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px;}
     @media(min-width: 768px) { .crm-grid { grid-template-columns: 1fr 2fr; } }
@@ -182,6 +186,15 @@
   </style>
 </head>
 <body>
+
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+        const loading = document.getElementById('loading-produtos');
+        if(loading) loading.style.display = 'none';
+        console.error("🚨 Erro Detectado:", msg);
+        return false; 
+    };
+  </script>
 
   <!-- NAVEGAÇÃO SUPERIOR ADMIN (Oculta para Cliente) -->
   <header class="top-nav" id="main-header-nav">
@@ -203,7 +216,7 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 1. ABA: CARDÁPIO (PÚBLICA - ESTILO OLACLICK)                              -->
+  <!-- 1. ABA: CARDÁPIO (PÚBLICA)                                                -->
   <!-- ========================================================================= -->
   <section id="sec-cardapio" style="flex:1;">
     <div class="store-layout-container">
@@ -232,7 +245,6 @@
         </div>
     </div>
 
-    <!-- Categorias Dinâmicas no Topo -->
     <div class="cat-nav-wrapper" id="sticky-cat-nav">
         <div class="cat-nav">
           <div class="cat-scroll" id="cat-list"></div>
@@ -272,11 +284,15 @@
       </div>
     </div>
 
+    <!-- GESTÃO DE CATEGORIAS -->
     <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:20px; margin-bottom:24px;">
-        <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase;">Navegar e Editar Categorias</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Navegar e Ordenar Categorias</div>
+            <div style="font-size:12px; color:var(--text-muted);">Use as setas para mover.</div>
+        </div>
         
-        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;" id="admin-cat-list">
-            <!-- Categorias Injetadas aqui -->
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;" id="admin-cat-list">
+            <!-- Categorias Injetadas aqui com botões de setas -->
         </div>
 
         <div style="display:flex; gap:8px; align-items:center; border-top:1px solid var(--border-color); padding-top:16px;">
@@ -287,7 +303,6 @@
     
     <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:18px;" id="admin-cat-title">Produtos nesta categoria</h3>
-        <!-- Botão Modificado para já abrir na categoria ativa correta -->
         <button class="btn-submit" style="width:auto; padding:10px 20px; margin:0; border-radius:10px;" onclick="abrirModalProduto()">+ Novo Produto Aqui</button>
     </div>
     
@@ -392,7 +407,6 @@
     </div>
   </section>
 
-  <!-- SEÇÃO DA COZINHA QUE ESTAVA VAZANDO -->
   <section id="sec-cozinha" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
       <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
@@ -418,6 +432,7 @@
           <h3 style="font-size:22px;">Informações</h3>
           <button type="button" onclick="fecharModalInfoLoja()" style="background:none; border:none; cursor:pointer; font-size:24px;">✕</button>
       </div>
+      
       <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border-color);">
           <img id="info-modal-logo" src="" style="width:64px; height:64px; border-radius:12px; object-fit:cover; border:1px solid var(--border-color);">
           <div>
@@ -425,10 +440,12 @@
               <div id="info-modal-status" class="badge-open">ABERTO</div>
           </div>
       </div>
+
       <div class="info-modal-row">
           <div class="info-modal-icon">📍</div>
           <div id="info-modal-endereco">Endereço</div>
       </div>
+
       <h4 style="font-size:16px; font-weight:800; margin-top:32px; margin-bottom:16px;">Tipos de Serviço</h4>
       <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px; margin-bottom:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
@@ -461,7 +478,7 @@
     </div>
   </div>
 
-  <!-- MODAL: NOVO PRODUTO REFEITO PARA EVITAR O BUG DO NOME COMPOSTO -->
+  <!-- MODAL: NOVO PRODUTO -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
     <div class="modal-box" style="max-width: 600px;">
       <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="document.getElementById('modal-novo-produto').style.display='none'" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
@@ -485,7 +502,7 @@
             <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
         
-        <div class="form-group"><label class="form-label">Descrição (Aparece no Destaque e na Lista)</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha molho especial"></div>
+        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha molho especial"></div>
         
         <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:16px; margin-bottom:24px; border:1px solid rgba(217, 45, 32, 0.2);">
             <label class="switch"><input type="checkbox" id="novo-destaque"><span class="slider"></span></label>
@@ -511,9 +528,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- SCRIPT CENTRAL E LÓGICA DE DADOS                                          -->
-  <!-- ========================================================================= -->
+  <!-- SCRIPT CENTRAL BLINDADO E LÓGICA DE REORDENAÇÃO -->
   <script>
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
@@ -533,7 +548,7 @@
 
     async function ligarAplicativo() {
       try {
-          if (typeof window.supabase === 'undefined') return;
+          if (typeof window.supabase === 'undefined') throw new Error("Supabase bloqueado.");
           malikDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
           document.documentElement.setAttribute('data-theme', 'light');
           
@@ -578,16 +593,16 @@
         reader.readAsDataURL(file);
     }
 
-    // CATEGORIAS DINÂMICAS
+    // ===== CATEGORIAS DINÂMICAS COM REORDENAÇÃO =====
     async function carregarCategorias() {
         const { data, error } = await malikDB.from('categorias').select('*').eq('restaurante_id', RESTAURANTE_ID).order('ordem', { ascending: true });
         if (data && data.length > 0) { 
             DADOS.categorias = data.filter(c => c.ativa !== false);
-            if(!catAtiva) catAtiva = DADOS.categorias[0].nome;
+            if(!catAtiva || !DADOS.categorias.find(c => c.nome === catAtiva)) catAtiva = DADOS.categorias[0].nome;
             renderCategoriasUI();
             renderAdminCategorias();
         } else {
-            DADOS.categorias = [{ id: '1', nome: 'Pizzas' }, { id: '2', nome: 'Esfihas' }, { id: '3', nome: 'Bebidas' }];
+            DADOS.categorias = [{ id: '1', nome: 'Pizzas', ordem: 1 }, { id: '2', nome: 'Esfihas', ordem: 2 }];
             catAtiva = 'Pizzas';
             renderCategoriasUI();
         }
@@ -607,12 +622,20 @@
     function renderAdminCategorias() {
         const listaEl = document.getElementById('admin-cat-list');
         if(!listaEl) return;
-        listaEl.innerHTML = DADOS.categorias.map(c => `
-            <div class="admin-cat-pill ${catAtiva === c.nome ? 'active' : ''}" onclick="setCat('${c.nome}')">
-                ${c.nome}
+        
+        listaEl.innerHTML = DADOS.categorias.map((c, index) => {
+            const isFirst = index === 0;
+            const isLast = index === DADOS.categorias.length - 1;
+            
+            return `
+            <div class="admin-cat-pill ${catAtiva === c.nome ? 'active' : ''}" style="display:flex; align-items:center; gap:8px;">
+                <button type="button" onclick="moverCategoriaAdmin('${c.id}', -1, event)" class="move-cat" ${isFirst ? 'disabled style="opacity:0.3"' : ''} title="Mover para Esquerda">❮</button>
+                <span onclick="setCat('${c.nome}')" style="cursor:pointer; flex:1; text-align:center;">${c.nome}</span>
+                <button type="button" onclick="moverCategoriaAdmin('${c.id}', 1, event)" class="move-cat" ${isLast ? 'disabled style="opacity:0.3"' : ''} title="Mover para Direita">❯</button>
+                <div style="width:1px; height:12px; background:var(--border-color); margin:0 4px;"></div>
                 <button type="button" onclick="excluirCategoriaAdmin('${c.id}', event)" class="remove-cat" title="Excluir Categoria">✕</button>
             </div>
-        `).join('');
+        `}).join('');
         
         const titleCat = document.getElementById('admin-cat-title');
         if(titleCat) titleCat.innerText = `Produtos em: ${catAtiva}`;
@@ -622,6 +645,7 @@
         const input = document.getElementById('nova-cat-nome');
         const nomeNova = input.value.trim();
         if(!nomeNova) return;
+        
         const novaCatDB = { restaurante_id: RESTAURANTE_ID, nome: nomeNova, ordem: DADOS.categorias.length + 1, ativa: true };
         await malikDB.from('categorias').insert([novaCatDB]);
         input.value = '';
@@ -637,7 +661,34 @@
         }
     }
 
-    // SESSÃO E NAVEGAÇÃO
+    async function moverCategoriaAdmin(id, direcao, event) {
+        event.stopPropagation();
+        
+        const index = DADOS.categorias.findIndex(c => c.id === id);
+        if(index === -1) return;
+        
+        const novaPos = index + direcao;
+        if(novaPos < 0 || novaPos >= DADOS.categorias.length) return;
+        
+        // Troca posições no array
+        const temp = DADOS.categorias[index];
+        DADOS.categorias[index] = DADOS.categorias[novaPos];
+        DADOS.categorias[novaPos] = temp;
+        
+        // Reatribui as ordens corretamente para não haver furos
+        DADOS.categorias.forEach((c, i) => { c.ordem = i + 1; });
+        
+        // Atualiza a tela imediatamente (visual fluído)
+        renderCategoriasUI();
+        renderAdminCategorias();
+        
+        // Salva silenciosamente no banco
+        for (const c of DADOS.categorias) {
+            await malikDB.from('categorias').update({ ordem: c.ordem }).eq('id', c.id);
+        }
+    }
+
+    // ===== SESSÃO =====
     async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session ? session.user : null; atualizarUINavegacao(); }
     
     function atualizarUINavegacao() { 
@@ -663,7 +714,6 @@
     async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
     async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); mostrarAba('cardapio'); }
 
-    // Correção: A função mostrarAba agora esconde TODAS as seções para evitar sobreposição (incluindo a Cozinha)
     function mostrarAba(aba) {
       ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
       const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
@@ -715,6 +765,7 @@
 
         const containerRedesRodape = document.getElementById('social-links-container');
         const containerRedesTopo = document.getElementById('client-social-links');
+        
         let htmlTopo = ''; let htmlRodape = '';
         if(CONFIG_LOJA.whatsapp) { htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-circle">📱</a>`; htmlRodape += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`; }
         if(CONFIG_LOJA.instagram) { htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-circle">📸</a>`; htmlRodape += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`; }
@@ -742,7 +793,8 @@
         }catch(e){}
 
         const { error } = await malikDB.from('configuracoes').upsert(dadosConfig);
-        if(error) { alert('Erro! ' + error.message); } else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
+        if(error) { alert('Erro! ' + error.message); } 
+        else { alert('Loja atualizada com sucesso!'); await carregarConfigDaNuvem(); }
         btn.innerText = 'Salvar Todas as Configurações'; btn.disabled = false;
     }
 
@@ -778,8 +830,8 @@
                 const precoF = parseFloat(p.preco) || 0;
                 const img = (p.img_url) ? `<img src="${p.img_url}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
                 const isDisponivel = p.ativo !== false && lojaAberta;
-                let onclickCode = ''; if (isDisponivel) { if (p.tipo === 'pizza') { onclickCode = `abrirPizzaModal('${p.id}')`; } else { onclickCode = `alterarQtd('${p.id}', 1)`; } }
-                const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '';
+                let onclickCode = ''; if (isDisponivel) { onclickCode = `alterarQtd('${p.id}', 1)`; }
+                const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
                 
                 htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${p.nome || 'Produto'}</div><div class="destaque-desc">${p.descricao || ''}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
@@ -831,28 +883,26 @@
       else bar.style.display = 'none';
     }
 
-    // Modal de Edição Consertado!
+    // Editar Produto: Abre no card atual e corrige o bug de nome composto!
     function abrirModalProduto(id = null) {
       produtoEmEdicaoId = id; const t = document.getElementById('modal-produto-titulo');
       
       document.getElementById('novo-img-preview').src = ''; document.getElementById('novo-img-preview').style.display = 'none'; document.getElementById('novo-img').value = '';
       
       if (id) {
-        t.innerText = 'Editar Produto'; 
-        const p = DADOS.produtos.find(i => i.id === id);
+        t.innerText = 'Editar Produto'; const p = DADOS.produtos.find(i => i.id === id);
         if(p.img_url) { document.getElementById('novo-img-preview').src = p.img_url; document.getElementById('novo-img-preview').style.display = 'flex'; document.getElementById('novo-img').value = p.img_url; }
         
         document.getElementById('novo-nome').value = p.nome || '';
-        document.getElementById('novo-cat').value = p.categoria || catAtiva; // Puxa diretamente sem querySelector falho
+        document.getElementById('novo-cat').value = p.categoria || catAtiva; 
         document.getElementById('novo-preco').value = p.preco || '';
-        document.getElementById('novo-desc').value = p.descricao || ''; 
-        document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
+        document.getElementById('novo-desc').value = p.descricao || ''; document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
         document.getElementById('novo-destaque').checked = p.destaque === true;
       } else {
         t.innerText = 'Novo Produto';
         document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = ''; document.getElementById('novo-desc').value = ''; document.getElementById('novo-estoque').value = ''; document.getElementById('novo-destaque').checked = false;
         
-        // Categoria inteligente: já abre na aba atual do admin
+        // Puxa com segurança a categoria atual para já facilitar o cadastro
         document.getElementById('novo-cat').value = catAtiva || (DADOS.categorias.length > 0 ? DADOS.categorias[0].nome : '');
       }
       document.getElementById('modal-novo-produto').style.display = 'flex';
@@ -883,6 +933,7 @@
       let htmlFinal = '';
       if(DADOS.produtos) {
           const produtosDaCategoria = DADOS.produtos.filter(p => p.categoria === catAtiva);
+          
           if(produtosDaCategoria.length === 0) {
               htmlFinal = `<tr><td colspan="7" style="text-align:center; padding: 24px; color:var(--text-muted);">Nenhum produto cadastrado nesta categoria.</td></tr>`;
           } else {
@@ -897,10 +948,7 @@
                 htmlFinal += `
                 <tr style="opacity: ${opacity};">
                     <td>${img}</td>
-                    <td>
-                        <b>${p.nome || 'Produto'}</b>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${p.categoria}</div>
-                    </td>
+                    <td><b>${p.nome || 'Produto'}</b></td>
                     <td class="mono-td">R$ ${precoF.toFixed(2)}</td>
                     <td style="text-align:center;">
                         <input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;">
@@ -925,6 +973,7 @@
       renderAdminCategorias(); 
     }
 
+    // CHECKOUT
     function setConsumo(c) { 
       tipoConsumo = c; 
       ['btn-cons-deliv', 'btn-cons-balcao', 'btn-cons-mesa'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; });
@@ -946,6 +995,11 @@
       await malikDB.from('pedidos').insert([novoPedidoDB]); sacola = [];
       document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`;
     }
+
+    let audioCtx = null;
+    function inicializarAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if (audioCtx.state === 'suspended') { audioCtx.resume(); } }
+    function testeBeepNativo() { try { inicializarAudio(); function playNote(freq, start, dur) { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start); gain.gain.setValueAtTime(0.1, audioCtx.currentTime + start); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + start + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(audioCtx.currentTime + start); osc.stop(audioCtx.currentTime + start + dur); } playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15); } catch (e) {} }
+    function beep() { testeBeepNativo(); }
 
     function renderKanban() {
       const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
@@ -992,11 +1046,7 @@
         const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "malik_clientes_crm.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    function abrirPizzaModal(id) { pizzaAtual = DADOS.produtos.find(p => p.id === id); document.getElementById('pizza-modal-nome').innerText = pizzaAtual.nome || 'Pizza'; calcPizzaModal(); document.getElementById('modal-pizza').style.display = 'flex'; }
-    function fecharModalPizza() { document.getElementById('modal-pizza').style.display = 'none'; }
-    function setTamPizza(t) { tamPizza = t; ['tam-grande', 'tam-media'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; }); const btn = document.getElementById('tam-' + t); if(btn) { btn.classList.add('active'); btn.style.background = 'var(--bg-subsurface)'; btn.style.color = 'var(--text-main)'; } calcPizzaModal(); }
-    function calcPizzaModal() { let preco = parseFloat(pizzaAtual.preco) || 0; const tot = preco * (tamPizza === 'media' ? 1.0 : 1.25); document.getElementById('pizza-modal-total').innerText = `R$ ${tot.toFixed(2).replace('.', ',')}`; }
-    function adicionarPizzaCarrinho() { sacola.push({ prodId: pizzaAtual.id, nome: `Pizza ${tamPizza.toUpperCase()}`, det: '', qtd: 1, preco: parseFloat(document.getElementById('pizza-modal-total').innerText.replace('R$ ', '').replace(',', '.')) }); fecharModalPizza(); atualizarSacolaBar(); }
+    function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
 
   </script>
 </body>
