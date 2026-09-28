@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Biblioteca do Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -17,7 +16,7 @@
       --bg-body: #ffffff;
       --bg-surface: #ffffff;
       --bg-subsurface: #f7f7f7;
-      --border-color: #f0f0f0;
+      --border-color: #e5e5e5; /* Borda um pouco mais sutil e cinza */
       --text-main: #3e3e3e;
       --text-muted: #717171;
       --accent: #ea1d2c;
@@ -45,6 +44,7 @@
     h1, h2, h3, h4, h5, h6, .brand, .store-title, .btn-sacola, .btn-submit, .cat-btn, .modal-header h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
     .mono, .badge-time, #chk-sub, #chk-taxa, #chk-tot, #pix-total, .order-id, .stepper-val, .badge-count, td.mono-td { font-family: 'JetBrains Mono', monospace !important; letter-spacing: -0.5px; }
 
+    /* Barra de Navegação */
     .top-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
     .brand { font-weight: 800; font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
     
@@ -56,40 +56,90 @@
     #user-info { display: none; align-items: center; gap: 8px; }
     .theme-toggle-btn { background: var(--bg-subsurface); border: none; color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
 
-    .banner-container { width: 100%; height: 160px; background-color: var(--bg-subsurface); background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop'); background-size: cover; background-position: center; }
-    .store-header { padding: 0 16px 24px 16px; background: var(--bg-surface); }
-    .store-info-wrapper { max-width: 900px; margin: 0 auto; display: flex; gap: 20px; align-items: flex-start; margin-top: -30px; }
-    .store-logo { width: 72px; height: 72px; border-radius: 12px; border: 4px solid var(--bg-surface); background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
+    /* Layout Centralizado da Loja (Estilo iFood) */
+    .store-layout-container {
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* NOVO: Capa e Logo (Ajustado para Desktop) */
+    .banner-container { 
+        width: 100%; 
+        height: 200px; /* Um pouco mais alto */
+        background-color: var(--bg-subsurface); 
+        background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop'); 
+        background-size: cover; 
+        background-position: center;
+        border-radius: 0; /* Celular sem borda */
+    }
     
-    .store-details { padding-top: 38px; flex: 1;}
+    @media(min-width: 768px) {
+        .banner-container {
+            margin-top: 24px;
+            border-radius: 8px; /* Arredondado no Desktop */
+            height: 250px;
+        }
+    }
+
+    .store-header { padding: 0 16px 24px 16px; background: transparent; }
+    .store-info-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-top: -40px; }
+    .store-logo { width: 88px; height: 88px; border-radius: 50%; /* Logo redonda estilo iFood */ border: 4px solid var(--bg-body); background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); object-fit: cover; flex-shrink: 0; }
+    
+    .store-details { padding-top: 48px; flex: 1;}
     .store-title-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;}
-    .store-title { font-size: 24px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
+    .store-title { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px;}
     .badge-open { font-size: 11px; background: rgba(80, 167, 115, 0.15); color: var(--success); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .badge-closed { font-size: 11px; background: rgba(234, 29, 44, 0.15); color: var(--danger); padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    .store-desc { font-size: 14px; color: var(--text-muted); margin-top: 6px; font-weight: 400; }
+    .store-desc { font-size: 14px; color: var(--text-muted); margin-top: 6px; font-weight: 400; display:none; /* iFood esconde a descrição na home principal */}
     .store-address { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 4px;}
 
-    .cat-nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); padding: 12px 16px; position: sticky; top: 62px; z-index: 40; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
-    .cat-scroll { max-width: 900px; margin: 0 auto; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+    /* Menu Horizontal */
+    .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 62px; z-index: 40; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
+    .cat-nav { max-width: 900px; margin: 0 auto; padding: 12px 16px;}
+    .cat-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
     .cat-scroll::-webkit-scrollbar { display: none; }
     .cat-btn { background: var(--bg-subsurface); border: none; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .cat-btn.active { background: var(--text-main); color: var(--bg-surface); }
 
-    .destaques-box { max-width: 900px; margin: 0 auto; padding: 24px 16px 8px 16px; }
+    /* DESTAQUES HORIZONTAL */
+    .destaques-box { padding: 24px 16px 8px 16px; }
     .destaques-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px;}
     .destaques-scroll::-webkit-scrollbar { display: none; }
-    .destaque-card { min-width: 150px; max-width: 150px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0;}
-    .destaque-img { width: 100%; height: 110px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
+    .destaque-card { min-width: 220px; max-width: 220px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; flex-shrink: 0;}
+    .destaque-img { width: 100%; height: 130px; object-fit: cover; background: var(--bg-subsurface); display:flex; align-items:center; justify-content:center; font-size:32px;}
     .destaque-info { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;}
-    .destaque-nome { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
-    .destaque-preco { font-size: 14px; font-weight: 800; color: var(--accent); }
+    .destaque-nome { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.2;}
+    .destaque-preco { font-size: 15px; font-weight: 800; color: var(--accent); }
 
+    /* NOVO: Grid de Produtos (1 coluna mobile, 2 colunas desktop) */
     .container { max-width: 900px; margin: 0 auto; padding: 16px; flex: 1; width: 100%; }
-    .grid-produtos { display: flex; flex-direction: column; gap: 0; }
+    
+    .grid-produtos { 
+        display: grid; 
+        grid-template-columns: 1fr; /* Padrão Celular: 1 coluna */
+        gap: 0; 
+    }
+    
     .prod-card { display: flex; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); gap: 16px; text-decoration: none; cursor: pointer; background: transparent; border-radius: 0;}
     .prod-card:hover { opacity: 0.8; }
     .prod-card:last-child { border-bottom: none; }
+    
+    /* Configuração Desktop (2 Colunas com Borda) */
+    @media(min-width: 768px) {
+        .grid-produtos {
+            grid-template-columns: 1fr 1fr; /* Desktop: 2 colunas */
+            gap: 20px;
+            padding-top: 16px;
+        }
+        .prod-card {
+            border: 1px solid var(--border-color); /* Borda ao redor do card inteiro */
+            border-radius: 8px; /* Arredondamento suave */
+            padding: 16px; /* Ajuste de espaçamento interno */
+        }
+        .prod-card:last-child { border-bottom: 1px solid var(--border-color); } /* Restaura borda inferior no último item do grid */
+    }
     
     .prod-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
     .prod-name { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display:flex; align-items:center; gap:6px;}
@@ -97,7 +147,7 @@
     .prod-price { font-size: 15px; font-weight: 600; color: var(--text-main); }
     .prod-bottom { display: flex; align-items: center; gap: 12px; margin-top: auto;}
 
-    .prod-img-wrap { width: 120px; height: 120px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: var(--bg-subsurface); display: flex; align-items: center; justify-content: center; font-size: 32px;}
+    .prod-img-wrap { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: var(--bg-subsurface); display: flex; align-items: center; justify-content: center; font-size: 32px;}
     .prod-img { width: 100%; height: 100%; object-fit: cover; }
     .tag-destaque { background: var(--accent); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
 
@@ -185,27 +235,32 @@
 
   <!-- ABA: CARDÁPIO -->
   <section id="sec-cardapio" style="flex:1;">
-    <div class="banner-container"></div>
-    <div class="store-header">
-      <div class="store-info-wrapper">
-        <img src="https://ui-avatars.com/api/?name=Malik+Culinária&background=ea1d2c&color=fff&size=150" class="store-logo" alt="Logo Malik">
-        <div class="store-details">
-          <div class="store-title-row">
-            <h1 class="store-title">Malik Culinária <span class="badge-open" id="badge-status-loja-cliente">Aberto</span></h1>
-          </div>
-          <p class="store-desc">Pizzas artesanais, esfihas recheadas e bebidas geladas.</p>
-          <div class="store-address">📍 Rua das Esfihas, 123 - Centro, São Paulo • 🛵 35-50 min</div>
-        </div>
-      </div>
-    </div>
     
-    <div class="destaques-box" id="box-destaques" style="display:none;">
-      <h2 style="font-size: 18px; margin-bottom: 12px; color:var(--text-main);">🌟 Destaques da Casa</h2>
-      <div class="destaques-scroll" id="destaques-list"></div>
+    <div class="store-layout-container">
+        <div class="banner-container"></div>
+        <div class="store-header">
+          <div class="store-info-wrapper">
+            <img src="https://ui-avatars.com/api/?name=Malik+Culinária&background=ea1d2c&color=fff&size=150" class="store-logo" alt="Logo Malik">
+            <div class="store-details">
+              <div class="store-title-row">
+                <h1 class="store-title">Malik Culinária <span class="badge-open" id="badge-status-loja-cliente">Aberto</span></h1>
+              </div>
+              <p class="store-desc">Pizzas artesanais, esfihas recheadas e bebidas geladas.</p>
+              <div class="store-address">📍 Rua das Esfihas, 123 - Centro, São Paulo • 🛵 35-50 min</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="destaques-box" id="box-destaques" style="display:none;">
+          <h2 style="font-size: 18px; margin-bottom: 12px; color:var(--text-main);">🌟 Destaques da Casa</h2>
+          <div class="destaques-scroll" id="destaques-list"></div>
+        </div>
     </div>
 
-    <div class="cat-nav">
-      <div class="cat-scroll" id="cat-list"></div>
+    <div class="cat-nav-wrapper">
+        <div class="cat-nav">
+          <div class="cat-scroll" id="cat-list"></div>
+        </div>
     </div>
     
     <main class="container" style="padding-top: 0;">
@@ -215,7 +270,10 @@
       <div id="debug-console" style="display:none; background:#fee2e2; color:#b91c1c; padding:20px; border-radius:12px; margin-top:20px; border: 2px solid #b91c1c; text-align:left; font-family:monospace; font-size:13px;">
           <h3 style="margin-bottom:10px;">O aplicativo encontrou um bloqueio técnico:</h3>
       </div>
+      
+      <!-- O Grid de Produtos (1 coluna mobile, 2 colunas desktop) -->
       <div class="grid-produtos" id="prod-list"></div>
+      
     </main>
 
     <div class="footer-discreto">
@@ -472,17 +530,7 @@
                 const selo = !isDisponivel ? '<span style="font-size:9px; color:var(--danger); font-weight:800;">OFF</span>' : '<span style="font-size:16px; color:var(--accent);">+</span>';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
 
-                htmlDestaques += `
-                <div class="destaque-card" style="${opacity}" onclick="${onclickCode}">
-                    ${img}
-                    <div class="destaque-info">
-                        <div class="destaque-nome">${p.nome || 'Produto'}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span class="destaque-preco mono">R$ ${precoF.toFixed(2)}</span>
-                            ${selo}
-                        </div>
-                    </div>
-                </div>`;
+                htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div class="destaque-nome">${p.nome || 'Produto'}</div><div style="display:flex; justify-content:space-between; align-items:center;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2)}</span>${selo}</div></div></div>`;
             });
             list.innerHTML = htmlDestaques;
         } else {
@@ -490,13 +538,13 @@
         }
     }
 
-    // RENDER PRODUTOS SEGURO
+    // RENDER PRODUTOS SEGURO (COM A ESTRUTURA DE 2 COLUNAS DO IFOOD)
     function renderProdutos() {
       const el = document.getElementById('prod-list');
       const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
       
       if (list.length === 0) { 
-          el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 40px;">Nenhum item adicionado a esta categoria ainda.</div>'; 
+          el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 40px; grid-column: 1 / -1;">Nenhum item adicionado a esta categoria ainda.</div>'; 
           return; 
       }
       
@@ -529,19 +577,7 @@
         const destaqueSelo = p.destaque === true ? '<span class="tag-destaque">Destaque</span>' : '';
         const opacity = !isDisponivel ? 'opacity:0.5' : '';
 
-        htmlFinal += `
-          <div class="prod-card" style="${opacity}">
-            <div class="prod-content">
-              <div class="prod-name">${nomeFinal} ${destaqueSelo}</div>
-              <div class="prod-desc">${p.descricao || ''}</div>
-              <div class="prod-bottom">
-                <span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>
-                <div style="margin-left:auto;">${acaoHTML}</div>
-              </div>
-            </div>
-            <div class="prod-img-wrap">${img}</div>
-          </div>
-        `;
+        htmlFinal += `<div class="prod-card" style="${opacity}"><div class="prod-content"><div class="prod-name">${nomeFinal} ${destaqueSelo}</div><div class="prod-desc">${p.descricao || ''}</div><div class="prod-bottom"><span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span><div style="margin-left:auto;">${acaoHTML}</div></div></div><div class="prod-img-wrap">${img}</div></div>`;
       });
       el.innerHTML = htmlFinal;
     }
@@ -605,61 +641,18 @@
         const checkedDest = p.destaque === true ? 'checked' : '';
         const checkedAtiv = p.ativo !== false ? 'checked' : '';
 
-        htmlFinal += `
-        <tr style="opacity: ${opacity};">
-            <td>${img}</td>
-            <td><b>${p.nome || 'Produto'}</b></td>
-            <td>${p.categoria}</td>
-            <td class="mono-td">R$ ${precoF.toFixed(2)}</td>
-            <td style="text-align:center;">
-                <input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;">
-            </td>
-            <td style="text-align:center;">
-                <label class="switch">
-                    <input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)">
-                    <span class="slider"></span>
-                </label>
-            </td>
-            <td>
-                <div style="display:flex; gap:8px; justify-content:flex-end;">
-                    <button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;">✏️</button>
-                    <button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;">🗑️</button>
-                </div>
-            </td>
-        </tr>`;
+        htmlFinal += `<tr style="opacity: ${opacity};"><td>${img}</td><td><b>${p.nome || 'Produto'}</b></td><td>${p.categoria}</td><td class="mono-td">R$ ${precoF.toFixed(2)}</td><td style="text-align:center;"><input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;"></td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)"><span class="slider"></span></label></td><td><div style="display:flex; gap:8px; justify-content:flex-end;"><button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;">✏️</button><button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;">🗑️</button></div></td></tr>`;
       });
       document.getElementById('admin-prod-rows').innerHTML = htmlFinal;
     }
 
     function renderEstoque() { 
       const itensEstoque = DADOS.produtos.filter(p => p.estoque !== null || p.ativo === false);
-      if(itensEstoque.length === 0) {
-          document.getElementById('estoque-rows').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color:var(--text-muted);">Nenhum item com limite de estoque.</td></tr>`;
-          return;
-      }
-      
+      if(itensEstoque.length === 0) { document.getElementById('estoque-rows').innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color:var(--text-muted);">Nenhum item com limite de estoque.</td></tr>`; return; }
       let htmlFinal = '';
       itensEstoque.forEach(p => {
-          const opacity = p.ativo !== false ? '1' : '0.5';
-          const qty = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '∞';
-          const checkedAtiv = p.ativo !== false ? 'checked' : '';
-
-          htmlFinal += `
-          <tr style="opacity: ${opacity};">
-              <td><b>${p.nome || 'Produto'}</b><div style="font-size:11px; color:var(--text-muted);">${p.categoria}</div></td>
-              <td class="mono" style="text-align:center; font-size:16px;">${qty}</td>
-              <td style="text-align:center;">
-                  <label class="switch">
-                      <input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)">
-                      <span class="slider"></span>
-                  </label>
-              </td>
-              <td>
-                  <div style="display:flex; justify-content:flex-end;">
-                      <button onclick="abrirModalProduto('${p.id}')" style="background:transparent; border:1px solid var(--border-color); padding:6px 12px; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px;">Editar Estoque</button>
-                  </div>
-              </td>
-          </tr>`;
+          const opacity = p.ativo !== false ? '1' : '0.5'; const qty = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '∞'; const checkedAtiv = p.ativo !== false ? 'checked' : '';
+          htmlFinal += `<tr style="opacity: ${opacity};"><td><b>${p.nome || 'Produto'}</b><div style="font-size:11px; color:var(--text-muted);">${p.categoria}</div></td><td class="mono" style="text-align:center; font-size:16px;">${qty}</td><td style="text-align:center;"><label class="switch"><input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)"><span class="slider"></span></label></td><td><div style="display:flex; justify-content:flex-end;"><button onclick="abrirModalProduto('${p.id}')" style="background:transparent; border:1px solid var(--border-color); padding:6px 12px; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px;">Editar Estoque</button></div></td></tr>`;
       });
       document.getElementById('estoque-rows').innerHTML = htmlFinal;
     }
@@ -688,53 +681,19 @@
 
     function renderKanban() {
       const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
-      
       let htmlFinal = '';
       cols.forEach(c => {
           const list = pedidos.filter(p => p.status === c.id);
-          
           let cardsHtml = '';
           list.forEach(p => {
-              const itensSeguros = Array.isArray(p.itens) ? p.itens : []; 
-              const totalF = parseFloat(p.total) || 0;
-              
-              let itensListHtml = '';
-              itensSeguros.forEach(i => {
-                  itensListHtml += `<div style="margin-bottom:4px; font-size:12px;"><span class="mono" style="color:var(--text-muted);">${i.qtd}x</span> ${i.nome}</div>`;
-              });
-
+              const itensSeguros = Array.isArray(p.itens) ? p.itens : []; const totalF = parseFloat(p.total) || 0;
+              let itensListHtml = ''; itensSeguros.forEach(i => { itensListHtml += `<div style="margin-bottom:4px; font-size:12px;"><span class="mono" style="color:var(--text-muted);">${i.qtd}x</span> ${i.nome}</div>`; });
               let acoesHtml = '';
-              if (p.status === 'novo') {
-                  acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`;
-              } else if (p.status === 'preparando') {
-                  acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`;
-              }
-
-              cardsHtml += `
-              <div class="order-card">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                      <span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span>
-                      <span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span>
-                  </div>
-                  <div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div>
-                  <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div>
-                  <div>${itensListHtml}</div>
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);">
-                      <span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span>
-                      <div style="display:flex; gap:6px;">${acoesHtml}</div>
-                  </div>
-              </div>`;
+              if (p.status === 'novo') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`; } 
+              else if (p.status === 'preparando') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`; }
+              cardsHtml += `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span><span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span></div><div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div><div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div><div>${itensListHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);"><span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span><div style="display:flex; gap:6px;">${acoesHtml}</div></div></div>`;
           });
-
-          htmlFinal += `
-          <div class="kanban-col">
-              <div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};">
-                  <span>${c.t}</span><span class="mono">${list.length}</span>
-              </div>
-              <div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">
-                  ${cardsHtml}
-              </div>
-          </div>`;
+          htmlFinal += `<div class="kanban-col"><div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">${cardsHtml}</div></div>`;
       });
       document.getElementById('kanban-cols').innerHTML = htmlFinal;
     }
@@ -752,23 +711,10 @@
             const itensSeguros = Array.isArray(p.itens) ? p.itens : [];
             itensSeguros.forEach(item => { if(!produtosMap[item.nome]) produtosMap[item.nome] = 0; produtosMap[item.nome] += (item.qtd || 1); });
         });
-        
         const clientesArr = Object.values(clientesMap).sort((a, b) => b.total_gasto - a.total_gasto); dadosExportacaoCRM = clientesArr; 
         const produtosArr = Object.keys(produtosMap).map(nome => ({nome, qtd: produtosMap[nome]})).sort((a, b) => b.qtd - a.qtd).slice(0, 5);
-        
-        let clientesHtml = '';
-        clientesArr.forEach(c => {
-            clientesHtml += `<tr><td><b>${c.nome}</b></td><td class="mono">${c.telefone}</td><td style="font-size:12px; color:var(--text-muted); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.endereco}</td><td class="mono" style="text-align:center;">${c.total_pedidos}</td><td class="mono" style="text-align:right;">R$ ${c.total_gasto.toFixed(2)}</td></tr>`;
-        });
-        document.getElementById('crm-lista-clientes').innerHTML = clientesHtml;
-        if(clientesArr.length === 0) document.getElementById('crm-lista-clientes').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Nenhum pedido registrado.</td></tr>';
-        
-        let produtosHtml = '';
-        produtosArr.forEach((p, index) => {
-            produtosHtml += `<tr><td><span style="color:var(--accent); font-weight:800; margin-right:8px;">#${index+1}</span> <b>${p.nome}</b></td><td class="mono" style="text-align:right;">${p.qtd} unid.</td></tr>`;
-        });
-        document.getElementById('crm-top-produtos').innerHTML = produtosHtml;
-        if(produtosArr.length === 0) document.getElementById('crm-top-produtos').innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px;">Nenhuma venda registrada.</td></tr>';
+        let clientesHtml = ''; clientesArr.forEach(c => { clientesHtml += `<tr><td><b>${c.nome}</b></td><td class="mono">${c.telefone}</td><td style="font-size:12px; color:var(--text-muted); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.endereco}</td><td class="mono" style="text-align:center;">${c.total_pedidos}</td><td class="mono" style="text-align:right;">R$ ${c.total_gasto.toFixed(2)}</td></tr>`; }); document.getElementById('crm-lista-clientes').innerHTML = clientesHtml; if(clientesArr.length === 0) document.getElementById('crm-lista-clientes').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Nenhum pedido registrado.</td></tr>';
+        let produtosHtml = ''; produtosArr.forEach((p, index) => { produtosHtml += `<tr><td><span style="color:var(--accent); font-weight:800; margin-right:8px;">#${index+1}</span> <b>${p.nome}</b></td><td class="mono" style="text-align:right;">${p.qtd} unid.</td></tr>`; }); document.getElementById('crm-top-produtos').innerHTML = produtosHtml; if(produtosArr.length === 0) document.getElementById('crm-top-produtos').innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px;">Nenhuma venda registrada.</td></tr>';
     }
 
     function exportarClientesCSV() {
