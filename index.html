@@ -74,8 +74,10 @@
     .store-actions-bar { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;}
     .btn-store-action { display: flex; align-items: center; gap: 6px; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 100px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
     .btn-store-action:hover { background: var(--bg-subsurface); }
-    .btn-social-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-size: 18px; cursor: pointer; text-decoration: none;}
-    .btn-social-circle:hover { background: var(--bg-subsurface); color: var(--accent);}
+    
+    /* Botões Pílula para Redes Sociais */
+    .btn-social-pill { display: flex; align-items: center; gap: 6px; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 100px; cursor: pointer; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+    .btn-social-pill:hover { background: var(--bg-subsurface); border-color: var(--text-muted); color: var(--accent); }
 
     .cat-nav-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0px; z-index: 40; }
     .cat-nav { max-width: 900px; margin: 0 auto; padding: 0 16px;}
@@ -168,7 +170,7 @@
     .img-upload-preview { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
     .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
 
-    /* Admin Categorias Novo Estilo */
+    /* Admin Categorias */
     .admin-cat-pill { background: var(--bg-subsurface); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;}
     .admin-cat-pill.active { background: var(--text-main); color: var(--bg-surface); border-color: var(--text-main);}
     .admin-cat-pill .remove-cat { background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: inherit; cursor: pointer; font-size: 10px;}
@@ -227,7 +229,7 @@
             <div class="store-address" id="loja-endereco-view">Aguarde...</div>
             <div class="store-actions-bar">
                 <button class="btn-store-action" onclick="abrirModalInfoLoja()">ℹ️ Informação</button>
-                <div style="display:flex; gap:8px;" id="client-social-links"></div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;" id="client-social-links"></div>
             </div>
         </div>
         
@@ -497,7 +499,7 @@
       </div>
       <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px;">
           <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️️ Retirada no Balcão</div>
+              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️ Retirada no Balcão</div>
               <div style="color:var(--success); font-weight:800;">✓</div>
           </div>
       </div>
@@ -783,7 +785,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // CONFIGURAÇÕES DA LOJA
+    // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
     async function carregarConfigDaNuvem() {
         const { data, error } = await malikDB.from('configuracoes').select('*').eq('restaurante_id', RESTAURANTE_ID).single();
         if (data) { CONFIG_LOJA = data; aplicarConfiguracoesNoVisual(); }
@@ -793,7 +795,6 @@
         const nomeFinal = CONFIG_LOJA.nome || 'Malik Culinária';
         document.getElementById('loja-nome-view').innerText = nomeFinal; 
         document.getElementById('info-modal-nome').innerText = nomeFinal; 
-        document.getElementById('footer-nome-loja').innerText = nomeFinal;
         document.getElementById('conf-nome').value = CONFIG_LOJA.nome || '';
         
         document.getElementById('loja-endereco-view').innerText = CONFIG_LOJA.endereco || ''; 
@@ -820,15 +821,13 @@
             document.getElementById('conf-facebook').value = CONFIG_LOJA.facebook || '';
         } catch(e){}
 
-        const containerRedesRodape = document.getElementById('social-links-container');
         const containerRedesTopo = document.getElementById('client-social-links');
+        let htmlTopo = ''; 
+        if(CONFIG_LOJA.whatsapp) { htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-pill">💬 WhatsApp</a>`; }
+        if(CONFIG_LOJA.instagram) { htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-pill">📸 Instagram</a>`; }
+        if(CONFIG_LOJA.facebook) { htmlTopo += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="btn-social-pill">📘 Facebook</a>`; }
         
-        let htmlTopo = ''; let htmlRodape = '';
-        if(CONFIG_LOJA.whatsapp) { htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-circle">📱</a>`; htmlRodape += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="social-icon">📱</a>`; }
-        if(CONFIG_LOJA.instagram) { htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-circle">📸</a>`; htmlRodape += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="social-icon">📸</a>`; }
-        if(CONFIG_LOJA.facebook) { htmlRodape += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="social-icon">📘</a>`; }
         if(containerRedesTopo) containerRedesTopo.innerHTML = htmlTopo;
-        if(containerRedesRodape) containerRedesRodape.innerHTML = htmlRodape;
     }
 
     async function salvarConfiguracoes(e) {
@@ -868,10 +867,34 @@
         renderProdutos(); renderDestaques(); 
     }
 
-    // PRODUTOS
+    // PRODUTOS E DUPLICAÇÃO
     async function carregarProdutosDaNuvem() { 
         const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
         if (!error && data) { DADOS.produtos = data; renderProdutos(); renderDestaques(); if(usuarioAtual) { renderAdmin(); } } 
+    }
+
+    async function duplicarProdutoNaNuvem(id) {
+        const p = DADOS.produtos.find(i => i.id === id);
+        if (!p) return;
+        
+        if (confirm(`Deseja criar uma cópia do item "${p.nome}"?`)) {
+            const copiaProduto = {
+                restaurante_id: p.restaurante_id,
+                categoria: p.categoria,
+                nome: p.nome + ' (Cópia)',
+                descricao: p.descricao,
+                preco: parseFloat(p.preco) || 0,
+                img_url: p.img_url,
+                tipo: p.tipo,
+                ativo: false, // Cria como esgotado por segurança
+                destaque: false,
+                estoque: p.estoque
+            };
+            
+            await malikDB.from('produtos').insert([copiaProduto]);
+            await carregarProdutosDaNuvem();
+            alert('Produto duplicado com sucesso! Ele foi adicionado como esgotado/pausado para você poder editá-lo.');
+        }
     }
 
     function rolarDestaques(direcao) { const container = document.getElementById('destaques-list'); container.scrollBy({ left: direcao * 300, behavior: 'smooth' }); }
@@ -1125,8 +1148,9 @@
                     </td>
                     <td>
                         <div style="display:flex; gap:8px; justify-content:flex-end;">
-                            <button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;">✏️</button>
-                            <button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;">🗑️</button>
+                            <button onclick="duplicarProdutoNaNuvem('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;" title="Duplicar Item">📄</button>
+                            <button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;" title="Editar">✏️</button>
+                            <button onclick="removerProdutoDaNuvem('${p.id}')" style="background:var(--accent-soft); color:var(--danger); border:none; padding:8px; border-radius:6px; cursor:pointer;" title="Excluir">🗑️</button>
                         </div>
                     </td>
                 </tr>`;
@@ -1137,7 +1161,7 @@
       renderAdminCategorias(); 
     }
 
-    // CHECKOUT
+    // CHECKOUT E KANBAN
     function setConsumo(c) { 
       tipoConsumo = c; 
       ['btn-cons-deliv', 'btn-cons-balcao', 'btn-cons-mesa'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; });
