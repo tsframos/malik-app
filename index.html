@@ -164,8 +164,6 @@
     .site-footer { margin-top: auto; padding: 40px 20px; background: var(--bg-subsurface); border-top: 1px solid var(--border-color); text-align: center; }
     .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .footer-copy { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;}
-    .link-lojista-hidden { background: none; border: none; color: inherit; cursor: pointer; padding: 4px; opacity: 0.5;}
-    .link-lojista-hidden:hover { opacity: 1;}
 
     .img-upload-preview { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); background: var(--bg-subsurface); display: none; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); flex-shrink: 0;}
     .file-input-wrapper { display: flex; align-items: center; gap: 12px; }
@@ -257,7 +255,6 @@
         <div class="footer-content">
             <div class="footer-copy">
                 &copy; <span id="ano-atual"></span> <span id="footer-nome-loja">Sistema</span>. Todos os direitos reservados.
-                <button class="link-lojista-hidden" onclick="abrirModalLogin()" title="Acesso Administrativo">⚙️</button>
             </div>
         </div>
     </footer>
@@ -311,7 +308,7 @@
   <!-- ========================================================================= -->
   <section id="sec-config" style="display:none;" class="container">
     <div style="margin-bottom: 24px;">
-      <h2 style="font-size:26px;">⚙️️ Configurações e Identidade</h2>
+      <h2 style="font-size:26px;">⚙ Configurações e Identidade</h2>
       <p style="font-size:14px; color:var(--text-muted);">Altere os textos, imagens de capa e redes sociais da loja.</p>
     </div>
 
@@ -500,7 +497,7 @@
       </div>
       <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px;">
           <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️ Retirada no Balcão</div>
+              <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️️ Retirada no Balcão</div>
               <div style="color:var(--success); font-weight:800;">✓</div>
           </div>
       </div>
@@ -592,6 +589,21 @@
 
     document.getElementById('ano-atual').innerText = new Date().getFullYear();
 
+    // ==========================================
+    // ROTA SECRETA ADMIN
+    // ==========================================
+    window.addEventListener('hashchange', verificarRotaAdmin);
+
+    function verificarRotaAdmin() {
+      if (window.location.hash === '#admin') {
+          if (!usuarioAtual) {
+              abrirModalLogin();
+          } else {
+              mostrarAba('admin');
+          }
+      }
+    }
+
     async function ligarAplicativo() {
       try {
           if (typeof window.supabase === 'undefined') throw new Error("Supabase bloqueado.");
@@ -612,6 +624,9 @@
           renderCategoriasUI();
           renderProdutos();
           renderDestaques();
+
+          // Verifica se acessou direto pelo /#admin
+          verificarRotaAdmin();
       }
     }
 
@@ -754,7 +769,7 @@
 
     function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
     async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
-    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); mostrarAba('cardapio'); }
+    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
 
     function mostrarAba(aba) {
       ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
@@ -913,7 +928,7 @@
       el.innerHTML = htmlFinal;
     }
 
-    // ===== NOVO: LÓGICA DO DETALHE E CARRINHO =====
+    // ===== LÓGICA DO DETALHE E CARRINHO =====
     function abrirDetalheProduto(id) {
       if(!lojaAberta) return;
       produtoDetalheAtual = DADOS.produtos.find(p => p.id === id);
@@ -1033,9 +1048,7 @@
       if (count > 0 && lojaAberta) { bar.style.display = 'block'; document.getElementById('sacola-count').innerText = count; document.getElementById('sacola-val').innerText = `R$ ${val.toFixed(2).replace('.', ',')}`; }
       else bar.style.display = 'none';
     }
-    // ===== FIM NOVO LÓGICA DE DETALHE E CARRINHO =====
 
-    // Editar Produto: Abre no card atual e corrige o bug de nome composto!
     function abrirModalProduto(id = null) {
       produtoEmEdicaoId = id; const t = document.getElementById('modal-produto-titulo');
       
@@ -1054,7 +1067,6 @@
         t.innerText = 'Novo Produto';
         document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = ''; document.getElementById('novo-desc').value = ''; document.getElementById('novo-estoque').value = ''; document.getElementById('novo-destaque').checked = false;
         
-        // Puxa com segurança a categoria atual para já facilitar o cadastro
         document.getElementById('novo-cat').value = catAtiva || (DADOS.categorias.length > 0 ? DADOS.categorias[0].nome : '');
       }
       document.getElementById('modal-novo-produto').style.display = 'flex';
