@@ -1047,7 +1047,59 @@
     }
 
     function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
+<!-- ============================================== -->
+<!-- MODAL: DETALHE DO PRODUTO (ESTILO IFOOD)       -->
+<!-- ============================================== -->
+<div class="modal-overlay" id="modal-detalhe-produto" style="display:none; z-index: 1000;">
+  <div class="modal-box" style="padding:0; overflow:hidden; max-width: 450px;">
+    <div style="position: relative;">
+      <img id="detalhe-img" src="" style="width:100%; height:220px; object-fit:cover; display:block;">
+      <button onclick="fecharDetalheProduto()" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
+    </div>
+    <div style="padding: 24px;">
+      <h2 id="detalhe-nome" style="font-size:22px; font-weight:900; color:var(--text-main); font-family:'Outfit', sans-serif;">Nome do Produto</h2>
+      <p id="detalhe-desc" style="color:var(--text-muted); font-size:14px; margin-top:8px; line-height: 1.5;"></p>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:32px; border-top:1px solid var(--border-color); padding-top:20px;">
+        <div class="stepper" style="transform: scale(1.2); transform-origin: left; background:var(--bg-subsurface);">
+          <button class="stepper-btn" onclick="mudarQtdDetalhe(-1)">-</button>
+          <span id="detalhe-qtd" class="stepper-val mono">1</span>
+          <button class="stepper-btn" onclick="mudarQtdDetalhe(1)">+</button>
+        </div>
+        <button class="btn-submit" onclick="confirmarAdicaoDetalhe()" style="width:auto; padding:12px 24px; margin:0;">
+          Adicionar <span id="detalhe-total" class="mono" style="margin-left:8px;">R$ 0,00</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- ============================================== -->
+<!-- MODAL: CARRINHO DE COMPRAS                     -->
+<!-- ============================================== -->
+<div class="modal-overlay" id="modal-carrinho" style="display:none; z-index: 999;">
+  <div class="modal-box" style="max-width: 450px;">
+    <div class="modal-header">
+      <h3 style="font-size:20px; color:var(--text-main); font-family:'Outfit', sans-serif;">Sua Sacola</h3>
+      <button onclick="fecharModalCarrinho()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
+    </div>
+    
+    <!-- Lista de Itens do Carrinho -->
+    <div id="carrinho-lista" style="max-height:50vh; overflow-y:auto; margin:16px 0; display:flex; flex-direction:column; gap:12px;">
+      <!-- Itens injetados via JS -->
+    </div>
+    
+    <div style="border-top:1px solid var(--border-color); padding-top:16px;">
+      <button class="btn-action" style="width:100%; background:transparent; color:var(--accent); border:1px solid var(--accent); margin-bottom:12px; font-weight:bold;" onclick="fecharModalCarrinho()">
+        + Continuar Comprando
+      </button>
+      <button class="btn-submit" onclick="avancarParaCheckout()" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Ir para Pagamento</span>
+        <span id="carrinho-total-btn" class="mono" style="font-size:16px;">R$ 0,00</span>
+      </button>
+    </div>
+  </div>
+</div>
   </script>
 </body>
 </html>
