@@ -187,6 +187,34 @@
     .input-text:focus-visible, button:focus-visible, a:focus-visible {outline:3px solid var(--accent);outline-offset:3px;}
     .prod-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}
     @media(max-width:480px){.store-title{font-size:26px;} #chk-form{padding:20px!important;}}
+  
+    .kitchen-top {display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+    .kitchen-sub {color:var(--text-muted);font-size:13px;margin-top:6px}
+    .kitchen-toolbar {display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+    .kitchen-toolbar input {flex:1;min-width:210px;margin:0}
+    .kitchen-summary {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+    .kitchen-stat {padding:16px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:12px}
+    .kitchen-stat strong {display:block;font-size:26px;margin-top:4px}
+    #kanban-cols {display:grid;grid-template-columns:repeat(4,minmax(250px,1fr));gap:16px;align-items:start;overflow-x:auto;padding-bottom:16px}
+    #kanban-cols .kanban-col {min-width:0;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);height:auto;max-height:none}
+    #kanban-cols .col-header {padding:16px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
+    .kitchen-cards {padding:12px;display:grid;gap:12px;max-height:70vh;overflow-y:auto}
+    #kanban-cols .order-card {padding:16px;border-radius:12px;background:var(--bg-surface);border:1px solid var(--border-color);border-left:4px solid var(--order-color)}
+    .order-top {display:flex;gap:8px;justify-content:space-between;align-items:start;margin-bottom:10px}
+    .order-code {font-size:15px;font-weight:800;overflow-wrap:anywhere}
+    .order-mode {font-size:10px;text-transform:uppercase;border-radius:20px;background:var(--bg-subsurface);padding:5px 8px}
+    .order-customer {font-weight:800;font-size:16px;margin:8px 0}
+    .order-meta {font-size:12px;color:var(--text-muted);line-height:1.5;overflow-wrap:anywhere}
+    .order-items {margin:14px 0;padding:12px 0;border-top:1px dashed var(--border-color);border-bottom:1px dashed var(--border-color);display:grid;gap:8px}
+    .order-item {font-size:14px;line-height:1.4}.order-item small {display:block;color:var(--text-muted);padding-left:24px}
+    .order-bottom {display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:12px}
+    .order-actions {display:flex;gap:8px;flex-wrap:wrap}.order-actions button {flex:1;justify-content:center;min-height:40px;padding:10px;font-weight:800;border-radius:9px;cursor:pointer;border:1px solid var(--border-color)}
+    .order-main-action {background:var(--text-main);color:var(--bg-surface)}
+    .order-secondary {background:var(--bg-subsurface);color:var(--text-main)}
+    .order-delete {background:transparent;color:var(--danger)}
+    .kitchen-empty {text-align:center;color:var(--text-muted);font-size:13px;padding:24px 8px}
+    .kitchen-connection {font-size:12px;padding:8px 12px;background:var(--bg-subsurface);border-radius:8px}
+    @media(max-width:700px){.kitchen-summary{grid-template-columns:repeat(2,minmax(0,1fr))}#kanban-cols{grid-template-columns:repeat(4,280px)}.kitchen-stat{padding:12px}}
   </style>
 </head>
 <body>
@@ -223,6 +251,8 @@
     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
       <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
       <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
+      <label class="theme-toggle-btn" style="cursor:pointer;">Escolher áudio MP3/WAV<input id="arquivo-campainha" type="file" accept="audio/*" style="display:none" onchange="carregarSomLocal(this)"></label>
+      <span id="nome-audio-campainha" style="font-size:12px;">Som padrão</span>
       <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
       <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
     </div>
@@ -418,11 +448,18 @@
     </div>
   </section>
 
-  <section id="sec-cozinha" style="display:none;" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-      <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="ativarSomPedidos()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
+  <section id="sec-cozinha" style="display:none; max-width:1600px;" class="container">
+    <div class="kitchen-top">
+      <div><h2 style="font-size:28px;">Central de pedidos</h2><p class="kitchen-sub">Receba, prepare e acompanhe cada pedido.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="ativarSomPedidos()">🔔 Ativar / testar som</button><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
-    <p id="pedidos-feedback" role="status" style="color:var(--text-muted);"></p>
+    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik Cozinha v5 • conectando…</div>
+    <div id="resumo-cozinha" class="kitchen-summary"></div>
+    <div class="kitchen-toolbar">
+      <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
+      <button class="theme-toggle-btn" id="btn-arquivados" onclick="alternarArquivados()">Ver arquivados</button>
+    </div>
+    <p id="pedidos-feedback" role="status" style="color:var(--text-muted);font-size:12px;margin-bottom:12px"></p>
     <div class="kanban-grid" id="kanban-cols"></div>
   </section>
 
@@ -793,6 +830,7 @@
             document.getElementById('user-info').style.display = 'none'; 
             abasAdmin.forEach(el => el.style.display = 'none');
             clearInterval(timerPedidos); timerPedidos = null; pedidos = [];
+            encerrarMonitorPedidos();
             resetarAlertasPedidos();
             document.getElementById('painel-alerta-pedidos').style.display = 'none';
             document.getElementById('kanban-cols').innerHTML = '';
@@ -815,7 +853,8 @@
       
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
       if (aba === 'admin') renderAdmin();
-      if (['cozinha', 'crm'].includes(aba)) carregarPedidos(); 
+      if (aba === 'cozinha') carregarPedidos();
+      if (aba === 'crm') carregarPedidosCRM(); 
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -1283,6 +1322,10 @@
     let audioCtx = null;
     let somPedidosAtivo = false;
     let pedidosConhecidos = null;
+    const idsNotificados = new Set();
+    let ultimoDisparoSom = 'nenhum';
+    let audioPersonalizado = null;
+    let audioPersonalizadoURL = null;
     const pedidosComAviso = new Set();
     let timerCampainha = null;
     const tituloOriginal = document.title || 'Malik';
@@ -1296,10 +1339,16 @@
       document.getElementById('btn-pausar-som').style.display = somPedidosAtivo ? 'inline-block' : 'none';
       document.getElementById('btn-reconhecer-pedidos').style.display = qtd ? 'inline-block' : 'none';
       document.title = qtd ? '(' + qtd + ' novo) ' + tituloOriginal : tituloOriginal;
+      atualizarConexaoCozinha();
     }
     async function ativarSomPedidos() {
       if (!usuarioAtual) return;
       try {
+        if (audioPersonalizado) {
+          somPedidosAtivo=true; await tocarCampainhaPedidos();
+          if (!somPedidosAtivo) return;
+          sincronizarRepeticaoCampainha(); atualizarAvisoPedidos(); carregarPedidos(); return;
+        }
         const Audio = window.AudioContext || window.webkitAudioContext;
         if (!Audio) throw new Error('Áudio indisponível');
         if (!audioCtx || audioCtx.state === 'closed') audioCtx = new Audio();
@@ -1307,7 +1356,7 @@
         if (!usuarioAtual) return;
         if (audioCtx.state !== 'running') throw new Error('Áudio bloqueado');
         somPedidosAtivo = true;
-        tocarCampainhaPedidos();
+        await tocarCampainhaPedidos();
         sincronizarRepeticaoCampainha();
         atualizarAvisoPedidos();
         carregarPedidos();
@@ -1316,11 +1365,17 @@
         document.getElementById('som-pedidos-status').textContent = 'Não foi possível ativar o som. Confira o áudio do navegador e tente novamente.';
       }
     }
-    function tocarCampainhaPedidos() {
+    async function tocarCampainhaPedidos() {
       if (!usuarioAtual || !somPedidosAtivo) return false;
-      if (!audioCtx || audioCtx.state !== 'running') {
-        pausarSomPedidos();
-        return false;
+      if (audioPersonalizado) {
+        try { audioPersonalizado.currentTime=0; audioPersonalizado.volume=1; await audioPersonalizado.play();
+          ultimoDisparoSom=new Date().toLocaleTimeString('pt-BR'); atualizarConexaoCozinha(); return true;
+        } catch (_) { pausarSomPedidos(); document.getElementById('som-pedidos-status').textContent='Áudio bloqueado. Clique em Ativar / testar som.'; return false; }
+      }
+      if (!audioCtx) { pausarSomPedidos(); return false; }
+      if (audioCtx.state !== 'running') {
+        try { await audioCtx.resume(); } catch (_) {}
+        if (audioCtx.state !== 'running') { pausarSomPedidos(); return false; }
       }
       try {
         // Seis toques fortes com duas alturas alternadas e sustentação.
@@ -1339,6 +1394,7 @@
             osc.start(inicio); osc.stop(inicio + 0.4);
           }
         }
+        ultimoDisparoSom=new Date().toLocaleTimeString('pt-BR'); atualizarConexaoCozinha();
         return true;
       } catch (_) { pausarSomPedidos(); return false; }
     }
@@ -1346,60 +1402,104 @@
       if (!somPedidosAtivo || !usuarioAtual || !pedidosComAviso.size) {
         clearInterval(timerCampainha); timerCampainha = null; return;
       }
-      if (!timerCampainha) timerCampainha = setInterval(() => tocarCampainhaPedidos(),8000);
+      if (!timerCampainha) timerCampainha = setInterval(() => tocarCampainhaPedidos().catch(() => {}),8000);
     }
     function detectarNovosPedidos(lista) {
+      const tinhaAviso = pedidosComAviso.size > 0;
       const atuais = new Set(lista.map(p => p.id));
-      const pendentes = new Set(lista.filter(p => p.status === 'novo').map(p => p.id));
+      const pendentes = new Set(lista.filter(p => p.status === 'novo' && !p.arquivado_em).map(p => p.id));
       let chegouPedido = false;
       // Inclui pedidos ainda novos na primeira carga: a cozinha precisa atendê-los.
       {
         for (const p of lista) {
-          if (p.status === 'novo' && (pedidosConhecidos === null || !pedidosConhecidos.has(p.id))) {
-            pedidosComAviso.add(p.id); chegouPedido = true;
+          if (p.status === 'novo' && !p.arquivado_em && !idsNotificados.has(p.id)) {
+            pedidosComAviso.add(p.id); idsNotificados.add(p.id); chegouPedido = true;
           }
         }
       }
       for (const id of pedidosComAviso) if (!pendentes.has(id)) pedidosComAviso.delete(id);
+      if(tinhaAviso && !pedidosComAviso.size && audioPersonalizado){audioPersonalizado.pause();audioPersonalizado.currentTime=0;}
       pedidosConhecidos = atuais;
-      if (chegouPedido) tocarCampainhaPedidos();
+      if (chegouPedido) tocarCampainhaPedidos().catch(() => {});
       sincronizarRepeticaoCampainha();
       atualizarAvisoPedidos();
     }
     function pausarSomPedidos() {
       somPedidosAtivo = false;
+      if (audioPersonalizado) { audioPersonalizado.pause(); audioPersonalizado.currentTime=0; }
       clearInterval(timerCampainha); timerCampainha = null;
       atualizarAvisoPedidos();
     }
     function reconhecerAvisoPedidos() {
+      if(audioPersonalizado){audioPersonalizado.pause();audioPersonalizado.currentTime=0;}
       pedidosComAviso.clear();
       sincronizarRepeticaoCampainha(); atualizarAvisoPedidos();
       if (usuarioAtual) mostrarAba('cozinha');
     }
     function resetarAlertasPedidos() {
-      pedidosConhecidos = null; pedidosComAviso.clear(); pausarSomPedidos();
+      pedidosConhecidos = null; idsNotificados.clear(); pedidosComAviso.clear(); pausarSomPedidos();
     }
 
+    let mostrandoArquivados=false;
+    let pedidosArquivados=[];
+    const acoesPedidosEmCurso=new Set();
+    function escaparHTML(v) { return String(v == null ? '' : v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function renderKanban() {
-      const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
-      let htmlFinal = '';
-      cols.forEach(c => {
-          const list = pedidos.filter(p => p.status === c.id);
-          let cardsHtml = '';
-          list.forEach(p => {
-              const itensSeguros = Array.isArray(p.itens) ? p.itens : []; const totalF = parseFloat(p.total) || 0;
-              let itensListHtml = ''; itensSeguros.forEach(i => { itensListHtml += `<div style="margin-bottom:4px; font-size:12px;"><span class="mono" style="color:var(--text-muted);">${i.qtd}x</span> ${i.nome}</div>`; });
-              let acoesHtml = '';
-              if (p.status === 'novo') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`; } 
-              else if (p.status === 'preparando') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`; }
-              if (p.status === 'entrega') acoesHtml = `<button class="btn-action" onclick="mudarStatusNaNuvem('${p.id}', 'fim')">Concluir</button>`;
-              cardsHtml += `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span><span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span></div><div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div><div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div><div>${itensListHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);"><span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span><div style="display:flex; gap:6px;">${acoesHtml}</div></div></div>`;
-          });
-          htmlFinal += `<div class="kanban-col"><div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">${cardsHtml}</div></div>`;
-      });
-      document.getElementById('kanban-cols').innerHTML = htmlFinal;
+      const cols=[{id:'novo',t:'Novos',cor:'var(--danger)'},{id:'preparando',t:'Em preparo',cor:'#e39721'},{id:'entrega',t:'Em entrega / retirada',cor:'#3b82f6'},{id:'fim',t:'Concluídos',cor:'var(--success)'}];
+      const ativos=pedidos.filter(p=>!p.arquivado_em);
+      document.getElementById('resumo-cozinha').innerHTML=cols.map(c=>`<div class="kitchen-stat"><span style="color:${c.cor}">${c.t}</span><strong>${ativos.filter(p=>p.status===c.id).length}</strong></div>`).join('');
+      const busca=normalizarBusca(document.getElementById('busca-pedidos').value||'');
+      const base=mostrandoArquivados ? pedidosArquivados : ativos;
+      const grupos=mostrandoArquivados ? [{id:'fim',t:'Histórico arquivado (até 100 recentes)',cor:'var(--text-muted)'}] : cols;
+      document.getElementById('kanban-cols').style.gridTemplateColumns=mostrandoArquivados ? 'minmax(280px,640px)' : '';
+      document.getElementById('btn-arquivados').textContent=mostrandoArquivados ? 'Voltar aos pedidos' : 'Ver arquivados';
+      document.getElementById('kanban-cols').innerHTML=grupos.map(c=>{
+        const lista=base.filter(p=>p.status===c.id && normalizarBusca([p.codigo_curto,p.cliente,p.telefone].join(' ')).includes(busca))
+          .sort((a,b)=>new Date(a.criado_em)-new Date(b.criado_em));
+        const cards=lista.map(p=>{
+          const id=String(p.id); if(!/^[0-9a-f-]{36}$/i.test(id)) return '';
+          const minutos=Math.max(0,Math.floor((Date.now()-new Date(p.criado_em).getTime())/60000));
+          const horario=new Date(p.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+          const disabled=acoesPedidosEmCurso.has(id)?'disabled':'';
+          let botoes='';
+          const transicoes={novo:['preparando','Iniciar preparo'],preparando:['entrega',p.tipo_entrega==='delivery'?'Saiu para entrega':'Pronto para retirada'],entrega:['fim','Concluir pedido']};
+          if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
+          if(p.status==='fim') botoes=`<button class="order-secondary" ${disabled} onclick="gerenciarConcluido('${id}','${p.arquivado_em?'restaurar':'arquivar'}')">${p.arquivado_em?'Restaurar':'Arquivar'}</button><button class="order-delete" ${disabled} onclick="gerenciarConcluido('${id}','excluir')">Excluir</button>`;
+          const itens=(Array.isArray(p.itens)?p.itens:[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}×</b> ${escaparHTML(i.nome)}${i.det?`<small>${escaparHTML(i.det)}</small>`:''}</div>`).join('');
+          return `<article class="order-card" style="--order-color:${c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div><div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">Pix pendente de conferência</span></div><div class="order-actions">${botoes}</div></article>`;
+        }).join('');
+        return `<div class="kanban-col"><div class="col-header" style="color:${c.cor}"><span>${c.t}</span><span>${lista.length}</span></div><div class="kitchen-cards">${cards||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
+      }).join('');
     }
-    
+    async function alternarArquivados() {
+      mostrandoArquivados=!mostrandoArquivados;
+      if(mostrandoArquivados) await carregarArquivados();
+      renderKanban();
+    }
+    async function carregarArquivados() {
+      if(!usuarioAtual) return;
+      const userId=usuarioAtual.id;
+      const {data,error}=await malikDB.from('pedidos').select(CAMPOS_PEDIDO).eq('restaurante_id',RESTAURANTE_ID).eq('status','fim').not('arquivado_em','is',null).order('arquivado_em',{ascending:false}).limit(100);
+      if(!usuarioAtual||usuarioAtual.id!==userId)return;
+      if(error){document.getElementById('pedidos-feedback').textContent='Não foi possível carregar os arquivados.';return;}
+      pedidosArquivados=data||[];
+    }
+    async function gerenciarConcluido(id,acao) {
+      if(!usuarioAtual||acoesPedidosEmCurso.has(id))return;
+      const pedido=[...pedidos,...pedidosArquivados].find(p=>p.id===id);
+      if(!pedido||pedido.status!=='fim')return;
+      if(acao==='excluir'&&!confirm('Excluir definitivamente o pedido #'+pedido.codigo_curto+'? Ele sairá do histórico e das métricas. Essa ação não devolve estoque.'))return;
+      acoesPedidosEmCurso.add(id);renderKanban();
+      try{
+        const {error}=await malikDB.rpc('malik_gerenciar_concluido_v1',{p_id:id,p_acao:acao});
+        if(error)throw error;
+        pedidos=pedidos.filter(p=>p.id!==id);pedidosArquivados=pedidosArquivados.filter(p=>p.id!==id);
+        await carregarPedidos();if(mostrandoArquivados)await carregarArquivados();
+        if(pedidosCRM.length)await carregarPedidosCRM();
+      }catch(e){alert('Não foi possível concluir a ação. '+(e.message||'Confira a conexão.'));}
+      finally{acoesPedidosEmCurso.delete(id);renderKanban();}
+    }
+
     async function mudarStatusNaNuvem(id, status) {
       if (!usuarioAtual) return;
       const permitidos = {novo:'preparando', preparando:'entrega', entrega:'fim'};
@@ -1411,11 +1511,27 @@
     }
 
     let dadosExportacaoCRM = [];
+    let pedidosCRM = [];
+    let carregandoCRM = false;
+    async function carregarPedidosCRM(){
+      if(!usuarioAtual||carregandoCRM)return;
+      carregandoCRM=true;const userId=usuarioAtual.id;
+      try{
+        const todos=[];
+        for(let inicio=0;;inicio+=1000){
+          const {data,error}=await malikDB.from('pedidos').select('id,cliente,telefone,endereco,tipo_entrega,total,itens').eq('restaurante_id',RESTAURANTE_ID).order('id',{ascending:true}).range(inicio,inicio+999);
+          if(error)throw error;if(!usuarioAtual||usuarioAtual.id!==userId)return;
+          todos.push(...(data||[]));if(!data||data.length<1000)break;
+        }
+        pedidosCRM=todos;renderCRM();
+      }catch(e){alert('Não foi possível atualizar as métricas. Confira a conexão.');}
+      finally{carregandoCRM=false;}
+    }
 
 
     function renderCRM() {
         const clientesMap = {}; const produtosMap = {};
-        pedidos.forEach(p => {
+        pedidosCRM.forEach(p => {
             const tel = p.telefone || 'Sem Número';
             if(!clientesMap[tel]) { clientesMap[tel] = { nome: p.cliente || 'Sem Nome', telefone: tel, endereco: p.endereco || '', total_pedidos: 0, total_gasto: 0 }; }
             clientesMap[tel].total_pedidos += 1; clientesMap[tel].total_gasto += (parseFloat(p.total) || 0);
@@ -1459,25 +1575,91 @@
         'Modalidade: ' + p.tipo_entrega, 'Total: ' + dinheiro(p.total),
         'Pode me orientar sobre o pagamento via Pix?'].join('\n');
     }
-    function iniciarAtualizacaoPedidos() {
+    const CAMPOS_PEDIDO='id,restaurante_id,codigo_curto,cliente,telefone,endereco,tipo_entrega,status,subtotal,taxa_entrega,total,forma_pagamento,itens,criado_em,arquivado_em';
+    let canalPedidos=null;
+    let estadoRealtime='conectando';
+    let ultimaConsultaPedidos='nenhuma';
+    let revisaoPedidos=0;
+    let consultaPendente=false;
+    function atualizarConexaoCozinha(){
+      const el=document.getElementById('conexao-cozinha');if(!el)return;
+      el.textContent='Malik Cozinha v5 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
+        ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
+    }
+    function receberEventoPedido(payload){
+      if(!usuarioAtual||!payload.new||payload.new.restaurante_id!==RESTAURANTE_ID)return;
+      const p=payload.new;revisaoPedidos++;
+      pedidos=pedidos.filter(x=>x.id!==p.id);
+      if(!p.arquivado_em)pedidos.unshift(p);
+      detectarNovosPedidos(pedidos);renderKanban();renderCRM();
+      document.getElementById('pedidos-feedback').textContent='Pedido atualizado em tempo real às '+new Date().toLocaleTimeString('pt-BR');
       carregarPedidos();
-      if (!timerPedidos) timerPedidos = setInterval(() => { if (usuarioAtual) carregarPedidos(); },5000);
     }
-    async function carregarPedidos() {
-      if (!usuarioAtual || carregandoPedidos) return;
-      carregandoPedidos = true;
-      const userId = usuarioAtual.id;
-      try {
-        const {data,error} = await malikDB.from('pedidos').select('*').eq('restaurante_id',RESTAURANTE_ID).order('criado_em',{ascending:false}).limit(500);
-        if (!usuarioAtual || usuarioAtual.id !== userId) return;
-        if (error) throw error;
-        pedidos = Array.isArray(data) ? data : [];
-        detectarNovosPedidos(pedidos);
-        renderKanban(); renderCRM();
-        document.getElementById('pedidos-feedback').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR') + ' • atualização a cada 5 segundos';
-      } catch(e) { document.getElementById('pedidos-feedback').textContent = 'Não foi possível carregar os pedidos. Confira sua conexão e as permissões da conta.'; }
-      finally { carregandoPedidos = false; }
+    function iniciarAtualizacaoPedidos(){
+      carregarPedidos();
+      if(!timerPedidos)timerPedidos=setInterval(()=>{if(usuarioAtual)carregarPedidos();},2000);
+      if(!canalPedidos&&malikDB&&typeof malikDB.channel==='function'){
+        canalPedidos=malikDB.channel('malik-cozinha-'+RESTAURANTE_ID)
+          .on('postgres_changes',{event:'INSERT',schema:'public',table:'pedidos',filter:'restaurante_id=eq.'+RESTAURANTE_ID},receberEventoPedido)
+          .on('postgres_changes',{event:'UPDATE',schema:'public',table:'pedidos',filter:'restaurante_id=eq.'+RESTAURANTE_ID},receberEventoPedido)
+          .subscribe(status=>{estadoRealtime=status;atualizarConexaoCozinha();if(status==='SUBSCRIBED')carregarPedidos();});
+      }else if(!canalPedidos){estadoRealtime='indisponível';atualizarConexaoCozinha();}
     }
+    function encerrarMonitorPedidos(){
+      if(canalPedidos&&malikDB&&malikDB.removeChannel)malikDB.removeChannel(canalPedidos);
+      canalPedidos=null;estadoRealtime='desconectado';revisaoPedidos++;consultaPendente=false;
+      pedidosArquivados=[];pedidosCRM=[];mostrandoArquivados=false;
+    }
+    async function carregarPedidos(){
+      if(!usuarioAtual)return;
+      if(carregandoPedidos){consultaPendente=true;return;}
+      carregandoPedidos=true;const userId=usuarioAtual.id;const revisao=revisaoPedidos;
+      try{
+        const base=()=>malikDB.from('pedidos').select(CAMPOS_PEDIDO).eq('restaurante_id',RESTAURANTE_ID).is('arquivado_em',null);
+        const resultados=await Promise.all([
+          base().in('status',['novo','preparando','entrega']).order('criado_em',{ascending:true}).limit(500),
+          base().eq('status','fim').order('criado_em',{ascending:false}).limit(100)
+        ]);
+        if(!usuarioAtual||usuarioAtual.id!==userId)return;
+        for(const r of resultados)if(r.error)throw r.error;
+        if(revisao!==revisaoPedidos){consultaPendente=true;return;}
+        pedidos=resultados.flatMap(r=>r.data||[]);
+        detectarNovosPedidos(pedidos);renderKanban();renderCRM();
+        ultimaConsultaPedidos=new Date().toLocaleTimeString('pt-BR');atualizarConexaoCozinha();
+        document.getElementById('pedidos-feedback').textContent='Atualizado às '+ultimaConsultaPedidos+' • até 500 ativos e 100 concluídos recentes';
+      }catch(e){document.getElementById('pedidos-feedback').textContent='Falha ao atualizar: '+(e.message||'confira a conexão e as permissões.');}
+      finally{carregandoPedidos=false;if(consultaPendente&&usuarioAtual){consultaPendente=false;setTimeout(()=>carregarPedidos(),0);}}
+    }
+    async function persistirAudioLocal(blob,nome){
+      return new Promise((resolve,reject)=>{
+        const req=indexedDB.open('malik-campainha',1);
+        req.onupgradeneeded=()=>req.result.createObjectStore('sons');
+        req.onerror=()=>reject(req.error);
+        req.onsuccess=()=>{const db=req.result;const tx=db.transaction('sons','readwrite');tx.objectStore('sons').put({blob,nome},RESTAURANTE_ID);tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>{db.close();reject(tx.error);};};
+      });
+    }
+    function definirAudioLocal(blob,nome){
+      if(audioPersonalizado)audioPersonalizado.pause();
+      if(audioPersonalizadoURL)URL.revokeObjectURL(audioPersonalizadoURL);
+      audioPersonalizadoURL=URL.createObjectURL(blob);audioPersonalizado=new window.Audio(audioPersonalizadoURL);
+      audioPersonalizado.preload='auto';audioPersonalizado.volume=1;
+      audioPersonalizado.addEventListener('error',()=>{pausarSomPedidos();document.getElementById('som-pedidos-status').textContent='Arquivo de áudio não pôde ser reproduzido. Escolha MP3 ou WAV.';});
+      document.getElementById('nome-audio-campainha').textContent=nome;
+    }
+    async function carregarSomLocal(input){
+      const f=input.files&&input.files[0];if(!f)return;
+      if(f.size>10*1024*1024){alert('Escolha um áudio de até 10 MB.');return;}
+      pausarSomPedidos();definirAudioLocal(f,f.name);
+      try{await persistirAudioLocal(f,f.name);}catch(_){alert('Áudio disponível nesta sessão, mas não foi possível salvar neste navegador.');}
+      document.getElementById('som-pedidos-status').textContent='Áudio selecionado. Clique em Ativar / testar som.';
+    }
+    function restaurarAudioLocal(){
+      if(typeof indexedDB==='undefined')return;
+      const req=indexedDB.open('malik-campainha',1);
+      req.onupgradeneeded=()=>req.result.createObjectStore('sons');
+      req.onsuccess=()=>{const db=req.result;const tx=db.transaction('sons','readonly');const r=tx.objectStore('sons').get(RESTAURANTE_ID);r.onsuccess=()=>{if(r.result&&!audioPersonalizado)definirAudioLocal(r.result.blob,r.result.nome);};tx.oncomplete=()=>db.close();};
+    }
+    restaurarAudioLocal();
     document.addEventListener('visibilitychange', () => { if (usuarioAtual && !document.hidden) carregarPedidos(); });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
