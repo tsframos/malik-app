@@ -587,6 +587,7 @@
     let catAtiva = ''; 
     let sacola = [];
     let usuarioAtual = null;
+    const ADMIN_UID = '62019159-08b9-4154-ab26-ba167bd982dd';
     let produtoEmEdicaoId = null;
     let lojaAberta = true;
     let tipoConsumo = 'delivery';
@@ -762,7 +763,7 @@
     }
 
     // ===== SESSÃO =====
-    async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session ? session.user : null; atualizarUINavegacao(); }
+    async function verificarSessao() { const { data: { session } } = await malikDB.auth.getSession(); usuarioAtual = session && session.user.id === ADMIN_UID ? session.user : null; atualizarUINavegacao(); }
     
     function atualizarUINavegacao() { 
         const abasAdmin = document.querySelectorAll('.admin-only'); 
@@ -789,7 +790,7 @@
     }
 
     function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
+    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { if (data.user.id !== ADMIN_UID) { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); alert('Esta conta não tem acesso à administração desta loja.'); btn.innerText = 'Entrar'; return; } usuarioAtual = data.user; atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
     async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
 
     function mostrarAba(aba) {
