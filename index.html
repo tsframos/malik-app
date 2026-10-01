@@ -219,6 +219,15 @@
     </div>
   </header>
 
+  <div id="painel-alerta-pedidos" style="display:none; padding:12px 20px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha</button>
+      <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
+      <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
+      <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
+    </div>
+  </div>
+
   <!-- ========================================================================= -->
   <!-- 1. ABA: CARDÁPIO (PÚBLICA - ESTILO OLACLICK / IFOOD)                      -->
   <!-- ========================================================================= -->
@@ -411,7 +420,7 @@
 
   <section id="sec-cozinha" style="display:none;" class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-      <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
+      <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="ativarSomPedidos()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
     </div>
     <p id="pedidos-feedback" role="status" style="color:var(--text-muted);"></p>
     <div class="kanban-grid" id="kanban-cols"></div>
@@ -776,6 +785,7 @@
             document.getElementById('user-info').style.display = 'flex'; 
             document.getElementById('user-email').innerText = 'Admin'; 
             abasAdmin.forEach(el => el.style.display = 'inline-block');
+            document.getElementById('painel-alerta-pedidos').style.display = 'block';
             iniciarAtualizacaoPedidos(); 
         } else { 
             navSuperior.style.display = 'none';
@@ -783,6 +793,8 @@
             document.getElementById('user-info').style.display = 'none'; 
             abasAdmin.forEach(el => el.style.display = 'none');
             clearInterval(timerPedidos); timerPedidos = null; pedidos = [];
+            resetarAlertasPedidos();
+            document.getElementById('painel-alerta-pedidos').style.display = 'none';
             document.getElementById('kanban-cols').innerHTML = '';
             document.getElementById('crm-lista-clientes').innerHTML = '';
             document.getElementById('crm-top-produtos').innerHTML = ''; 
@@ -1269,11 +1281,102 @@
     }
 
     let audioCtx = null;
+    let somPedidosAtivo = false;
+    let pedidosConhecidos = null;
+    const pedidosComAviso = new Set();
+    let timerCampainha = null;
+    const tituloOriginal = document.title || 'Malik';
 
-
-    function inicializarAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if (audioCtx.state === 'suspended') { audioCtx.resume(); } }
-    function testeBeepNativo() { try { inicializarAudio(); function playNote(freq, start, dur) { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start); gain.gain.setValueAtTime(0.1, audioCtx.currentTime + start); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + start + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(audioCtx.currentTime + start); osc.stop(audioCtx.currentTime + start + dur); } playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15); } catch (e) {} }
-    function beep() { testeBeepNativo(); }
+    function atualizarAvisoPedidos() {
+      const qtd = pedidosComAviso.size;
+      document.getElementById('som-pedidos-status').textContent =
+        (somPedidosAtivo ? 'Campainha ativa.' : 'Som pausado: clique em Ativar campainha.') +
+        (qtd ? ' ' + qtd + ' pedido(s) novo(s) aguardando atenção.' : ' Aguardando novos pedidos.');
+      document.getElementById('btn-ativar-som').textContent = somPedidosAtivo ? '🔔 Testar campainha' : '🔔 Ativar campainha';
+      document.getElementById('btn-pausar-som').style.display = somPedidosAtivo ? 'inline-block' : 'none';
+      document.getElementById('btn-reconhecer-pedidos').style.display = qtd ? 'inline-block' : 'none';
+      document.title = qtd ? '(' + qtd + ' novo) ' + tituloOriginal : tituloOriginal;
+    }
+    async function ativarSomPedidos() {
+      if (!usuarioAtual) return;
+      try {
+        const Audio = window.AudioContext || window.webkitAudioContext;
+        if (!Audio) throw new Error('Áudio indisponível');
+        if (!audioCtx || audioCtx.state === 'closed') audioCtx = new Audio();
+        await audioCtx.resume();
+        if (!usuarioAtual) return;
+        if (audioCtx.state !== 'running') throw new Error('Áudio bloqueado');
+        somPedidosAtivo = true;
+        tocarCampainhaPedidos();
+        sincronizarRepeticaoCampainha();
+        atualizarAvisoPedidos();
+      } catch (_) {
+        pausarSomPedidos();
+        document.getElementById('som-pedidos-status').textContent = 'Não foi possível ativar o som. Confira o áudio do navegador e tente novamente.';
+      }
+    }
+    function tocarCampainhaPedidos() {
+      if (!usuarioAtual || !somPedidosAtivo) return false;
+      if (!audioCtx || audioCtx.state !== 'running') {
+        pausarSomPedidos();
+        return false;
+      }
+      try {
+        // Três toques, cada um com harmônicos e decaimento de campainha.
+        for (const atraso of [0, 0.65, 1.3]) {
+          for (const [freq, volume] of [[740,0.16],[1110,0.07],[1480,0.035]]) {
+            const inicio = audioCtx.currentTime + atraso;
+            const osc = audioCtx.createOscillator();
+            const ganho = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(freq,inicio);
+            ganho.gain.setValueAtTime(0.0001,inicio);
+            ganho.gain.exponentialRampToValueAtTime(volume,inicio + 0.012);
+            ganho.gain.exponentialRampToValueAtTime(0.0001,inicio + 0.6);
+            osc.connect(ganho); ganho.connect(audioCtx.destination);
+            osc.onended = () => { osc.disconnect(); ganho.disconnect(); };
+            osc.start(inicio); osc.stop(inicio + 0.65);
+          }
+        }
+        return true;
+      } catch (_) { pausarSomPedidos(); return false; }
+    }
+    function sincronizarRepeticaoCampainha() {
+      if (!somPedidosAtivo || !usuarioAtual || !pedidosComAviso.size) {
+        clearInterval(timerCampainha); timerCampainha = null; return;
+      }
+      if (!timerCampainha) timerCampainha = setInterval(() => tocarCampainhaPedidos(),12000);
+    }
+    function detectarNovosPedidos(lista) {
+      const atuais = new Set(lista.map(p => p.id));
+      const pendentes = new Set(lista.filter(p => p.status === 'novo').map(p => p.id));
+      let chegouPedido = false;
+      // A primeira consulta estabelece a base sem tocar por pedidos antigos.
+      if (pedidosConhecidos !== null) {
+        for (const p of lista) {
+          if (p.status === 'novo' && !pedidosConhecidos.has(p.id)) {
+            pedidosComAviso.add(p.id); chegouPedido = true;
+          }
+        }
+      }
+      for (const id of pedidosComAviso) if (!pendentes.has(id)) pedidosComAviso.delete(id);
+      pedidosConhecidos = atuais;
+      if (chegouPedido) tocarCampainhaPedidos();
+      sincronizarRepeticaoCampainha();
+      atualizarAvisoPedidos();
+    }
+    function pausarSomPedidos() {
+      somPedidosAtivo = false;
+      clearInterval(timerCampainha); timerCampainha = null;
+      atualizarAvisoPedidos();
+    }
+    function reconhecerAvisoPedidos() {
+      pedidosComAviso.clear();
+      sincronizarRepeticaoCampainha(); atualizarAvisoPedidos();
+      if (usuarioAtual) mostrarAba('cozinha');
+    }
+    function resetarAlertasPedidos() {
+      pedidosConhecidos = null; pedidosComAviso.clear(); pausarSomPedidos();
+    }
 
     function renderKanban() {
       const cols = [{ id: 'novo', t: 'Novos', cor: 'var(--danger)' }, { id: 'preparando', t: 'Em Preparo', cor: 'var(--text-main)' }, { id: 'entrega', t: 'Despachados', cor: '#3b82f6' }, { id: 'fim', t: 'Concluídos', cor: 'var(--success)' }];
@@ -1356,7 +1459,7 @@
     }
     function iniciarAtualizacaoPedidos() {
       carregarPedidos();
-      if (!timerPedidos) timerPedidos = setInterval(() => { if (usuarioAtual && !document.hidden) carregarPedidos(); },15000);
+      if (!timerPedidos) timerPedidos = setInterval(() => { if (usuarioAtual) carregarPedidos(); },5000);
     }
     async function carregarPedidos() {
       if (!usuarioAtual || carregandoPedidos) return;
@@ -1367,11 +1470,13 @@
         if (!usuarioAtual || usuarioAtual.id !== userId) return;
         if (error) throw error;
         pedidos = Array.isArray(data) ? data : [];
+        detectarNovosPedidos(pedidos);
         renderKanban(); renderCRM();
-        document.getElementById('pedidos-feedback').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR') + ' • atualização a cada 15 segundos';
+        document.getElementById('pedidos-feedback').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR') + ' • atualização a cada 5 segundos';
       } catch(e) { document.getElementById('pedidos-feedback').textContent = 'Não foi possível carregar os pedidos. Confira sua conexão e as permissões da conta.'; }
       finally { carregandoPedidos = false; }
     }
+    document.addEventListener('visibilitychange', () => { if (usuarioAtual && !document.hidden) carregarPedidos(); });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
     });
