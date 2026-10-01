@@ -1233,11 +1233,25 @@
           return {prodId:p.id, nome:p.nome, det:item.det || '', qtd:item.qtd, preco};
         });
         enviandoPedido = true; btn.disabled = true; btn.textContent = 'Enviando pedido...';
-        const sub = Math.round(itens.reduce((acc,i) => acc + Math.round(i.preco*100)*i.qtd,0))/100;
-        const taxa = tipoConsumo === 'delivery' ? 7 : 0;
-        const novo = {restaurante_id:RESTAURANTE_ID, codigo_curto:Math.floor(1000 + Math.random()*9000).toString(), cliente:nome, telefone, endereco:tipoConsumo === 'delivery' ? rua + ' - ' + bairro : 'Retirada (' + tipoConsumo + ')', tipo_entrega:tipoConsumo, subtotal:sub, taxa_entrega:taxa, total:sub+taxa, forma_pagamento:'pix', itens, status:'novo'};
-        const {error} = await malikDB.from('pedidos').insert([novo]);
-        if (error) throw new Error('Não foi possível registrar o pedido. Sua sacola foi mantida. Tente novamente.');
+        const payload = {restaurante_id:RESTAURANTE_ID, cliente:nome, telefone,
+          endereco:tipoConsumo === 'delivery' ? rua + ' - ' + bairro : '',
+          tipo_entrega:tipoConsumo, itens:itens.map(i => ({prodId:i.prodId,qtd:i.qtd,det:i.det}))};
+        const tentativaKey = 'malik-tentativa-' + RESTAURANTE_ID;
+        const assinatura = JSON.stringify(payload);
+        let tentativa;
+        try { tentativa = JSON.parse(localStorage.getItem(tentativaKey) || 'null'); } catch (_) {}
+        if (!tentativa || tentativa.assinatura !== assinatura) {
+          tentativa = {assinatura, chave:crypto.randomUUID()};
+          localStorage.setItem(tentativaKey,JSON.stringify(tentativa));
+        }
+        const {data:novo,error} = await malikDB.rpc('malik_criar_pedido_v1', {p_pedido:payload,p_chave:tentativa.chave});
+        if (error) {
+          const msg = String(error.message || '');
+          throw new Error(msg.startsWith('MALIK:') ? msg.slice(6).trim() : 'Não foi possível confirmar o pedido. Sua sacola foi mantida. Tente novamente com os mesmos dados para evitar duplicação.');
+        }
+        if (!novo || !novo.id || !Array.isArray(novo.itens) || !Number.isFinite(Number(novo.total)))
+          throw new Error('Resposta inesperada. Confira com a loja antes de alterar ou reenviar o pedido.');
+        localStorage.removeItem(tentativaKey);
         pedidoConfirmado = novo;
         sacola = []; atualizarSacolaBar();
         document.getElementById('chk-form').style.display = 'none';
@@ -1248,6 +1262,7 @@
         const numero = String(CONFIG_LOJA.whatsapp || '').replace(/\D/g,'');
         link.style.display = /^\d{10,15}$/.test(numero) ? 'inline-flex' : 'none';
         link.href = numero ? 'https://wa.me/' + numero + '?text=' + encodeURIComponent(resumoWhatsApp(novo)) : '#';
+        carregarProdutosDaNuvem().catch(() => {});
       } catch (erro) {
         erroEl.textContent = erro.message || 'Falha de conexão. Sua sacola foi mantida; confira com a loja antes de tentar novamente.';
       } finally { enviandoPedido = false; btn.disabled = false; btn.textContent = 'Confirmar Pedido'; }
