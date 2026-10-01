@@ -182,6 +182,11 @@
     .crm-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px;}
     @media(min-width: 768px) { .crm-grid { grid-template-columns: 1fr 2fr; } }
     .crm-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; }
+      .banner-container {height:160px;}
+    @media(min-width:768px){.banner-container{height:220px;}}
+    .input-text:focus-visible, button:focus-visible, a:focus-visible {outline:3px solid var(--accent);outline-offset:3px;}
+    .prod-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}
+    @media(max-width:480px){.store-title{font-size:26px;} #chk-form{padding:20px!important;}}
   </style>
 </head>
 <body>
@@ -250,6 +255,8 @@
       <div id="loading-produtos" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:bold; font-size:16px;">
          🔄 Carregando Produtos...
       </div>
+      <label for="busca-produtos" class="form-label">O que você quer pedir?</label>
+      <input id="busca-produtos" class="input-text" type="search" placeholder="Buscar produtos em todo o cardápio" oninput="renderProdutos()" style="margin:8px 0 20px;">
       <div class="grid-produtos" id="prod-list"></div>
     </main>
 
@@ -373,9 +380,12 @@
         <h2 style="font-size:22px;">Finalizar Pedido</h2>
       </div>
       <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px; text-align:center; margin-bottom:24px;">
-        <div style="color:var(--success); font-weight:800; font-size:20px; margin-bottom:12px;">Pedido Concluído! Copie o Pix:</div>
-        <div id="pix-total" style="font-size:32px; font-weight:800; color:var(--text-main); margin-bottom:24px;" class="mono">R$ 0,00</div>
-        <button type="button" onclick="alert('Pagamento via Pix confirmado no painel!')" class="btn-submit" style="background:var(--success);">Confirmar Pagamento</button>
+        <h2>Pedido registrado <span id="pedido-codigo"></span></h2>
+        <p>O pagamento ainda não foi confirmado. Consulte a loja para receber os dados do Pix.</p>
+        <div id="pix-total" class="mono" style="font-size:28px;margin:20px 0;">R$ 0,00</div>
+        <a id="pedido-whatsapp" class="btn-submit" target="_blank" rel="noopener noreferrer">Falar com a loja no WhatsApp</a>
+        <p style="font-size:13px;color:var(--text-muted);">O botão abre uma mensagem para você revisar e enviar. O pedido já foi registrado no sistema.</p>
+        <button class="btn-action" onclick="mostrarAba('cardapio')">Voltar ao cardápio</button>
       </div>
       <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
         <div class="form-group">
@@ -393,6 +403,7 @@
           <div style="display:flex; justify-content:space-between; margin-bottom:20px; color:var(--text-muted); font-size:15px;"><span>Taxa de Entrega:</span><span id="chk-taxa" class="mono">R$ 7,00</span></div>
           <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 20px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 28px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
         </div>
+        <p id="checkout-erro" role="alert" style="color:var(--danger);"></p>
         <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
       </form>
     </div>
@@ -402,6 +413,7 @@
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
       <h2 style="font-size:24px;">Pedidos na Cozinha</h2><button type="button" onclick="testeBeepNativo()" style="background:var(--bg-subsurface); border:1px solid var(--border-color); font-size:13px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer;">🔔 Testar Alarme</button>
     </div>
+    <p id="pedidos-feedback" role="status" style="color:var(--text-muted);"></p>
     <div class="kanban-grid" id="kanban-cols"></div>
   </section>
 
@@ -552,7 +564,7 @@
         
         <div style="background:var(--bg-subsurface); padding:20px; border-radius:16px; margin-bottom:24px; border:1px solid var(--border-color);">
             <label class="form-label" style="font-size:14px;">📦 Estoque e Limite de Vendas (Opcional)</label>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Se preenchido, o produto pausa automaticamente ao chegar em zero.</p>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Produtos com estoque zero ficam indisponíveis. A baixa automática depende da integração no banco.</p>
             <input type="number" id="novo-estoque" class="input-text mono" placeholder="Qtd. em estoque (vazio = infinito)">
         </div>
         
@@ -561,15 +573,8 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="modal-pizza" style="display:none;">
-    <div class="modal-box">
-      <div class="modal-header"><h3 id="pizza-modal-nome" style="font-size: 22px;">Montar Pizza</h3><button type="button" onclick="document.getElementById('modal-pizza').style.display='none'" style="background:none; border:none; cursor:pointer; font-size:24px; font-weight:bold;">✕</button></div>
-      <div class="form-group"><label class="form-label">Tamanho</label><div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"><button type="button" class="tab-btn active" id="tam-grande" onclick="setTamPizza('grande')" style="border:1px solid var(--border-color); padding: 12px;">Grande</button><button type="button" class="tab-btn" id="tam-media" onclick="setTamPizza('media')" style="border:1px solid var(--border-color); padding: 12px;">Média</button></div></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:24px; margin-top: 12px;"><span id="pizza-modal-total" class="mono" style="font-size:26px; font-weight:800; color:var(--accent);">R$ 0,00</span><button type="button" onclick="adicionarPizzaCarrinho()" class="btn-pizza" style="padding:14px 28px; font-size:15px;">Adicionar</button></div>
-    </div>
-  </div>
+  <!-- Montagem de pizza pendente da definição de tamanhos e sabores no banco. -->
 
-  <!-- SCRIPT CENTRAL BLINDADO -->
   <script>
     const SUPABASE_URL = 'https://jvbzqolenhpjtmuajszb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lRsblvKzfIK2bBV4bHc2hw_71NOGTC6';
@@ -583,7 +588,14 @@
     let sacola = [];
     let usuarioAtual = null;
     let produtoEmEdicaoId = null;
-    let lojaAberta = true; 
+    let lojaAberta = true;
+    let tipoConsumo = 'delivery';
+    let pedidos = [];
+    let enviandoPedido = false;
+    let timerPedidos = null;
+    let carregandoPedidos = false;
+    let pedidoConfirmado = null;
+    const CARRINHO_KEY = 'malik-carrinho-' + RESTAURANTE_ID; 
     
     // Variáveis Detalhe do Produto
     let produtoDetalheAtual = null;
@@ -616,6 +628,7 @@
           await carregarCategorias().catch(e => console.warn(e));
           await carregarProdutosDaNuvem().catch(e => console.warn(e));
           await verificarSessao().catch(e => console.warn(e));
+          restaurarCarrinho();
           
       } catch (e) { 
           console.error(e); 
@@ -626,6 +639,7 @@
           renderCategoriasUI();
           renderProdutos();
           renderDestaques();
+          atualizarSacolaBar();
 
           // Verifica se acessou direto pelo /#admin
           verificarRotaAdmin();
@@ -760,12 +774,17 @@
             catNavSticky.style.top = '62px'; 
             document.getElementById('user-info').style.display = 'flex'; 
             document.getElementById('user-email').innerText = 'Admin'; 
-            abasAdmin.forEach(el => el.style.display = 'inline-block'); 
+            abasAdmin.forEach(el => el.style.display = 'inline-block');
+            iniciarAtualizacaoPedidos(); 
         } else { 
             navSuperior.style.display = 'none';
             catNavSticky.style.top = '0px'; 
             document.getElementById('user-info').style.display = 'none'; 
-            abasAdmin.forEach(el => el.style.display = 'none'); 
+            abasAdmin.forEach(el => el.style.display = 'none');
+            clearInterval(timerPedidos); timerPedidos = null; pedidos = [];
+            document.getElementById('kanban-cols').innerHTML = '';
+            document.getElementById('crm-lista-clientes').innerHTML = '';
+            document.getElementById('crm-top-produtos').innerHTML = ''; 
         } 
     }
 
@@ -774,6 +793,7 @@
     async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
 
     function mostrarAba(aba) {
+      if (['admin','crm','config','cozinha'].includes(aba) && !usuarioAtual) { abrirModalLogin(); return; }
       ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
       const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
       
@@ -781,7 +801,8 @@
       const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
       
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
-      if (aba === 'admin') renderAdmin(); 
+      if (aba === 'admin') renderAdmin();
+      if (['cozinha', 'crm'].includes(aba)) carregarPedidos(); 
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -793,6 +814,7 @@
 
     function aplicarConfiguracoesNoVisual() {
         const nomeFinal = CONFIG_LOJA.nome || 'Malik Culinária';
+        document.getElementById('footer-nome-loja').textContent = nomeFinal;
         document.getElementById('loja-nome-view').innerText = nomeFinal; 
         document.getElementById('info-modal-nome').innerText = nomeFinal; 
         document.getElementById('conf-nome').value = CONFIG_LOJA.nome || '';
@@ -909,7 +931,7 @@
             destaques.forEach(p => {
                 const precoF = parseFloat(p.preco) || 0;
                 const img = (p.img_url) ? `<img src="${p.img_url}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
-                const isDisponivel = p.ativo !== false && lojaAberta;
+                const isDisponivel = p.ativo !== false && lojaAberta && (p.estoque == null || Number(p.estoque) > 0);
                 let onclickCode = ''; if (isDisponivel) { onclickCode = `abrirDetalheProduto('${p.id}')`; }
                 const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
@@ -923,19 +945,20 @@
     function renderProdutos() {
       const el = document.getElementById('prod-list');
       if(!DADOS.produtos) DADOS.produtos = [];
-      const list = DADOS.produtos.filter(p => p.categoria === catAtiva);
+      const termo = normalizarBusca(document.getElementById('busca-produtos').value);
+      const list = DADOS.produtos.filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : p.categoria === catAtiva);
       
-      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 60px 20px; grid-column: 1 / -1; font-size:15px; background:var(--bg-surface); border-radius:16px; border:1px dashed var(--border-color);">Nenhum produto nesta categoria.</div>'; return; }
+      if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 60px 20px; grid-column: 1 / -1; font-size:15px; background:var(--bg-surface); border-radius:16px; border:1px dashed var(--border-color);">Nenhum produto encontrado. Escolha outra categoria ou altere a busca.</div>'; return; }
       
       let htmlFinal = '';
       list.forEach(p => {
         const inCart = sacola.find(s => s.prodId === p.id); const qtd = inCart ? inCart.qtd : 0;
         const img = (p.img_url) ? `<img src="${p.img_url}" class="prod-img">` : `<div style="font-size:32px;">🍽️</div>`;
-        const isDisponivel = p.ativo !== false && lojaAberta; const precoF = parseFloat(p.preco) || 0;
+        const isDisponivel = p.ativo !== false && lojaAberta && (p.estoque == null || Number(p.estoque) > 0); const precoF = parseFloat(p.preco) || 0;
         
         let acaoHTML = '';
         if(!lojaAberta) { acaoHTML = `<span style="font-size:12px; color:var(--text-muted); font-weight:600;">Fechado</span>`; } 
-        else if (!p.ativo) { acaoHTML = `<span style="font-size:11px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:4px 8px; border-radius:6px;">ESGOTADO</span>`; } 
+        else if (p.ativo === false || (p.estoque != null && Number(p.estoque) <= 0)) { acaoHTML = `<span style="font-size:11px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:4px 8px; border-radius:6px;">ESGOTADO</span>`; } 
         else {
             if (qtd > 0) { 
                 acaoHTML = `<div style="background:var(--accent); color:#fff; font-size:11px; font-weight:800; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.1);">${qtd} NA SACOLA</div>`; 
@@ -955,7 +978,7 @@
     function abrirDetalheProduto(id) {
       if(!lojaAberta) return;
       produtoDetalheAtual = DADOS.produtos.find(p => p.id === id);
-      if(!produtoDetalheAtual) return;
+      if(!produtoDetalheAtual || produtoDetalheAtual.ativo === false || (produtoDetalheAtual.estoque != null && Number(produtoDetalheAtual.estoque) <= 0)) return;
       
       qtdDetalheAtual = 1;
       const imgEl = document.getElementById('detalhe-img');
@@ -990,6 +1013,9 @@
     }
 
     function confirmarAdicaoDetalhe() {
+      if (!produtoDetalheAtual || !lojaAberta) return;
+      const existente = sacola.find(s => s.prodId === produtoDetalheAtual.id);
+      if (produtoDetalheAtual.estoque != null && qtdDetalheAtual + (existente ? existente.qtd : 0) > Number(produtoDetalheAtual.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
       const idx = sacola.findIndex(s => s.prodId === produtoDetalheAtual.id);
       if (idx === -1) {
         sacola.push({ 
@@ -1046,6 +1072,8 @@
     }
 
     function alterarQtdNoCarrinho(index, delta) {
+      const produto = DADOS.produtos.find(p => p.id === sacola[index].prodId);
+      if (delta > 0 && produto && produto.estoque != null && sacola[index].qtd + delta > Number(produto.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
       sacola[index].qtd += delta;
       if (sacola[index].qtd <= 0) {
         sacola.splice(index, 1);
@@ -1066,6 +1094,7 @@
     }
 
     function atualizarSacolaBar() {
+      salvarCarrinho();
       const bar = document.getElementById('bar-sacola');
       const count = sacola.reduce((acc, i) => acc + i.qtd, 0); const val = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
       if (count > 0 && lojaAberta) { bar.style.display = 'block'; document.getElementById('sacola-count').innerText = count; document.getElementById('sacola-val').innerText = `R$ ${val.toFixed(2).replace('.', ',')}`; }
@@ -1172,19 +1201,60 @@
     }
 
     function abrirCheckout() {
+      if (!sacola.length) { mostrarAba('cardapio'); return; }
+      document.getElementById('chk-form').style.display = 'block';
+      document.getElementById('box-pix').style.display = 'none';
+      document.getElementById('chk-rua').required = tipoConsumo === 'delivery';
+      document.getElementById('chk-bairro').required = tipoConsumo === 'delivery';
       mostrarAba('checkout'); const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0); document.getElementById('chk-sub').innerText = `R$ ${sub.toFixed(2)}`;
       const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00; document.getElementById('chk-taxa').innerText = `R$ ${taxa.toFixed(2)}`; document.getElementById('chk-tot').innerText = `R$ ${(sub + taxa).toFixed(2)}`;
     }
 
     async function enviarPedido(e) {
-      e.preventDefault(); const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0); const taxa = tipoConsumo === 'delivery' ? 7.00 : 0.00; const total = sub + taxa;
-      const enderecoCompleto = tipoConsumo === 'delivery' ? `${document.getElementById('chk-rua').value} - ${document.getElementById('chk-bairro').value}` : `Retirada (${tipoConsumo})`;
-      const novoPedidoDB = { restaurante_id: RESTAURANTE_ID, codigo_curto: Math.floor(1000 + Math.random()*9000).toString(), cliente: document.getElementById('chk-nome').value, telefone: document.getElementById('chk-tel').value, endereco: enderecoCompleto, tipo_entrega: tipoConsumo, subtotal: sub, taxa_entrega: taxa, total: total, forma_pagamento: 'pix', itens: sacola, status: 'novo' };
-      await malikDB.from('pedidos').insert([novoPedidoDB]); sacola = [];
-      document.getElementById('chk-form').style.display = 'none'; document.getElementById('box-pix').style.display = 'block'; document.getElementById('pix-total').innerText = `R$ ${total.toFixed(2)}`;
+      e.preventDefault();
+      if (enviandoPedido) return;
+      const erroEl = document.getElementById('checkout-erro');
+      erroEl.textContent = '';
+      const btn = document.getElementById('btn-finalizar-pedido');
+      try {
+        if (!lojaAberta || !sacola.length) throw new Error('A loja está fechada ou sua sacola está vazia.');
+        const nome = document.getElementById('chk-nome').value.trim();
+        const telefone = document.getElementById('chk-tel').value.replace(/\D/g, '');
+        const rua = document.getElementById('chk-rua').value.trim();
+        const bairro = document.getElementById('chk-bairro').value.trim();
+        if (!nome || !/^(?:55)?\d{10,11}$/.test(telefone)) throw new Error('Informe seu nome e um telefone válido com DDD.');
+        if (tipoConsumo === 'delivery' && (!rua || !bairro)) throw new Error('Informe endereço, número e bairro para entrega.');
+        const itens = sacola.map(item => {
+          const p = DADOS.produtos.find(p => p.id === item.prodId);
+          if (!p || p.ativo === false || !Number.isInteger(item.qtd) || item.qtd < 1 || (p.estoque != null && item.qtd > Number(p.estoque))) throw new Error('Revise os itens da sacola: um produto está indisponível.');
+          const preco = Number(p.preco);
+          if (!Number.isFinite(preco) || preco < 0) throw new Error('Produto com preço inválido. Entre em contato com a loja.');
+          return {prodId:p.id, nome:p.nome, det:item.det || '', qtd:item.qtd, preco};
+        });
+        enviandoPedido = true; btn.disabled = true; btn.textContent = 'Enviando pedido...';
+        const sub = Math.round(itens.reduce((acc,i) => acc + Math.round(i.preco*100)*i.qtd,0))/100;
+        const taxa = tipoConsumo === 'delivery' ? 7 : 0;
+        const novo = {restaurante_id:RESTAURANTE_ID, codigo_curto:Math.floor(1000 + Math.random()*9000).toString(), cliente:nome, telefone, endereco:tipoConsumo === 'delivery' ? rua + ' - ' + bairro : 'Retirada (' + tipoConsumo + ')', tipo_entrega:tipoConsumo, subtotal:sub, taxa_entrega:taxa, total:sub+taxa, forma_pagamento:'pix', itens, status:'novo'};
+        const {error} = await malikDB.from('pedidos').insert([novo]);
+        if (error) throw new Error('Não foi possível registrar o pedido. Sua sacola foi mantida. Tente novamente.');
+        pedidoConfirmado = novo;
+        sacola = []; atualizarSacolaBar();
+        document.getElementById('chk-form').style.display = 'none';
+        document.getElementById('box-pix').style.display = 'block';
+        document.getElementById('pix-total').textContent = dinheiro(novo.total);
+        document.getElementById('pedido-codigo').textContent = '#' + novo.codigo_curto;
+        const link = document.getElementById('pedido-whatsapp');
+        const numero = String(CONFIG_LOJA.whatsapp || '').replace(/\D/g,'');
+        link.style.display = /^\d{10,15}$/.test(numero) ? 'inline-flex' : 'none';
+        link.href = numero ? 'https://wa.me/' + numero + '?text=' + encodeURIComponent(resumoWhatsApp(novo)) : '#';
+      } catch (erro) {
+        erroEl.textContent = erro.message || 'Falha de conexão. Sua sacola foi mantida; confira com a loja antes de tentar novamente.';
+      } finally { enviandoPedido = false; btn.disabled = false; btn.textContent = 'Confirmar Pedido'; }
     }
 
     let audioCtx = null;
+
+
     function inicializarAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if (audioCtx.state === 'suspended') { audioCtx.resume(); } }
     function testeBeepNativo() { try { inicializarAudio(); function playNote(freq, start, dur) { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start); gain.gain.setValueAtTime(0.1, audioCtx.currentTime + start); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + start + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(audioCtx.currentTime + start); osc.stop(audioCtx.currentTime + start + dur); } playNote(1046.50, 0, 0.15); playNote(1046.50, 0.25, 0.15); } catch (e) {} }
     function beep() { testeBeepNativo(); }
@@ -1201,6 +1271,7 @@
               let acoesHtml = '';
               if (p.status === 'novo') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'preparando')" style="background:var(--text-main); color:var(--bg-surface); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Preparar</button>`; } 
               else if (p.status === 'preparando') { acoesHtml = `<button onclick="mudarStatusNaNuvem('${p.id}', 'entrega')" style="background:#3b82f6; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;">Despachar</button>`; }
+              if (p.status === 'entrega') acoesHtml = `<button class="btn-action" onclick="mudarStatusNaNuvem('${p.id}', 'fim')">Concluir</button>`;
               cardsHtml += `<div class="order-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><span class="mono" style="font-size:16px; font-weight:800;">#${p.codigo_curto}</span><span style="font-size:10px; font-weight:700; background:var(--bg-body); padding:4px 8px; border-radius:6px; text-transform:uppercase;">${p.tipo_entrega || 'Indefinido'}</span></div><div style="font-weight:600;">${p.cliente || 'Sem Nome'}</div><div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">${p.endereco || ''}</div><div>${itensListHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-color);"><span class="mono" style="font-weight:800;">R$ ${totalF.toFixed(2)}</span><div style="display:flex; gap:6px;">${acoesHtml}</div></div></div>`;
           });
           htmlFinal += `<div class="kanban-col"><div class="col-header" style="color:${c.cor}; border-bottom:2px solid ${c.cor};"><span>${c.t}</span><span class="mono">${list.length}</span></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">${cardsHtml}</div></div>`;
@@ -1208,9 +1279,19 @@
       document.getElementById('kanban-cols').innerHTML = htmlFinal;
     }
     
-    async function mudarStatusNaNuvem(id, status) { await malikDB.from('pedidos').update({ status: status }).eq('id', id); }
+    async function mudarStatusNaNuvem(id, status) {
+      if (!usuarioAtual) return;
+      const permitidos = {novo:'preparando', preparando:'entrega', entrega:'fim'};
+      const pedido = pedidos.find(p => p.id === id);
+      if (!pedido || permitidos[pedido.status] !== status) return;
+      const {error} = await malikDB.from('pedidos').update({status}).eq('id',id).eq('restaurante_id',RESTAURANTE_ID).eq('status',pedido.status);
+      if (error) { alert('Não foi possível atualizar o pedido.'); return; }
+      await carregarPedidos();
+    }
 
     let dadosExportacaoCRM = [];
+
+
     function renderCRM() {
         const clientesMap = {}; const produtosMap = {};
         pedidos.forEach(p => {
@@ -1235,6 +1316,49 @@
     }
 
     function alternarTema() { temaAtual = temaAtual === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', temaAtual); document.getElementById('btn-theme').innerText = temaAtual === 'light' ? '🌙 Escuro' : '☀️ Claro'; }
+
+    function dinheiro(valor) { return Number(valor).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+    function normalizarBusca(texto) { return String(texto).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
+    function salvarCarrinho() { try { localStorage.setItem(CARRINHO_KEY, JSON.stringify({quando:Date.now(),itens:sacola})); } catch(e) {} }
+    function restaurarCarrinho() {
+      try {
+        const salvo = JSON.parse(localStorage.getItem(CARRINHO_KEY) || 'null');
+        if (!salvo || !Array.isArray(salvo.itens) || Date.now() - salvo.quando > 86400000) return;
+        sacola = salvo.itens.flatMap(i => {
+          const p = DADOS.produtos.find(p => p.id === i.prodId);
+          if (!p || p.ativo === false || !Number.isInteger(i.qtd) || i.qtd < 1) return [];
+          const qtd = p.estoque == null ? i.qtd : Math.min(i.qtd, Number(p.estoque));
+          return qtd > 0 ? [{prodId:p.id,nome:p.nome,det:'',qtd,preco:Number(p.preco)}] : [];
+        });
+      } catch(e) { sacola = []; }
+    }
+    function resumoWhatsApp(p) {
+      return ['Olá! Registrei o pedido #' + p.codigo_curto + ' no cardápio.',
+        ...p.itens.map(i => i.qtd + 'x ' + i.nome + ' — ' + dinheiro(i.qtd*i.preco)),
+        'Modalidade: ' + p.tipo_entrega, 'Total: ' + dinheiro(p.total),
+        'Pode me orientar sobre o pagamento via Pix?'].join('\n');
+    }
+    function iniciarAtualizacaoPedidos() {
+      carregarPedidos();
+      if (!timerPedidos) timerPedidos = setInterval(() => { if (usuarioAtual && !document.hidden) carregarPedidos(); },15000);
+    }
+    async function carregarPedidos() {
+      if (!usuarioAtual || carregandoPedidos) return;
+      carregandoPedidos = true;
+      const userId = usuarioAtual.id;
+      try {
+        const {data,error} = await malikDB.from('pedidos').select('*').eq('restaurante_id',RESTAURANTE_ID);
+        if (!usuarioAtual || usuarioAtual.id !== userId) return;
+        if (error) throw error;
+        pedidos = Array.isArray(data) ? data : [];
+        renderKanban(); renderCRM();
+        document.getElementById('pedidos-feedback').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR') + ' • atualização a cada 15 segundos';
+      } catch(e) { document.getElementById('pedidos-feedback').textContent = 'Não foi possível carregar os pedidos. Confira sua conexão e as permissões da conta.'; }
+      finally { carregandoPedidos = false; }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
+    });
 
   </script>
 </body>
