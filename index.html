@@ -221,7 +221,7 @@
 
   <div id="painel-alerta-pedidos" style="display:none; padding:12px 20px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-      <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha</button>
+      <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
       <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
       <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
       <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
@@ -1290,9 +1290,9 @@
     function atualizarAvisoPedidos() {
       const qtd = pedidosComAviso.size;
       document.getElementById('som-pedidos-status').textContent =
-        (somPedidosAtivo ? 'Campainha ativa.' : 'Som pausado: clique em Ativar campainha.') +
+        (somPedidosAtivo ? 'Campainha alta ativa.' : 'Som pausado: clique em Ativar campainha.') +
         (qtd ? ' ' + qtd + ' pedido(s) novo(s) aguardando atenção.' : ' Aguardando novos pedidos.');
-      document.getElementById('btn-ativar-som').textContent = somPedidosAtivo ? '🔔 Testar campainha' : '🔔 Ativar campainha';
+      document.getElementById('btn-ativar-som').textContent = somPedidosAtivo ? '🔔 Testar campainha' : '🔔 Ativar campainha alta';
       document.getElementById('btn-pausar-som').style.display = somPedidosAtivo ? 'inline-block' : 'none';
       document.getElementById('btn-reconhecer-pedidos').style.display = qtd ? 'inline-block' : 'none';
       document.title = qtd ? '(' + qtd + ' novo) ' + tituloOriginal : tituloOriginal;
@@ -1310,6 +1310,7 @@
         tocarCampainhaPedidos();
         sincronizarRepeticaoCampainha();
         atualizarAvisoPedidos();
+        carregarPedidos();
       } catch (_) {
         pausarSomPedidos();
         document.getElementById('som-pedidos-status').textContent = 'Não foi possível ativar o som. Confira o áudio do navegador e tente novamente.';
@@ -1322,19 +1323,20 @@
         return false;
       }
       try {
-        // Três toques, cada um com harmônicos e decaimento de campainha.
-        for (const atraso of [0, 0.65, 1.3]) {
-          for (const [freq, volume] of [[740,0.16],[1110,0.07],[1480,0.035]]) {
+        // Seis toques fortes com duas alturas alternadas e sustentação.
+        for (const [atraso,base] of [[0,880],[0.4,1320],[0.8,880],[1.6,880],[2,1320],[2.4,880]]) {
+          for (const [freq, volume] of [[base,0.36],[base*2,0.12],[base*3,0.06]]) {
             const inicio = audioCtx.currentTime + atraso;
             const osc = audioCtx.createOscillator();
             const ganho = audioCtx.createGain();
-            osc.type = 'sine'; osc.frequency.setValueAtTime(freq,inicio);
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(freq,inicio);
             ganho.gain.setValueAtTime(0.0001,inicio);
             ganho.gain.exponentialRampToValueAtTime(volume,inicio + 0.012);
-            ganho.gain.exponentialRampToValueAtTime(0.0001,inicio + 0.6);
+            ganho.gain.setValueAtTime(volume,inicio + 0.22);
+            ganho.gain.exponentialRampToValueAtTime(0.0001,inicio + 0.38);
             osc.connect(ganho); ganho.connect(audioCtx.destination);
             osc.onended = () => { osc.disconnect(); ganho.disconnect(); };
-            osc.start(inicio); osc.stop(inicio + 0.65);
+            osc.start(inicio); osc.stop(inicio + 0.4);
           }
         }
         return true;
@@ -1344,16 +1346,16 @@
       if (!somPedidosAtivo || !usuarioAtual || !pedidosComAviso.size) {
         clearInterval(timerCampainha); timerCampainha = null; return;
       }
-      if (!timerCampainha) timerCampainha = setInterval(() => tocarCampainhaPedidos(),12000);
+      if (!timerCampainha) timerCampainha = setInterval(() => tocarCampainhaPedidos(),8000);
     }
     function detectarNovosPedidos(lista) {
       const atuais = new Set(lista.map(p => p.id));
       const pendentes = new Set(lista.filter(p => p.status === 'novo').map(p => p.id));
       let chegouPedido = false;
-      // A primeira consulta estabelece a base sem tocar por pedidos antigos.
-      if (pedidosConhecidos !== null) {
+      // Inclui pedidos ainda novos na primeira carga: a cozinha precisa atendê-los.
+      {
         for (const p of lista) {
-          if (p.status === 'novo' && !pedidosConhecidos.has(p.id)) {
+          if (p.status === 'novo' && (pedidosConhecidos === null || !pedidosConhecidos.has(p.id))) {
             pedidosComAviso.add(p.id); chegouPedido = true;
           }
         }
@@ -1466,7 +1468,7 @@
       carregandoPedidos = true;
       const userId = usuarioAtual.id;
       try {
-        const {data,error} = await malikDB.from('pedidos').select('*').eq('restaurante_id',RESTAURANTE_ID);
+        const {data,error} = await malikDB.from('pedidos').select('*').eq('restaurante_id',RESTAURANTE_ID).order('criado_em',{ascending:false}).limit(500);
         if (!usuarioAtual || usuarioAtual.id !== userId) return;
         if (error) throw error;
         pedidos = Array.isArray(data) ? data : [];
