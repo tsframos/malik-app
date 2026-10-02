@@ -230,6 +230,15 @@
 .grid-produtos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0}.prod-card{background:var(--bg-surface);border-radius:20px;padding:20px;min-height:176px;transition:transform .15s,box-shadow .15s}.prod-card:hover{transform:translateY(-2px);box-shadow:0 8px 26px #00000008}.prod-content{min-width:0}.prod-name{font-size:17px}.prod-desc{line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.prod-img-wrap{width:138px;height:138px;background:var(--bg-subsurface);border-radius:16px}.prod-img{object-fit:contain!important;padding:8px;box-sizing:border-box}.prod-price{font-size:18px}
 .product-dialog{position:relative;max-width:880px!important;width:calc(100% - 32px);display:grid;grid-template-columns:1fr 1fr;padding:0!important;overflow:auto!important;border-radius:24px;max-height:90dvh}.product-photo{display:flex;align-items:center;justify-content:center;background:var(--bg-subsurface);min-height:360px;font-size:64px;padding:24px}.product-photo img{width:100%;max-height:440px;object-fit:contain}.product-details{padding:36px 28px}.product-details h2{font-size:28px;margin:12px 0}.product-details p{color:var(--text-muted);line-height:1.7;white-space:pre-line}.detail-price{display:block;color:var(--accent);font-size:22px;margin:20px 0 28px}.product-close{position:absolute;right:14px;top:14px;border:1px solid var(--border-color);border-radius:50%;background:var(--bg-surface);color:var(--text-main);width:36px;height:36px;cursor:pointer;z-index:2}.product-add{display:flex;gap:16px;align-items:center;margin-top:24px}.product-add .btn-submit{margin:0;flex:1;font-size:14px;padding:16px 10px}.product-add .stepper{flex-shrink:0}.operations-settings{background:var(--bg-surface);border:1px solid var(--border-color);padding:28px;border-radius:20px;margin-top:28px}.operations-settings h4{margin:24px 0 16px}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}.settings-grid select,.settings-grid input{margin-top:10px}.operations-settings .btn-action{margin:16px 8px 0 0}.img-upload-preview{object-fit:contain!important}
 @media(max-width:650px){.banner-container{height:160px;margin:0;border-radius:0}.store-header{margin:-26px 16px 20px;padding:22px 20px 22px 100px;min-height:140px}.store-logo{width:64px;height:64px;top:22px;left:20px;border-radius:16px}.store-title{font-size:23px;display:flex;flex-direction:column;align-items:flex-start}.store-address{font-size:12px}.store-actions-bar{flex-wrap:wrap}.destaques-box{padding:10px 16px 24px}.destaque-card{min-width:210px;max-width:210px}.destaque-img{height:140px}.grid-produtos{grid-template-columns:1fr}.prod-card{padding:16px;min-height:144px}.prod-img-wrap{width:106px;height:106px}.prod-name{font-size:16px}.prod-price{font-size:16px}#sec-cardapio main.container{padding:20px 16px 110px!important}.product-dialog{display:block;width:100%;max-height:94dvh;border-radius:24px 24px 0 0;margin-top:auto}.product-photo{min-height:220px;height:230px;padding:20px}.product-photo img{height:100%}.product-details{padding:24px 20px}.product-details h2{font-size:25px}.product-add{position:sticky;bottom:-24px;background:var(--bg-surface);padding:16px 0;margin-top:16px}.settings-grid{grid-template-columns:1fr}.operations-settings{padding:20px}.menu-heading h2{font-size:24px}}
+
+/* Ajustes v6.1 */
+#client-social-links .btn-social-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-main);border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;transition:background .15s,transform .15s}
+#client-social-links .btn-social-pill:hover{background:var(--bg-subsurface);transform:translateY(-1px)}
+.btn-social-pill svg{width:20px;height:20px;flex-shrink:0;fill:currentColor}.social-whatsapp svg{color:#158b48}.social-instagram svg{color:#c13584}.social-facebook svg{color:#1877f2}
+.identity-images-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.identity-social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+#sec-config .file-input-wrapper{align-items:flex-start;flex-wrap:wrap;max-width:100%;gap:12px}#sec-config .file-input-wrapper>div{flex:1 1 170px;min-width:0;max-width:100%}#sec-config .img-upload-preview{flex-shrink:0;max-width:100%;margin:0}#sec-config .banner-upload-preview{width:140px;height:70px}
+.upload-file-button{display:inline-flex;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-subsurface);color:var(--text-main);padding:10px 14px;cursor:pointer;font-size:13px;font-weight:700;max-width:100%}.upload-file-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}.upload-file-button:has(+input:focus-visible){outline:2px solid var(--accent);outline-offset:3px}.upload-filename{display:block;color:var(--text-muted);font-size:12px;line-height:1.6;margin-top:8px;overflow-wrap:anywhere}
+@media(max-width:650px){.identity-images-grid,.identity-social-grid{grid-template-columns:1fr}#sec-config>form{padding:20px!important}#client-social-links .btn-social-pill{padding:9px 11px}}
   </style>
 </head>
 <body>
@@ -261,17 +270,6 @@
       <button class="theme-toggle-btn" onclick="alternarTema()" id="btn-theme">🌙 Escuro</button>
     </div>
   </header>
-
-  <div id="painel-alerta-pedidos" style="display:none; padding:12px 20px; background:var(--bg-surface); border-bottom:1px solid var(--border-color);">
-    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-      <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
-      <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
-      <button class="theme-toggle-btn" onclick="mostrarAba('config')">Configurar campainha</button>
-      
-      <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
-      <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
-    </div>
-  </div>
 
   <!-- ========================================================================= -->
   <!-- 1. ABA: CARDÁPIO (PÚBLICA - ESTILO OLACLICK / IFOOD)                      -->
@@ -382,13 +380,15 @@
         <div class="form-group"><label class="form-label">Endereço Completo (Aparece no botão "Informações")</label><input type="text" id="conf-endereco" required class="input-text" placeholder="Ex: Rua XYZ, 123 - Centro, São Paulo"></div>
 
         <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Imagens da Loja</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div class="identity-images-grid">
             <div class="form-group">
                 <label class="form-label">Logomarca</label><span class="form-help">Formato: Quadrado (Ex: 512x512px)</span>
                 <div class="file-input-wrapper" style="margin-top:12px;">
-                    <img id="conf-logo-preview" class="img-upload-preview" src="">
+                    <img id="conf-logo-preview" class="img-upload-preview" alt="Prévia da logomarca" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64'); document.getElementById('conf-logo-preview').style.display='flex';">
+                        <label class="upload-file-button" for="conf-logo-file">Escolher logomarca</label>
+                        <input id="conf-logo-file" class="upload-file-input" type="file" accept="image/png,image/jpeg" onchange="processarImagem(this, 'conf-logo-preview', 'conf-logo-b64');">
+                        <span id="conf-logo-filename" class="upload-filename" role="status">PNG ou JPG • até 10 MB</span>
                         <input type="hidden" id="conf-logo-b64">
                     </div>
                 </div>
@@ -396,9 +396,11 @@
             <div class="form-group">
                 <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Formato: Retangular (Ex: 1200x400px)</span>
                 <div class="file-input-wrapper" style="margin-top:12px;">
-                    <img id="conf-banner-preview" class="img-upload-preview" style="width:140px;" src="">
+                    <img id="conf-banner-preview" class="img-upload-preview banner-upload-preview" alt="Prévia do banner" src="">
                     <div>
-                        <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64'); document.getElementById('conf-banner-preview').style.display='flex';">
+                        <label class="upload-file-button" for="conf-banner-file">Escolher banner</label>
+                        <input id="conf-banner-file" class="upload-file-input" type="file" accept="image/png,image/jpeg" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64');">
+                        <span id="conf-banner-filename" class="upload-filename" role="status">PNG ou JPG • até 10 MB</span>
                         <input type="hidden" id="conf-banner-b64">
                     </div>
                 </div>
@@ -406,7 +408,7 @@
         </div>
 
         <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Redes Sociais e Contatos</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+        <div class="identity-social-grid">
             <div class="form-group"><label class="form-label">WhatsApp (Apenas Números)</label><input type="text" id="conf-whatsapp" class="input-text" placeholder="5511999999999"></div>
             <div class="form-group"><label class="form-label">Link do Instagram</label><input type="url" id="conf-instagram" class="input-text" placeholder="https://instagram.com/sua_loja"></div>
             <div class="form-group"><label class="form-label">Link do Facebook</label><input type="url" id="conf-facebook" class="input-text" placeholder="https://facebook.com/sua_loja"></div>
@@ -417,8 +419,19 @@
 
     <div class="operations-settings">
       <h3>Campainha e impressão</h3><p class="form-help">Preferências deste computador e navegador. Configure em cada estação da cozinha.</p>
-      <h4>Som de novos pedidos</h4><label class="theme-toggle-btn" style="cursor:pointer;">Escolher áudio MP3/WAV<input id="arquivo-campainha" type="file" accept="audio/*" style="display:none" onchange="carregarSomLocal(this)"></label> <span id="nome-audio-campainha">Som padrão</span>
-      <button class="btn-action" onclick="ativarSomPedidos()">Ativar / testar campainha</button>
+      <h4>Som de novos pedidos</h4>  <div id="painel-alerta-pedidos" style="display:none; margin:16px 0;">
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
+      <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
+      
+      
+      <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
+      <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
+    </div>
+  </div>
+
+<label class="theme-toggle-btn" style="cursor:pointer;">Escolher áudio MP3/WAV<input id="arquivo-campainha" type="file" accept="audio/*" style="display:none" onchange="carregarSomLocal(this)"></label> <span id="nome-audio-campainha">Som padrão</span>
+
       <p class="form-help">O navegador exige um clique para liberar o áudio. Ative o som ao abrir o painel e ajuste o volume do computador.</p>
       <form onsubmit="salvarConfigOperacao(event)">
         <h4>Impressora de comandas</h4>
@@ -488,9 +501,9 @@
   <section id="sec-cozinha" style="display:none; max-width:1600px;" class="container">
     <div class="kitchen-top">
       <div><h2 style="font-size:28px;">Central de pedidos</h2><p class="kitchen-sub">Receba, prepare e acompanhe cada pedido.</p></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="ativarSomPedidos()">🔔 Ativar / testar som</button><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
-    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v6 • conectando…</div>
+    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v6.1 • conectando…</div>
     <div id="resumo-cozinha" class="kitchen-summary"></div>
     <div class="kitchen-toolbar">
       <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
@@ -739,6 +752,9 @@
                 const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
                 const dataUrl = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.85); 
                 document.getElementById(previewId).src = dataUrl;
+                document.getElementById(previewId).style.display='block';
+                const filenameEl=document.getElementById(inputElement.id.replace('-file','-filename'));
+                if(filenameEl)filenameEl.textContent=file.name;
                 document.getElementById(targetInputId).value = dataUrl; 
             }
             img.onerror = () => alert('Não foi possível abrir esta imagem.');
@@ -926,12 +942,20 @@
         } catch(e){}
 
         const containerRedesTopo = document.getElementById('client-social-links');
-        let htmlTopo = ''; 
-        if(CONFIG_LOJA.whatsapp) { htmlTopo += `<a href="https://wa.me/${CONFIG_LOJA.whatsapp}" target="_blank" class="btn-social-pill">💬 WhatsApp</a>`; }
-        if(CONFIG_LOJA.instagram) { htmlTopo += `<a href="${CONFIG_LOJA.instagram}" target="_blank" class="btn-social-pill">📸 Instagram</a>`; }
-        if(CONFIG_LOJA.facebook) { htmlTopo += `<a href="${CONFIG_LOJA.facebook}" target="_blank" class="btn-social-pill">📘 Facebook</a>`; }
-        
-        if(containerRedesTopo) containerRedesTopo.innerHTML = htmlTopo;
+        const svg = (content) => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${content}</svg>`;
+        const icons={
+          whatsapp:svg('<path d="M20.4 3.5A11.4 11.4 0 0 0 2.5 17.2L1 23l5.9-1.5A11.4 11.4 0 0 0 23 11.4a11.3 11.3 0 0 0-2.6-7.9ZM12 21a9.3 9.3 0 0 1-4.7-1.3l-.4-.2-3.5.9.9-3.4-.2-.4A9.4 9.4 0 1 1 12 21Z"/><path d="M17.2 13.8c-.3-.2-1.7-.8-2-.9-.2-.1-.4-.2-.6.1-.2.3-.7.9-.9 1-.1.2-.3.2-.6.1a7.5 7.5 0 0 1-2.3-1.4 8.5 8.5 0 0 1-1.6-2c-.2-.3 0-.4.1-.6l.5-.6c.1-.2.2-.3.1-.5l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 2.6 1.1 2.6.7 3 .7.5 0 1.6-.6 1.9-1.3.2-.6.2-1.2.1-1.3l-.3-.2Z"/>'),
+          instagram:svg('<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/>'),
+          facebook:svg('<path d="M14 22v-9h3l.5-4H14V6.5c0-1.2.4-2 2-2h2V1.2A25 25 0 0 0 15 1c-3 0-5 1.8-5 5v3H7v4h3v9z"/>')
+        };
+        const links=[];
+        const add=(network,label,url)=>links.push(`<a href="${escaparHTML(url)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${label} da loja" class="btn-social-pill social-${network}">${icons[network]}<span>${label}</span></a>`);
+        const phone=String(CONFIG_LOJA.whatsapp||'').replace(/\D/g,'');
+        if(phone)add('whatsapp','WhatsApp','https://wa.me/'+phone);
+        for(const [network,label] of [['instagram','Instagram'],['facebook','Facebook']]){
+          try{const url=new URL(CONFIG_LOJA[network]);if(['https:','http:'].includes(url.protocol))add(network,label,url.href);}catch(e){}
+        }
+        if(containerRedesTopo) containerRedesTopo.innerHTML=links.join('');
     }
 
     async function salvarConfiguracoes(e) {
@@ -1692,7 +1716,7 @@
     let consultaPendente=false;
     function atualizarConexaoCozinha(){
       const el=document.getElementById('conexao-cozinha');if(!el)return;
-      el.textContent='Malik v6 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
+      el.textContent='Malik v6.1 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
         ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
     }
     function receberEventoPedido(payload){
