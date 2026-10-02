@@ -215,6 +215,21 @@
     .kitchen-empty {text-align:center;color:var(--text-muted);font-size:13px;padding:24px 8px}
     .kitchen-connection {font-size:12px;padding:8px 12px;background:var(--bg-subsurface);border-radius:8px}
     @media(max-width:700px){.kitchen-summary{grid-template-columns:repeat(2,minmax(0,1fr))}#kanban-cols{grid-template-columns:repeat(4,280px)}.kitchen-stat{padding:12px}}
+
+/* Cardápio v6 */
+#sec-cardapio{background:var(--bg-subsurface)}
+.store-layout-container,#sec-cardapio main.container,.cat-nav{max-width:1120px}
+.banner-container{height:240px;background-image:linear-gradient(120deg,#40221c,#ac4732);border-radius:0 0 28px 28px}
+.store-header{position:relative;align-items:flex-start;text-align:left;background:var(--bg-surface);margin: -42px 24px 28px;padding:28px 32px 28px 150px;border-radius:22px;box-shadow:0 12px 40px #00000008;min-height:150px}
+.store-logo{position:absolute;left:28px;top:24px;width:96px;height:96px;margin:0;object-fit:contain;border-radius:22px;background:var(--bg-surface)}
+.store-title{font-size:30px;gap:12px;flex-wrap:wrap;margin:0 0 12px}.store-address{margin:0 0 16px}.store-actions-bar{margin:0;justify-content:flex-start}
+.destaques-box{padding:12px 24px 32px}.destaques-scroll{gap:18px;padding-bottom:12px}.destaque-card{border-radius:20px;box-shadow:none}.destaque-img{object-fit:contain;height:175px;padding:14px;background:var(--bg-subsurface)}
+.cat-nav-wrapper{background:var(--bg-surface);border-top:1px solid var(--border-color);border-bottom:1px solid var(--border-color)}.cat-btn{border-radius:24px}.cat-btn.active{background:var(--accent);color:white}
+#sec-cardapio main.container{padding:28px 24px 120px!important}#busca-produtos{border-radius:16px;background:var(--bg-surface);padding:18px 20px}
+.menu-heading{display:flex;justify-content:space-between;align-items:center;margin:20px 0}.menu-heading h2{font-size:28px;margin:6px 0}.menu-eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:var(--accent)}
+.grid-produtos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0}.prod-card{background:var(--bg-surface);border-radius:20px;padding:20px;min-height:176px;transition:transform .15s,box-shadow .15s}.prod-card:hover{transform:translateY(-2px);box-shadow:0 8px 26px #00000008}.prod-content{min-width:0}.prod-name{font-size:17px}.prod-desc{line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.prod-img-wrap{width:138px;height:138px;background:var(--bg-subsurface);border-radius:16px}.prod-img{object-fit:contain!important;padding:8px;box-sizing:border-box}.prod-price{font-size:18px}
+.product-dialog{position:relative;max-width:880px!important;width:calc(100% - 32px);display:grid;grid-template-columns:1fr 1fr;padding:0!important;overflow:auto!important;border-radius:24px;max-height:90dvh}.product-photo{display:flex;align-items:center;justify-content:center;background:var(--bg-subsurface);min-height:360px;font-size:64px;padding:24px}.product-photo img{width:100%;max-height:440px;object-fit:contain}.product-details{padding:36px 28px}.product-details h2{font-size:28px;margin:12px 0}.product-details p{color:var(--text-muted);line-height:1.7;white-space:pre-line}.detail-price{display:block;color:var(--accent);font-size:22px;margin:20px 0 28px}.product-close{position:absolute;right:14px;top:14px;border:1px solid var(--border-color);border-radius:50%;background:var(--bg-surface);color:var(--text-main);width:36px;height:36px;cursor:pointer;z-index:2}.product-add{display:flex;gap:16px;align-items:center;margin-top:24px}.product-add .btn-submit{margin:0;flex:1;font-size:14px;padding:16px 10px}.product-add .stepper{flex-shrink:0}.operations-settings{background:var(--bg-surface);border:1px solid var(--border-color);padding:28px;border-radius:20px;margin-top:28px}.operations-settings h4{margin:24px 0 16px}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}.settings-grid select,.settings-grid input{margin-top:10px}.operations-settings .btn-action{margin:16px 8px 0 0}.img-upload-preview{object-fit:contain!important}
+@media(max-width:650px){.banner-container{height:160px;margin:0;border-radius:0}.store-header{margin:-26px 16px 20px;padding:22px 20px 22px 100px;min-height:140px}.store-logo{width:64px;height:64px;top:22px;left:20px;border-radius:16px}.store-title{font-size:23px;display:flex;flex-direction:column;align-items:flex-start}.store-address{font-size:12px}.store-actions-bar{flex-wrap:wrap}.destaques-box{padding:10px 16px 24px}.destaque-card{min-width:210px;max-width:210px}.destaque-img{height:140px}.grid-produtos{grid-template-columns:1fr}.prod-card{padding:16px;min-height:144px}.prod-img-wrap{width:106px;height:106px}.prod-name{font-size:16px}.prod-price{font-size:16px}#sec-cardapio main.container{padding:20px 16px 110px!important}.product-dialog{display:block;width:100%;max-height:94dvh;border-radius:24px 24px 0 0;margin-top:auto}.product-photo{min-height:220px;height:230px;padding:20px}.product-photo img{height:100%}.product-details{padding:24px 20px}.product-details h2{font-size:25px}.product-add{position:sticky;bottom:-24px;background:var(--bg-surface);padding:16px 0;margin-top:16px}.settings-grid{grid-template-columns:1fr}.operations-settings{padding:20px}.menu-heading h2{font-size:24px}}
   </style>
 </head>
 <body>
@@ -251,8 +266,8 @@
     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
       <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
       <button type="button" id="btn-pausar-som" class="theme-toggle-btn" onclick="pausarSomPedidos()" style="display:none;">Pausar som</button>
-      <label class="theme-toggle-btn" style="cursor:pointer;">Escolher áudio MP3/WAV<input id="arquivo-campainha" type="file" accept="audio/*" style="display:none" onchange="carregarSomLocal(this)"></label>
-      <span id="nome-audio-campainha" style="font-size:12px;">Som padrão</span>
+      <button class="theme-toggle-btn" onclick="mostrarAba('config')">Configurar campainha</button>
+      
       <span id="som-pedidos-status" role="status">Clique em Ativar campainha ao abrir o painel.</span>
       <button type="button" id="btn-reconhecer-pedidos" class="theme-toggle-btn" onclick="reconhecerAvisoPedidos()" style="display:none;">Ver pedidos e silenciar aviso</button>
     </div>
@@ -265,7 +280,7 @@
     <div class="store-layout-container">
         <div class="banner-container" id="loja-banner-view"></div>
         <div class="store-header">
-            <img src="https://ui-avatars.com/api/?name=Loja&background=d92d20&color=fff&size=150" class="store-logo" id="loja-logo-view" alt="Logo">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' rx='24' fill='%23d92d20'/%3E%3Ctext x='75' y='105' font-size='95' font-family='sans-serif' text-anchor='middle' fill='white'%3EM%3C/text%3E%3C/svg%3E" class="store-logo" id="loja-logo-view" alt="Logo">
             <h1 class="store-title">
                 <span id="loja-nome-view">Carregando...</span> 
                 <span class="badge-open" id="badge-status-loja-cliente">Aberto</span>
@@ -296,7 +311,7 @@
       </div>
       <label for="busca-produtos" class="form-label">O que você quer pedir?</label>
       <input id="busca-produtos" class="input-text" type="search" placeholder="Buscar produtos em todo o cardápio" oninput="renderProdutos()" style="margin:8px 0 20px;">
-      <div class="grid-produtos" id="prod-list"></div>
+      <div class="menu-heading"><div><span class="menu-eyebrow">ESCOLHA SEU FAVORITO</span><h2 id="menu-category-title">Cardápio</h2></div><span id="menu-count" class="form-help"></span></div><div class="grid-produtos" id="prod-list"></div>
     </main>
 
     <footer class="site-footer">
@@ -399,6 +414,28 @@
 
         <button type="submit" class="btn-submit" id="btn-submit-config" style="margin-top: 32px; max-width:300px;">Salvar Identidade</button>
     </form>
+
+    <div class="operations-settings">
+      <h3>Campainha e impressão</h3><p class="form-help">Preferências deste computador e navegador. Configure em cada estação da cozinha.</p>
+      <h4>Som de novos pedidos</h4><label class="theme-toggle-btn" style="cursor:pointer;">Escolher áudio MP3/WAV<input id="arquivo-campainha" type="file" accept="audio/*" style="display:none" onchange="carregarSomLocal(this)"></label> <span id="nome-audio-campainha">Som padrão</span>
+      <button class="btn-action" onclick="ativarSomPedidos()">Ativar / testar campainha</button>
+      <p class="form-help">O navegador exige um clique para liberar o áudio. Ative o som ao abrir o painel e ajuste o volume do computador.</p>
+      <form onsubmit="salvarConfigOperacao(event)">
+        <h4>Impressora de comandas</h4>
+        <div class="settings-grid">
+          <label class="form-label">Tipo de impressora<select id="print-type" class="input-text"><option value="thermal">Térmica (bobina)</option><option value="a4">Convencional (A4)</option></select></label>
+          <label class="form-label">Tamanho da bobina<select id="print-width" class="input-text"><option value="58">58 mm</option><option value="80">80 mm</option></select></label>
+          <label class="form-label">Forma de impressão<select id="print-mode" class="input-text"><option value="browser">Diálogo do navegador</option><option value="qz">Direta com QZ Tray (ESC/POS)</option></select></label>
+          <label class="form-label">Nome da impressora no computador<input id="print-name" class="input-text" placeholder="Nome exato para QZ Tray"></label>
+          <label class="form-label">Vias<select id="print-copies" class="input-text"><option value="1">1 via</option><option value="2">2 vias</option><option value="3">3 vias</option></select></label>
+        </div>
+        <label><input id="print-auto" type="checkbox"> Abrir / enviar comanda automaticamente ao aceitar o pedido</label>
+        <p class="form-help">No modo navegador, confirme no diálogo e escolha o papel também no driver. Para envio direto, instale o QZ Tray no computador da impressora, use uma térmica compatível com ESC/POS e autorize a conexão. Sem certificado de assinatura, o QZ pode pedir confirmação por trabalho.</p>
+        <button class="btn-submit" style="max-width:260px">Salvar preferências</button>
+      </form>
+      <button class="btn-action" onclick="testarImpressora()">Imprimir comanda de teste</button>
+      <p id="print-feedback" role="status"></p>
+    </div>
   </section>
 
   <!-- ========================================================================= -->
@@ -453,7 +490,7 @@
       <div><h2 style="font-size:28px;">Central de pedidos</h2><p class="kitchen-sub">Receba, prepare e acompanhe cada pedido.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="ativarSomPedidos()">🔔 Ativar / testar som</button><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
-    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik Cozinha v5 • conectando…</div>
+    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v6 • conectando…</div>
     <div id="resumo-cozinha" class="kitchen-summary"></div>
     <div class="kitchen-toolbar">
       <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
@@ -477,25 +514,16 @@
 
   <!-- MODAL: DETALHE DO PRODUTO -->
   <div class="modal-overlay" id="modal-detalhe-produto" style="display:none; z-index: 1000;">
-    <div class="modal-box" style="padding:0; overflow:hidden; max-width: 450px;">
-      <div style="position: relative;">
-        <img id="detalhe-img" src="" style="width:100%; height:220px; object-fit:cover; display:block;">
-        <button onclick="fecharDetalheProduto()" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:32px; height:32px; border-radius:50%; font-weight:bold; cursor:pointer;">✕</button>
-      </div>
-      <div style="padding: 24px;">
-        <h2 id="detalhe-nome" style="font-size:22px; font-weight:900; color:var(--text-main); font-family:'Outfit', sans-serif;">Nome do Produto</h2>
-        <p id="detalhe-desc" style="color:var(--text-muted); font-size:14px; margin-top:8px; line-height: 1.5;"></p>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:32px; border-top:1px solid var(--border-color); padding-top:20px;">
-          <div class="stepper" style="transform: scale(1.2); transform-origin: left; background:var(--bg-subsurface);">
-            <button class="stepper-btn" onclick="mudarQtdDetalhe(-1)">-</button>
-            <span id="detalhe-qtd" class="stepper-val mono">1</span>
-            <button class="stepper-btn" onclick="mudarQtdDetalhe(1)">+</button>
-          </div>
-          <button class="btn-submit" onclick="confirmarAdicaoDetalhe()" style="width:auto; padding:12px 24px; margin:0;">
-            Adicionar <span id="detalhe-total" class="mono" style="margin-left:8px;">R$ 0,00</span>
-          </button>
-        </div>
+    <div class="modal-box product-dialog" role="dialog" aria-modal="true" aria-labelledby="detalhe-nome">
+      <button class="product-close" aria-label="Fechar produto" onclick="fecharDetalheProduto()">✕</button>
+      <div class="product-photo"><img id="detalhe-img" src="" alt=""><span id="detalhe-placeholder">🍽️</span></div>
+      <div class="product-details"><span class="menu-eyebrow">FEITO PARA VOCÊ</span><h2 id="detalhe-nome"></h2>
+        <p id="detalhe-desc"></p><strong id="detalhe-preco" class="detail-price"></strong>
+        <label for="detalhe-obs" class="form-label">Alguma observação?</label>
+        <textarea id="detalhe-obs" class="input-text" maxlength="500" rows="3" placeholder="Ex.: sem cebola, por favor"></textarea>
+        <p class="form-help">Solicitações sujeitas à disponibilidade da cozinha.</p>
+        <div class="product-add"><div class="stepper"><button class="stepper-btn" aria-label="Diminuir quantidade" onclick="mudarQtdDetalhe(-1)">−</button><span id="detalhe-qtd" class="stepper-val">1</span><button class="stepper-btn" aria-label="Aumentar quantidade" onclick="mudarQtdDetalhe(1)">+</button></div>
+        <button class="btn-submit" onclick="confirmarAdicaoDetalhe()">Adicionar • <span id="detalhe-total"></span></button></div>
       </div>
     </div>
   </div>
@@ -601,7 +629,7 @@
             <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
         
-        <div class="form-group"><label class="form-label">Descrição</label><input type="text" id="novo-desc" class="input-text" placeholder="Ex: Acompanha molho especial"></div>
+        <div class="form-group"><label class="form-label">Descrição</label><textarea id="novo-desc" class="input-text" rows="4" maxlength="2000" placeholder="Descreva ingredientes, tamanho e acompanhamentos"></textarea></div>
         
         <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:16px; margin-bottom:24px; border:1px solid rgba(217, 45, 32, 0.2);">
             <label class="switch"><input type="checkbox" id="novo-destaque"><span class="slider"></span></label>
@@ -698,20 +726,22 @@
     function processarImagem(inputElement, previewId, targetInputId) {
         const file = inputElement.files[0];
         if (!file) return;
+        if (!['image/png','image/jpeg'].includes(file.type) || file.size > 10*1024*1024) { alert('Selecione uma imagem PNG ou JPG de até 10 MB.'); inputElement.value=''; return; }
         const reader = new FileReader();
         reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 600;
+                const MAX_WIDTH = targetInputId.includes('banner') ? 1600 : 900;
                 let width = img.width; let height = img.height;
                 if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.7); 
+                const dataUrl = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.85); 
                 document.getElementById(previewId).src = dataUrl;
                 document.getElementById(targetInputId).value = dataUrl; 
             }
+            img.onerror = () => alert('Não foi possível abrir esta imagem.');
             img.src = event.target.result;
         }
         reader.readAsDataURL(file);
@@ -733,10 +763,10 @@
     }
 
     function renderCategoriasUI() {
-        const htmlCats = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.nome ? 'active' : ''}" onclick="setCat('${c.nome}')">${c.nome}</button>`).join('');
+        const htmlCats = DADOS.categorias.map(c => `<button class="cat-btn ${catAtiva === c.nome ? 'active' : ''}" onclick="setCat(${escaparHTML(JSON.stringify(c.nome))})">${escaparHTML(c.nome)}</button>`).join('');
         document.getElementById('cat-list').innerHTML = htmlCats;
         
-        const selectCats = DADOS.categorias.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+        const selectCats = DADOS.categorias.map(c => `<option value="${escaparHTML(c.nome)}">${escaparHTML(c.nome)}</option>`).join('');
         const modaisNovoCat = document.getElementById('novo-cat');
         if(modaisNovoCat) modaisNovoCat.innerHTML = selectCats;
     }
@@ -975,20 +1005,20 @@
 
     function renderDestaques() {
         if(!DADOS.produtos) return;
-        const destaques = DADOS.produtos.filter(p => p.destaque === true);
+        const destaques = DADOS.produtos.filter(p => p.destaque === true && p.ativo !== false);
         const box = document.getElementById('box-destaques'); const list = document.getElementById('destaques-list');
         
         if(destaques.length > 0) {
             box.style.display = 'block'; let htmlDestaques = '';
             destaques.forEach(p => {
                 const precoF = parseFloat(p.preco) || 0;
-                const img = (p.img_url) ? `<img src="${p.img_url}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
+                const img = (p.img_url) ? `<img src="${escaparHTML(p.img_url)}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
                 const isDisponivel = p.ativo !== false && lojaAberta && (p.estoque == null || Number(p.estoque) > 0);
                 let onclickCode = ''; if (isDisponivel) { onclickCode = `abrirDetalheProduto('${p.id}')`; }
                 const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
                 
-                htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${p.nome || 'Produto'}</div><div class="destaque-desc">${p.descricao || ''}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
+                htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${escaparHTML(p.nome || 'Produto')}</div><div class="destaque-desc">${escaparHTML(p.descricao || '')}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
             });
             list.innerHTML = htmlDestaques;
         } else { box.style.display = 'none'; }
@@ -1000,12 +1030,14 @@
       const termo = normalizarBusca(document.getElementById('busca-produtos').value);
       const list = DADOS.produtos.filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : p.categoria === catAtiva);
       
+      document.getElementById('menu-category-title').textContent = termo ? 'Resultados da busca' : catAtiva;
+      document.getElementById('menu-count').textContent = list.length + ' opções';
       if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 60px 20px; grid-column: 1 / -1; font-size:15px; background:var(--bg-surface); border-radius:16px; border:1px dashed var(--border-color);">Nenhum produto encontrado. Escolha outra categoria ou altere a busca.</div>'; return; }
       
       let htmlFinal = '';
       list.forEach(p => {
-        const inCart = sacola.find(s => s.prodId === p.id); const qtd = inCart ? inCart.qtd : 0;
-        const img = (p.img_url) ? `<img src="${p.img_url}" class="prod-img">` : `<div style="font-size:32px;">🍽️</div>`;
+        const qtd = quantidadeNaSacola(p.id);
+        const img = (p.img_url) ? `<img src="${escaparHTML(p.img_url)}" class="prod-img">` : `<div style="font-size:32px;">🍽️</div>`;
         const isDisponivel = p.ativo !== false && lojaAberta && (p.estoque == null || Number(p.estoque) > 0); const precoF = parseFloat(p.preco) || 0;
         
         let acaoHTML = '';
@@ -1017,11 +1049,11 @@
             } 
         }
         
-        const nomeFinal = p.nome || 'Produto'; const destaqueSelo = p.destaque === true ? '<span class="tag-destaque">Destaque</span>' : '';
+        const nomeFinal = escaparHTML(p.nome || 'Produto'); const destaqueSelo = p.destaque === true ? '<span class="tag-destaque">Destaque</span>' : '';
         const opacity = !isDisponivel ? 'opacity:0.5' : '';
         const cliqueAcao = isDisponivel ? `onclick="abrirDetalheProduto('${p.id}')"` : '';
 
-        htmlFinal += `<div class="prod-card" style="${opacity}" ${cliqueAcao}><div class="prod-content"><div class="prod-name">${nomeFinal} ${destaqueSelo}</div><div class="prod-desc">${p.descricao || ''}</div><div class="prod-bottom"><span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span><div style="margin-left:auto;">${acaoHTML}</div></div></div><div class="prod-img-wrap">${img}</div></div>`;
+        htmlFinal += `<div class="prod-card" style="${opacity}" ${cliqueAcao}><div class="prod-content"><div class="prod-name">${nomeFinal} ${destaqueSelo}</div><div class="prod-desc">${escaparHTML(p.descricao || '')}</div><div class="prod-bottom"><span class="prod-price mono">R$ ${precoF.toFixed(2).replace('.', ',')}</span><div style="margin-left:auto;">${acaoHTML}</div></div></div><div class="prod-img-wrap">${img}</div></div>`;
       });
       el.innerHTML = htmlFinal;
     }
@@ -1033,6 +1065,9 @@
       if(!produtoDetalheAtual || produtoDetalheAtual.ativo === false || (produtoDetalheAtual.estoque != null && Number(produtoDetalheAtual.estoque) <= 0)) return;
       
       qtdDetalheAtual = 1;
+      document.getElementById('detalhe-obs').value='';
+      document.getElementById('detalhe-preco').textContent=dinheiro(produtoDetalheAtual.preco);
+      document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';
       const imgEl = document.getElementById('detalhe-img');
       if (produtoDetalheAtual.img_url) {
           imgEl.src = produtoDetalheAtual.img_url;
@@ -1042,7 +1077,7 @@
       }
       
       document.getElementById('detalhe-nome').innerText = produtoDetalheAtual.nome;
-      document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Sem descrição.';
+      document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Preparado com cuidado pela nossa cozinha.';
       atualizarPrecoDetalhe();
       
       document.getElementById('modal-detalhe-produto').style.display = 'flex';
@@ -1053,6 +1088,7 @@
     }
 
     function mudarQtdDetalhe(delta) {
+      if(delta>0 && produtoDetalheAtual.estoque != null && quantidadeNaSacola(produtoDetalheAtual.id)+qtdDetalheAtual+delta>Number(produtoDetalheAtual.estoque)){ alert('Quantidade maior que o estoque disponível.');return; }
       qtdDetalheAtual += delta;
       if (qtdDetalheAtual < 1) qtdDetalheAtual = 1;
       atualizarPrecoDetalhe();
@@ -1066,14 +1102,14 @@
 
     function confirmarAdicaoDetalhe() {
       if (!produtoDetalheAtual || !lojaAberta) return;
-      const existente = sacola.find(s => s.prodId === produtoDetalheAtual.id);
-      if (produtoDetalheAtual.estoque != null && qtdDetalheAtual + (existente ? existente.qtd : 0) > Number(produtoDetalheAtual.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
-      const idx = sacola.findIndex(s => s.prodId === produtoDetalheAtual.id);
+      const det = document.getElementById('detalhe-obs').value.trim().slice(0,500);
+      if (produtoDetalheAtual.estoque != null && qtdDetalheAtual + quantidadeNaSacola(produtoDetalheAtual.id) > Number(produtoDetalheAtual.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
+      const idx = sacola.findIndex(s => s.prodId === produtoDetalheAtual.id && s.det === det);
       if (idx === -1) {
         sacola.push({ 
           prodId: produtoDetalheAtual.id, 
           nome: produtoDetalheAtual.nome, 
-          det: '', 
+          det, 
           qtd: qtdDetalheAtual, 
           preco: parseFloat(produtoDetalheAtual.preco) 
         });
@@ -1108,7 +1144,7 @@
         return `
           <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:12px; border-radius:12px; border:1px solid var(--border-color);">
             <div>
-              <h4 style="font-size:14px; margin:0; color:var(--text-main);">${item.nome}</h4>
+              <h4 style="font-size:14px; margin:0; color:var(--text-main);">${escaparHTML(item.nome)}</h4>${item.det ? `<p class="form-help">${escaparHTML(item.det)}</p>` : ''}
               <p class="mono" style="font-size:12px; color:var(--accent); margin:4px 0 0 0;">R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</p>
             </div>
             <div class="stepper" style="background:var(--bg-body);">
@@ -1125,7 +1161,7 @@
 
     function alterarQtdNoCarrinho(index, delta) {
       const produto = DADOS.produtos.find(p => p.id === sacola[index].prodId);
-      if (delta > 0 && produto && produto.estoque != null && sacola[index].qtd + delta > Number(produto.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
+      if (delta > 0 && produto && produto.estoque != null && quantidadeNaSacola(produto.id) + delta > Number(produto.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
       sacola[index].qtd += delta;
       if (sacola[index].qtd <= 0) {
         sacola.splice(index, 1);
@@ -1184,7 +1220,7 @@
       const estQtd = document.getElementById('novo-estoque').value; const precoF = parseFloat(document.getElementById('novo-preco').value) || 0;
       const imgFinal = document.getElementById('novo-img').value; 
 
-      const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null, destaque: document.getElementById('novo-destaque').checked };
+      const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value.trim() || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null, destaque: document.getElementById('novo-destaque').checked };
       
       if (produtoEmEdicaoId) await malikDB.from('produtos').update(dados).eq('id', produtoEmEdicaoId);
       else { dados.ativo = true; await malikDB.from('produtos').insert([dados]); }
@@ -1207,7 +1243,7 @@
           } else {
               produtosDaCategoria.forEach(p => {
                 const precoF = parseFloat(p.preco) || 0; 
-                const img = (p.img_url) ? `<img src="${p.img_url}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;">` : `<div style="width:44px; height:44px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">🍽️</div>`;
+                const img = (p.img_url) ? `<img src="${escaparHTML(p.img_url)}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;">` : `<div style="width:44px; height:44px; border-radius:8px; background:var(--bg-subsurface); display:flex; align-items:center; justify-content:center;">🍽️</div>`;
                 const opacity = p.ativo !== false ? '1' : '0.5';
                 const checkedDest = p.destaque === true ? 'checked' : '';
                 const checkedAtiv = p.ativo !== false ? 'checked' : '';
@@ -1466,7 +1502,7 @@
           if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
           if(p.status==='fim') botoes=`<button class="order-secondary" ${disabled} onclick="gerenciarConcluido('${id}','${p.arquivado_em?'restaurar':'arquivar'}')">${p.arquivado_em?'Restaurar':'Arquivar'}</button><button class="order-delete" ${disabled} onclick="gerenciarConcluido('${id}','excluir')">Excluir</button>`;
           const itens=(Array.isArray(p.itens)?p.itens:[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}×</b> ${escaparHTML(i.nome)}${i.det?`<small>${escaparHTML(i.det)}</small>`:''}</div>`).join('');
-          return `<article class="order-card" style="--order-color:${c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div><div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">Pix pendente de conferência</span></div><div class="order-actions">${botoes}</div></article>`;
+          return `<article class="order-card" style="--order-color:${c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div><div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">Pix pendente de conferência</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}')">Comanda</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
         }).join('');
         return `<div class="kanban-col"><div class="col-header" style="color:${c.cor}"><span>${c.t}</span><span>${lista.length}</span></div><div class="kitchen-cards">${cards||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
       }).join('');
@@ -1501,13 +1537,20 @@
     }
 
     async function mudarStatusNaNuvem(id, status) {
-      if (!usuarioAtual) return;
+      if (!usuarioAtual || acoesPedidosEmCurso.has(id)) return;
       const permitidos = {novo:'preparando', preparando:'entrega', entrega:'fim'};
       const pedido = pedidos.find(p => p.id === id);
       if (!pedido || permitidos[pedido.status] !== status) return;
-      const {error} = await malikDB.from('pedidos').update({status}).eq('id',id).eq('restaurante_id',RESTAURANTE_ID).eq('status',pedido.status);
-      if (error) { alert('Não foi possível atualizar o pedido.'); return; }
-      await carregarPedidos();
+      const aceitar = pedido.status === 'novo';
+      const janela = aceitar && configOperacao.auto && configOperacao.mode==='browser' ? window.open('', '_blank','width=480,height=720') : null;
+      if(janela) janela.document.body.textContent='Confirmando o pedido…';
+      acoesPedidosEmCurso.add(id); renderKanban();
+      try {
+        const {data,error} = await malikDB.from('pedidos').update({status}).eq('id',id).eq('restaurante_id',RESTAURANTE_ID).eq('status',pedido.status).select('id');
+        if(error || !data?.length) { janela?.close(); alert(error?'Não foi possível atualizar o pedido.':'Este pedido já foi atualizado. Atualize a lista.'); return; }
+        if(aceitar && configOperacao.auto) await enviarComanda(pedido,janela);
+        await carregarPedidos();
+      } finally { acoesPedidosEmCurso.delete(id); renderKanban(); }
     }
 
     let dadosExportacaoCRM = [];
@@ -1561,11 +1604,13 @@
       try {
         const salvo = JSON.parse(localStorage.getItem(CARRINHO_KEY) || 'null');
         if (!salvo || !Array.isArray(salvo.itens) || Date.now() - salvo.quando > 86400000) return;
+        const usados = {};
         sacola = salvo.itens.flatMap(i => {
           const p = DADOS.produtos.find(p => p.id === i.prodId);
           if (!p || p.ativo === false || !Number.isInteger(i.qtd) || i.qtd < 1) return [];
-          const qtd = p.estoque == null ? i.qtd : Math.min(i.qtd, Number(p.estoque));
-          return qtd > 0 ? [{prodId:p.id,nome:p.nome,det:'',qtd,preco:Number(p.preco)}] : [];
+          const qtd = p.estoque == null ? i.qtd : Math.min(i.qtd, Math.max(0, Number(p.estoque)-(usados[p.id]||0)));
+          usados[p.id]=(usados[p.id]||0)+qtd;
+          return qtd > 0 ? [{prodId:p.id,nome:p.nome,det:String(i.det || '').slice(0,500),qtd,preco:Number(p.preco)}] : [];
         });
       } catch(e) { sacola = []; }
     }
@@ -1575,6 +1620,70 @@
         'Modalidade: ' + p.tipo_entrega, 'Total: ' + dinheiro(p.total),
         'Pode me orientar sobre o pagamento via Pix?'].join('\n');
     }
+    function quantidadeNaSacola(id){return sacola.filter(i=>i.prodId===id).reduce((n,i)=>n+i.qtd,0);}
+    const PRINT_KEY='malik-print-v1-'+RESTAURANTE_ID;
+    const estadoImpressao={};
+    let configOperacao={type:'thermal',width:80,mode:'browser',name:'',copies:1,auto:true};
+    try { const c=JSON.parse(localStorage.getItem(PRINT_KEY)||'null'); if(c)configOperacao={...configOperacao,...c}; }catch(e){}
+    function preencherConfigOperacao(){
+      for(const [id,key] of [['print-type','type'],['print-width','width'],['print-mode','mode'],['print-name','name'],['print-copies','copies']]) document.getElementById(id).value=configOperacao[key];
+      document.getElementById('print-auto').checked=configOperacao.auto;
+    }
+    preencherConfigOperacao();
+    function salvarConfigOperacao(e){
+      e.preventDefault();
+      const c={type:document.getElementById('print-type').value,width:Number(document.getElementById('print-width').value),mode:document.getElementById('print-mode').value,name:document.getElementById('print-name').value.trim(),copies:Number(document.getElementById('print-copies').value),auto:document.getElementById('print-auto').checked};
+      if(c.mode==='qz' && (c.type!=='thermal'||!c.name)){alert('Para QZ Tray, selecione térmica e informe o nome exato da impressora.');return;}
+      try{localStorage.setItem(PRINT_KEY,JSON.stringify(c));configOperacao=c;document.getElementById('print-feedback').textContent='Preferências salvas neste computador.';}catch(e){alert('Não foi possível salvar as preferências no navegador.');}
+    }
+    function htmlComanda(p,c=configOperacao){
+      const e=escaparHTML;
+      const via=()=>`<article><header><h2>${e(CONFIG_LOJA.nome||'Malik')}</h2><h1>COMANDA #${e(p.codigo_curto)}</h1><b>${e(p.tipo_entrega).toUpperCase()}</b><p>${e(new Date(p.criado_em).toLocaleString('pt-BR'))}</p></header><p><b>${e(p.cliente)}</b><br>${e(p.telefone)}<br>${e(p.endereco)}</p><hr>${(p.itens||[]).map(i=>`<section><b>${Number(i.qtd)} × ${e(i.nome)}</b>${i.det?`<p class="obs">OBS: ${e(i.det)}</p>`:''}<div>${dinheiro(Number(i.preco)*Number(i.qtd))}</div></section>`).join('')}<hr><p>Subtotal: ${dinheiro(p.subtotal)}<br>Entrega: ${dinheiro(p.taxa_entrega)}</p><h2>TOTAL ${dinheiro(p.total)}</h2><p>${e(p.forma_pagamento||'Pix')} — conferir pagamento</p><footer>Comanda de preparo • não é documento fiscal</footer></article>`;
+      const size=c.type==='a4'?'A4':`${c.width}mm 297mm`;
+      const content=c.type==='a4'?'180mm':`${c.width===58?48:72}mm`;
+      return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Comanda ${e(p.codigo_curto)}</title><style>@page{size:${size};margin:3mm}*{box-sizing:border-box}body{color:#000;background:#fff;font: ${c.width===58&&c.type==='thermal'?11:13}px monospace;margin:0}article{width:${content};margin:auto;padding:3mm 0;break-after:page}article:last-child{break-after:auto}header{text-align:center}h1{font-size:20px}h2{font-size:16px}section{margin:12px 0;break-inside:avoid}p{white-space:pre-line;overflow-wrap:anywhere}hr{border:0;border-top:1px dashed #000}.obs{font-weight:bold;margin:5px 0}footer{font-size:10px;margin-top:16px}button{margin:16px;padding:12px}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir novamente</button>${Array.from({length:c.copies},via).join('')}</body></html>`;
+    }
+    function textoComanda(p,c=configOperacao){
+      const cols=c.width===58?32:48;
+      const clean=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7E\n]/g,'');
+      const wrap=t=>clean(t).split('\n').flatMap(line=>{const out=[];while(line.length>cols){let n=line.lastIndexOf(' ',cols);if(n<1)n=cols;out.push(line.slice(0,n));line=line.slice(n).trimStart();}out.push(line);return out;}).join('\n');
+      const lines=[CONFIG_LOJA.nome||'Malik','COMANDA #'+p.codigo_curto,p.tipo_entrega,new Date(p.criado_em).toLocaleString('pt-BR'),'-'.repeat(cols),p.cliente,p.telefone,p.endereco,'-'.repeat(cols),...(p.itens||[]).flatMap(i=>[i.qtd+' x '+i.nome,i.det?'OBS: '+i.det:'',dinheiro(i.qtd*i.preco)]),'-'.repeat(cols),'Subtotal: '+dinheiro(p.subtotal),'Entrega: '+dinheiro(p.taxa_entrega),'TOTAL: '+dinheiro(p.total),(p.forma_pagamento||'Pix')+' - conferir pagamento','Comanda de preparo / nao fiscal'];
+      return '\x1b@'+lines.filter(Boolean).map(wrap).join('\n')+'\n\n\n\n\x1dV\x00';
+    }
+    let carregandoQZ;
+    function obterQZ(){
+      if(window.qz)return Promise.resolve(window.qz);
+      if(!carregandoQZ)carregandoQZ=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/qz-tray@2.2.5/qz-tray.js';script.onload=()=>resolve(window.qz);script.onerror=()=>{carregandoQZ=null;reject(new Error('Não foi possível carregar QZ Tray.'));};document.head.appendChild(script);});
+      return carregandoQZ;
+    }
+    let filaImpressao=Promise.resolve();
+    function enviarComanda(p,janela=null){
+      const c={...configOperacao};
+      const executar=async()=>{
+        try{
+          if(c.mode==='qz'){
+            const qz=await obterQZ();
+            if(!qz.websocket.isActive())await qz.websocket.connect();
+            const printer=await qz.printers.find(c.name);
+            await qz.print(qz.configs.create(printer,{copies:c.copies,encoding:'ISO-8859-1'}),[textoComanda(p,c)]);
+            estadoImpressao[p.id]='Comanda enviada à impressora via QZ Tray.';
+          }else{
+            const w=janela||window.open('','_blank','width=480,height=720');
+            if(!w)throw new Error('O navegador bloqueou a janela. Permita pop-ups e clique em Comanda para tentar novamente.');
+            w.document.open();w.document.write(htmlComanda(p,c));w.document.close();
+            await new Promise(resolve=>setTimeout(resolve,200));w.focus();w.print();
+            estadoImpressao[p.id]='Diálogo de impressão aberto. Confirme na impressora selecionada.';
+          }
+          document.getElementById('print-feedback').textContent=estadoImpressao[p.id];
+        }catch(e){janela?.close();estadoImpressao[p.id]='Falha na impressão: '+(e.message||'confira a impressora');document.getElementById('print-feedback').textContent=estadoImpressao[p.id];alert('O pedido foi mantido. '+estadoImpressao[p.id]+' Use Comanda para tentar novamente.');}
+        renderKanban();
+      };
+      filaImpressao=filaImpressao.then(executar,executar);return filaImpressao;
+    }
+    function imprimirPedido(id){if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(p)return enviarComanda(p,configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null);}
+    function testarImpressora(){if(!usuarioAtual)return;return enviarComanda({id:'teste',codigo_curto:'TESTE',cliente:'COMANDA DE TESTE',telefone:'',endereco:'Não preparar / não entregar',tipo_entrega:'teste',criado_em:new Date().toISOString(),subtotal:0,taxa_entrega:0,total:0,forma_pagamento:'TESTE',itens:[{nome:'Item para conferir a impressão',qtd:1,preco:0,det:'Verifique largura, acentos e legibilidade.'}]},configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null);}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharDetalheProduto();});
+
     const CAMPOS_PEDIDO='id,restaurante_id,codigo_curto,cliente,telefone,endereco,tipo_entrega,status,subtotal,taxa_entrega,total,forma_pagamento,itens,criado_em,arquivado_em';
     let canalPedidos=null;
     let estadoRealtime='conectando';
@@ -1583,7 +1692,7 @@
     let consultaPendente=false;
     function atualizarConexaoCozinha(){
       const el=document.getElementById('conexao-cozinha');if(!el)return;
-      el.textContent='Malik Cozinha v5 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
+      el.textContent='Malik v6 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
         ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
     }
     function receberEventoPedido(payload){
