@@ -196,10 +196,10 @@
     .kitchen-stat {padding:16px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:12px}
     .kitchen-stat strong {display:block;font-size:26px;margin-top:4px}
     #kanban-cols {display:grid;grid-template-columns:repeat(4,minmax(250px,1fr));gap:16px;align-items:start;overflow-x:auto;padding-bottom:16px}
-    #kanban-cols .kanban-col {min-width:0;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);height:auto;max-height:none}
-    #kanban-cols .col-header {padding:16px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
+    :is(#kanban-cols,#kds-cols) .kanban-col {min-width:0;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);height:auto;max-height:none}
+    :is(#kanban-cols,#kds-cols) .col-header {padding:16px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
     .kitchen-cards {padding:12px;display:grid;gap:12px;max-height:70vh;overflow-y:auto}
-    #kanban-cols .order-card {padding:16px;border-radius:12px;background:var(--bg-surface);border:1px solid var(--border-color);border-left:4px solid var(--order-color)}
+    :is(#kanban-cols,#kds-cols) .order-card {padding:16px;border-radius:12px;background:var(--bg-surface);border:1px solid var(--border-color);border-left:4px solid var(--order-color)}
     .order-top {display:flex;gap:8px;justify-content:space-between;align-items:start;margin-bottom:10px}
     .order-code {font-size:15px;font-weight:800;overflow-wrap:anywhere}
     .order-mode {font-size:10px;text-transform:uppercase;border-radius:20px;background:var(--bg-subsurface);padding:5px 8px}
@@ -262,6 +262,10 @@
     @media(max-width:650px){.atendimento-form{padding:20px}.atendimento-fields{grid-template-columns:1fr}.category-navigation{padding:16px}.category-nav-select{flex-wrap:wrap}.category-nav-select select{max-width:none;flex-basis:100%}.category-manager-dialog{width:calc(100% - 24px)!important;padding:20px!important}.category-manager-row{flex-wrap:wrap}.category-manager-name{flex-basis:100%}.category-manager-tools{flex-wrap:wrap}.category-manager-tools{flex-direction:column}.category-manager-tools input{width:100%;flex:auto}.category-manager-tools button{width:100%!important;margin:0}.closed-notice{margin:0 16px 20px}.atendimento-fields label{font-size:14px}}
   .combo-choice{gap:12px}.combo-choice>div:first-child{min-width:0;flex:1}.combo-choice small{display:block;color:var(--text-muted);font-size:12px;margin-top:4px}.combo-choice strong{overflow-wrap:anywhere}.combo-stepper{display:flex;align-items:center;gap:8px;flex-shrink:0}.combo-stepper button{width:40px;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-subsurface);color:var(--accent);font-size:22px;cursor:pointer}.combo-stepper button:disabled{opacity:.35;cursor:default}.combo-stepper span{min-width:20px;text-align:center;font-weight:700}
 .prep-legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 20px;font-size:12px}.prep-legend>span{padding:7px 10px;border-radius:8px;font-weight:700}.prep-legend>small{width:100%;color:var(--text-muted)}.prep-green,.order-card[data-tempo="verde"] .order-prep-time{background:#dcfce7;color:#166534}.prep-orange,.order-card[data-tempo="laranja"] .order-prep-time{background:#ffedd5;color:#9a3412}.prep-red,.order-card[data-tempo="vermelho"] .order-prep-time{background:#fee2e2;color:#991b1b}.order-card[data-tempo="verde"],.order-card[data-tempo="laranja"],.order-card[data-tempo="vermelho"]{border-left:6px solid var(--order-color);box-shadow:0 0 0 1px var(--order-color)}.order-prep-time{font-size:12px;font-weight:700;line-height:1.5;border-radius:8px;padding:10px;margin:10px 0}.order-card[data-tempo="sem-tempo"] .order-prep-time{background:var(--bg-subsurface);color:var(--text-muted)}
+
+  .combo-quick{padding:16px;background:var(--bg-subsurface);border:1px solid var(--border-color);border-radius:14px;margin:12px 0}.combo-presets{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.combo-presets button{padding:12px 22px;border:1px solid var(--accent);border-radius:10px;background:var(--bg-surface);color:var(--accent);font-weight:700;cursor:pointer}.custom-fields{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}#kanban-cols{grid-template-columns:repeat(5,minmax(260px,1fr));overflow-x:auto}#sec-kds:fullscreen{background:var(--bg-main);overflow:auto;padding:24px;width:100%;max-width:none!important}.kds-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.kds-board .order-card{font-size:17px;padding:18px}.kds-board .order-main-action{display:block;width:100%;padding:14px;border:0;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;margin-top:18px}.kds-board .order-main-action:disabled{opacity:.5;cursor:default}.combo-presets button[aria-pressed="true"]{background:var(--accent);color:white}.kds-board .order-code{font-size:26px}.kds-board .order-items{font-size:19px}.kds-board .order-item small{font-size:17px;white-space:pre-line;color:var(--text-main);line-height:1.5}.kds-board .kitchen-cards{max-height:none}.kds-latest{padding:14px 18px;background:var(--bg-subsurface);border-radius:12px;margin-bottom:16px;font-weight:700}.queue-number{font-weight:700;font-size:15px;margin:8px 0}.message-event{padding:14px 0;border-bottom:1px solid var(--border-color)}.message-event p{white-space:pre-line;margin:8px 0}.message-event a{display:inline-block;color:var(--accent);padding:8px 0}
+  @media(max-width:1000px){.kds-board{grid-template-columns:1fr}#kanban-cols{grid-template-columns:repeat(5,minmax(280px,1fr))}}@media(max-width:600px){#kanban-cols{grid-template-columns:1fr;overflow:visible}.combo-presets button{flex:1}.top-nav{overflow-x:auto}.kds-board .order-card{padding:14px}}
+@media(min-width:1100px){.kitchen-summary{grid-template-columns:repeat(5,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -281,7 +285,8 @@
       <button class="tab-btn active" id="tab-cardapio" onclick="mostrarAba('cardapio')">Visão Cliente</button>
       <button class="tab-btn admin-only" id="tab-admin" onclick="mostrarAba('admin')">Cardápio & Estoque</button>
       <button class="tab-btn admin-only" id="tab-crm" onclick="mostrarAba('crm')">Métricas</button>
-      <button class="tab-btn admin-only" id="tab-cozinha" onclick="mostrarAba('cozinha')">Pedidos</button>
+      <button class="tab-btn admin-only" id="tab-cozinha" onclick="mostrarAba('cozinha')">Atendimento</button>
+      <button class="tab-btn admin-only" id="tab-kds" onclick="mostrarAba('kds')">Cozinha · KDS</button>
       <button class="tab-btn admin-only" id="tab-config" onclick="mostrarAba('config')" style="color:var(--accent);">⚙️ Configurações</button>
     </div>
 
@@ -448,7 +453,7 @@
     </form>
 
     <div class="operations-settings">
-      <h3>Campainha e impressão</h3><p class="form-help">Preferências deste computador e navegador. Configure em cada estação da cozinha.</p>
+      <h3>Campainha e impressão</h3><p class="form-help">Preferências deste computador e navegador. Configure no computador do atendente. A cozinha acompanha os pedidos pelo KDS.</p>
       <h4>Som de novos pedidos</h4>  <div id="painel-alerta-pedidos" style="display:none; margin:16px 0;">
     <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
       <button type="button" id="btn-ativar-som" class="theme-toggle-btn" onclick="ativarSomPedidos()">🔔 Ativar campainha alta</button>
@@ -524,17 +529,17 @@
           <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 20px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 28px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
         </div>
         <p id="checkout-erro" role="alert" style="color:var(--danger);"></p>
-        <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
+        <label class="form-help" style="display:block;margin:16px 0"><input type="checkbox" id="chk-whatsapp-atualizacoes"> Quero receber atualizações deste pedido pelo WhatsApp.</label><button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
       </form>
     </div>
   </section>
 
   <section id="sec-cozinha" style="display:none; max-width:1600px;" class="container">
     <div class="kitchen-top">
-      <div><h2 style="font-size:28px;">Central de pedidos</h2><p class="kitchen-sub">Receba, prepare e acompanhe cada pedido.</p></div>
+      <div><h2 style="font-size:28px;">Atendimento e despacho</h2><p class="kitchen-sub">Confira o Pix, aceite pedidos, imprima as vias e despache para entrega ou salão.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
-    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v12 • conectando…</div>
+    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v13 • conectando…</div>
     <div id="resumo-cozinha" class="kitchen-summary"></div><div class="prep-legend" aria-label="Legenda do tempo de preparo"><span class="prep-green">Verde: menos de 15 min</span><span class="prep-orange">Laranja: 15 a 29 min</span><span class="prep-red">Vermelho: 30 min ou mais</span><small>Tempo desde Iniciar preparo, mantido até concluir o pedido.</small></div>
     <div class="kitchen-toolbar">
       <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
@@ -542,6 +547,13 @@
     </div>
     <p id="pedidos-feedback" role="status" style="color:var(--text-muted);font-size:12px;margin-bottom:12px"></p>
     <div class="kanban-grid" id="kanban-cols"></div>
+  </section>
+
+  <section id="sec-kds" class="container" style="display:none;max-width:1800px">
+    <div class="kitchen-top"><div><h2>Cozinha · KDS</h2><p class="kitchen-sub">Prepare na ordem da fila. Ao terminar, marque Pronto; o atendente faz o despacho.</p></div><div class="custom-toolbar"><button class="btn-action" onclick="carregarPedidos()">Atualizar</button><button class="btn-action" onclick="alternarTelaCheiaKDS()">Tela cheia</button></div></div>
+    <p id="kds-conexao" class="kitchen-connection" role="status"></p><p id="kds-ultimo" class="kds-latest" aria-live="polite"></p>
+    <div class="prep-legend"><span class="prep-green">Verde: menos de 15 min</span><span class="prep-orange">Laranja: 15 a 29 min</span><span class="prep-red">Vermelho: 30 min ou mais</span><small>Fila do mais antigo para o mais recente. Aguardando aceite fica sem cronômetro.</small></div>
+    <div class="kds-board" id="kds-cols"></div>
   </section>
 
   <!-- BARRA FLUTUANTE SACOLA -->
@@ -576,14 +588,15 @@
   <div class="modal-overlay" id="modal-personalizacao" style="display:none;z-index:1002">
     <div class="modal-box custom-editor" role="dialog" aria-modal="true" aria-labelledby="custom-title">
       <div class="modal-header"><h3 id="custom-title">Personalizar produto</h3><button type="button" aria-label="Fechar personalização" onclick="fecharPersonalizacao()">✕</button></div>
-      <p class="form-help">Crie grupos para pizzas, bordas, adicionais ou sabores de combos com quantidade. Em sabores, informe o preço da pizza inteira: prevalece o maior valor escolhido. Cadastre cada tamanho como um produto.</p>
-      <div id="custom-grupos"></div>
-      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('sabores')">+ Sabores</button><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button><button type="button" onclick="adicionarGrupoCustom('combo')">+ Sabores do combo</button></div>
+      <p class="form-help">Para esfihas, escolha o tamanho do combo abaixo e cadastre os sabores. O cliente completa exatamente essa quantidade; pode repetir sabores. O preço do combo fica no cadastro do produto.</p>
+      <div class="combo-quick"><strong>Configurar combo de esfihas</strong><div class="combo-presets"><button type="button" onclick="configurarComboEsfihas(2)">Combo 2</button><button type="button" onclick="configurarComboEsfihas(3)">Combo 3</button><button type="button" onclick="configurarComboEsfihas(4)">Combo 4</button><button type="button" onclick="configurarComboEsfihas(8)">Combo 8</button></div><p class="form-help">1. Escolha a quantidade. 2. Adicione os sabores. 3. Salve. Sabores incluídos têm acréscimo R$ 0.</p></div><div id="custom-grupos"></div>
+      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('sabores')">+ Sabores de pizza</button><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button><button type="button" onclick="adicionarGrupoCustom('combo')">+ Outro combo</button></div>
       <div class="custom-save"><p id="custom-erro" role="alert" style="color:var(--danger)"></p><button type="button" class="btn-submit" id="custom-salvar" onclick="salvarPersonalizacao()">Salvar opções</button></div>
     </div>
   </div>
   <div id="modal-categorias" class="modal-overlay" style="display:none;z-index:1004"><div class="modal-box category-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="categorias-title"><div class="modal-header"><h3 id="categorias-title">Gerenciar categorias</h3><button type="button" aria-label="Fechar categorias" onclick="fecharGestaoCategorias()">✕</button></div><p class="form-help">Edite os nomes e a ordem das categorias. Categorias com produtos só podem ser excluídas depois que os produtos forem movidos.</p><input id="busca-categorias-admin" class="input-text" type="search" placeholder="Buscar categoria..." aria-label="Buscar categoria" oninput="renderListaGestaoCategorias()"><div id="gestao-categorias-lista"></div><form class="category-manager-tools" onsubmit="adicionarCategoriaAdmin(event)"><input id="nova-cat-nome" class="input-text" maxlength="80" required placeholder="Nome da nova categoria" aria-label="Nome da nova categoria"><button id="btn-criar-categoria" type="submit" class="btn-submit" style="width:auto;margin:0">+ Criar categoria</button></form><p id="gestao-categorias-feedback" class="form-help" role="status"></p></div></div>
   <div id="modal-editar-categoria" class="modal-overlay" style="display:none;z-index:1005"><form class="modal-box" style="max-width:440px" role="dialog" aria-modal="true" aria-labelledby="category-edit-title" onsubmit="salvarNomeCategoria(event)"><div class="modal-header"><h3 id="category-edit-title">Editar categoria</h3><button type="button" aria-label="Fechar edição" onclick="fecharEdicaoCategoria()">✕</button></div><p class="form-help">O novo nome será aplicado aos produtos, preservando a ordem deles.</p><label for="editar-cat-nome" class="form-label">Nome da categoria</label><input id="editar-cat-nome" class="input-text" maxlength="80" required><p id="editar-cat-feedback" role="status" class="form-help"></p><button id="btn-salvar-categoria" type="submit" class="btn-submit">Salvar nome</button></form></div>
+  <div id="modal-mensagens" class="modal-overlay" style="display:none;z-index:1006"><div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="mensagens-title"><div class="modal-header"><h3 id="mensagens-title">Mensagens do pedido</h3><button aria-label="Fechar mensagens" onclick="document.getElementById('modal-mensagens').style.display='none'">✕</button></div><p class="form-help">O envio automático exige a integração do WhatsApp ativa. Sem integração, os eventos ficam na fila. Abrir WhatsApp permite enviar manualmente; não comprova envio automático.</p><div id="mensagens-lista"></div></div></div>
   <!-- MODAL: CARRINHO DE COMPRAS -->
   <div class="modal-overlay" id="modal-carrinho" style="display:none; z-index: 999;">
     <div class="modal-box" style="max-width: 450px;">
@@ -744,6 +757,7 @@
     window.addEventListener('hashchange', verificarRotaAdmin);
 
     function verificarRotaAdmin() {
+      if (['#atendimento','#kds'].includes(window.location.hash)) { if(!usuarioAtual)abrirModalLogin();else mostrarAba(window.location.hash==='#kds'?'kds':'cozinha');return; }
       if (window.location.hash === '#admin') {
           if (!usuarioAtual) {
               abrirModalLogin();
@@ -884,27 +898,27 @@
             encerrarMonitorPedidos();
             resetarAlertasPedidos();
             document.getElementById('painel-alerta-pedidos').style.display = 'none';
-            document.getElementById('kanban-cols').innerHTML = '';
+            document.getElementById('kanban-cols').innerHTML = '';document.getElementById('kds-cols').innerHTML='';document.getElementById('kds-ultimo').textContent='';
             document.getElementById('crm-lista-clientes').innerHTML = '';
             document.getElementById('crm-top-produtos').innerHTML = ''; 
         } 
     }
 
     function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { if (data.user.id !== ADMIN_UID) { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); alert('Esta conta não tem acesso à administração desta loja.'); btn.innerText = 'Entrar'; return; } usuarioAtual = data.user; await carregarProdutosDaNuvem(); atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba('admin'); } }
+    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { if (data.user.id !== ADMIN_UID) { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); alert('Esta conta não tem acesso à administração desta loja.'); btn.innerText = 'Entrar'; return; } usuarioAtual = data.user; await carregarProdutosDaNuvem(); atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba(window.location.hash==='#kds'?'kds':window.location.hash==='#atendimento'?'cozinha':'admin'); } }
     async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; document.getElementById('modal-personalizacao').style.display='none'; await carregarProdutosDaNuvem(); atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
 
     function mostrarAba(aba) {
-      if (['admin','crm','config','cozinha'].includes(aba) && !usuarioAtual) { abrirModalLogin(); return; }
-      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+      if (['admin','crm','config','cozinha','kds'].includes(aba) && !usuarioAtual) { abrirModalLogin(); return; }
+      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha', 'sec-kds'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
       const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
       
-      ['tab-cardapio', 'tab-admin', 'tab-crm', 'tab-config', 'tab-cozinha'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
+      ['tab-cardapio', 'tab-admin', 'tab-crm', 'tab-config', 'tab-cozinha', 'tab-kds'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
       const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
       
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
       if (aba === 'admin') renderAdmin();
-      if (aba === 'cozinha') carregarPedidos();
+      if (['cozinha','kds'].includes(aba)) carregarPedidos();
       if (aba === 'crm') carregarPedidosCRM(); 
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
@@ -1203,7 +1217,7 @@
     function renderEscolhasDetalhe(){
       document.getElementById('detalhe-grupos').innerHTML=gruposProduto(produtoDetalheAtual.id).map(g=>{
         const count=escolhasDetalhe.filter(id=>opcoesGrupo(g.id).some(o=>o.id===id)).length;
-        if(g.tipo==='combo')return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)}</h3><p aria-live="polite">${count}/${g.maximo} unidades escolhidas · ${g.minimo===g.maximo?'Escolha exatamente '+g.maximo:'Escolha de '+g.minimo+' a '+g.maximo} unidades. Pode repetir sabores.</p></div>${opcoesGrupo(g.id).map(o=>{const qtd=escolhasDetalhe.filter(id=>id===o.id).length;return `<div class="choice-row combo-choice"><div><strong>${escaparHTML(o.nome)}</strong><small>${Number(o.preco)?'+ '+dinheiro(o.preco)+' por unidade':'Incluído no combo'}</small></div><div class="combo-stepper"><button type="button" aria-label="Diminuir ${escaparHTML(o.nome)}" ${qtd===0?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',-1)">−</button><span aria-label="Quantidade de ${escaparHTML(o.nome)}">${qtd}</span><button type="button" aria-label="Aumentar ${escaparHTML(o.nome)}" ${count>=g.maximo?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',1)">+</button></div></div>`;}).join('')}</section>`;
+        if(g.tipo==='combo')return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)}</h3><p aria-live="polite">Escolhidas ${count} de ${g.maximo} esfihas · ${g.minimo===g.maximo?'Complete '+g.maximo+' esfihas':'Escolha de '+g.minimo+' a '+g.maximo}. Pode repetir sabores.</p></div>${opcoesGrupo(g.id).map(o=>{const qtd=escolhasDetalhe.filter(id=>id===o.id).length;return `<div class="choice-row combo-choice"><div><strong>${escaparHTML(o.nome)}</strong><small>${Number(o.preco)?'+ '+dinheiro(o.preco)+' por unidade':'Incluído no combo'}</small></div><div class="combo-stepper"><button type="button" aria-label="Diminuir ${escaparHTML(o.nome)}" ${qtd===0?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',-1)">−</button><span aria-label="Quantidade de ${escaparHTML(o.nome)}">${qtd}</span><button type="button" aria-label="Aumentar ${escaparHTML(o.nome)}" ${count>=g.maximo?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',1)">+</button></div></div>`;}).join('')}</section>`;
 
         return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)} <small style="float:right;font-size:11px">${g.minimo?'Obrigatório':'Opcional'} · ${count}/${g.maximo}</small></h3><p>${g.minimo?`Escolha de ${g.minimo} a ${g.maximo}`:`Escolha até ${g.maximo}`} opção(ões).${g.tipo==='sabores'?' O maior preço escolhido define o valor da pizza.':''}</p></div>${opcoesGrupo(g.id).map(o=>`<label class="choice-row"><input type="checkbox" aria-label="${escaparHTML(o.nome)}" ${escolhasDetalhe.includes(o.id)?'checked':''} ${g.maximo>1&&count>=g.maximo&&!escolhasDetalhe.includes(o.id)?'disabled':''} onchange="selecionarOpcaoDetalhe('${g.id}','${o.id}',this.checked)"><span>${escaparHTML(o.nome)}</span><strong>${g.tipo==='sabores'?'':Number(o.preco)?'+ ':''}${Number(o.preco)?dinheiro(o.preco):'Grátis'}</strong></label>`).join('')}</section>`;
       }).join('');
@@ -1242,11 +1256,31 @@
       if(tipo==='sabores'&&customGrupos.some(g=>g.tipo==='sabores'&&g.ativo!==false)){alert('Este produto já tem um grupo ativo de sabores.');return;}
       customGrupos.push({id:crypto.randomUUID(),nome:tipo==='combo'?'Escolha os sabores do combo':tipo==='sabores'?'Escolha os sabores':'Escolha a borda',tipo,minimo:tipo==='combo'?8:tipo==='sabores'?1:0,maximo:tipo==='combo'?8:tipo==='sabores'?2:1,ativo:true,opcoes:[]});renderEditorCustom();
     }
+    function definirTamanhoCombo(i,n){if(salvandoCustom||!Number.isInteger(n)||n<1||n>20)return;customGrupos[i].minimo=n;customGrupos[i].maximo=n;renderEditorCustom();}
+    function configurarComboEsfihas(n){
+      if(salvandoCustom||![2,3,4,8].includes(n))return;
+      let g=customGrupos.find(g=>g.tipo==='combo');
+      if(!g){
+        g=customGrupos.find(g=>g.tipo==='sabores'&&g.ativo!==false);
+        if(g){if(!confirm('Transformar o grupo de pizza em combo de esfihas? Os sabores serão incluídos sem acréscimo. Confira os preços antes de salvar.'))return;g.tipo='combo';g.opcoes.forEach(o=>o.preco=0);}
+        else{if(customGrupos.length>=10)return;g={id:crypto.randomUUID(),tipo:'combo',opcoes:[]};customGrupos.push(g);}
+      }
+      g.nome='Escolha suas '+n+' esfihas';g.minimo=n;g.maximo=n;g.ativo=true;renderEditorCustom();
+    }
+    function adicionarListaSabores(i){
+      if(salvandoCustom||customGrupos[i]?.tipo!=='combo')return;
+      const g=customGrupos[i],lista=document.getElementById('combo-lista-'+i).value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+      for(const nome of lista){if(nome.length>150||g.opcoes.length>=100)continue;if(!g.opcoes.some(o=>normalizarBusca(o.nome)===normalizarBusca(nome)))g.opcoes.push({id:crypto.randomUUID(),nome,preco:0,ativo:true});}
+      renderEditorCustom();
+    }
     function adicionarOpcaoCustom(i){if(salvandoCustom)return;customGrupos[i].opcoes.push({id:crypto.randomUUID(),nome:'',preco:0,ativo:true});renderEditorCustom();}
     function removerGrupoCustom(i){if(!salvandoCustom&&confirm('Remover este grupo e suas opções?')){customGrupos.splice(i,1);renderEditorCustom();}}
     function removerOpcaoCustom(i,j){if(!salvandoCustom){customGrupos[i].opcoes.splice(j,1);renderEditorCustom();}}
     function renderEditorCustom(){
-      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label><label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option><option value="sabores" ${g.tipo==='sabores'?'selected':''}>Sabores de pizza</option><option value="combo" ${g.tipo==='combo'?'selected':''}>Combo com quantidades</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='adicional'?0:1}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label></div><p class="form-help">${g.tipo==='combo'?'Mínimo e máximo contam unidades. Preço base no produto; informe aqui o acréscimo por unidade, ou 0 para sabor incluído. Para um combo de 8, mínimo 8 e máximo 8.':g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='combo'?'Sabores podem ser repetidos.':g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='combo'?'Carne':g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input aria-label="${g.tipo==='combo'?'Acréscimo por unidade':'Preço da opção'}" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">+ Opção</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
+      const selecionado=customGrupos.find(g=>g.tipo==='combo'&&g.ativo!==false);
+      document.querySelectorAll('.combo-presets button').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.textContent.replace(/\D/g,''))===selecionado?.maximo)));
+
+      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label>${g.tipo==='combo'?`<label>Quantidade de esfihas<select class="input-text" aria-label="Quantidade de esfihas" onchange="definirTamanhoCombo(${i},Number(this.value))">${[...new Set([2,3,4,8,g.maximo])].sort((a,b)=>a-b).map(n=>`<option value="${n}" ${g.maximo===n?'selected':''}>Combo de ${n} esfihas</option>`).join('')}</select></label>`:`<label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option><option value="sabores" ${g.tipo==='sabores'?'selected':''}>Sabores de pizza</option><option value="combo" ${g.tipo==='combo'?'selected':''}>Combo com quantidades</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='adicional'?0:1}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label>`}</div><p class="form-help">${g.tipo==='combo'?'O cliente escolhe exatamente '+g.maximo+' esfihas. Não precisa configurar mínimo e máximo. Cadastre todos os sabores disponíveis; podem ser mais que a quantidade do combo.':g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='combo'?'Sabores podem ser repetidos.':g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.tipo==='combo'?`<label class="form-label">Adicionar vários sabores, um por linha</label><textarea id="combo-lista-${i}" class="input-text" rows="3" placeholder="Carne&#10;Queijo&#10;Frango"></textarea><button class="btn-action" type="button" onclick="adicionarListaSabores(${i})">Adicionar sabores incluídos</button>`:''}${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='combo'?'Carne':g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input title="${g.tipo==='combo'?'Acréscimo por esfiha. Zero = incluído no combo':'Preço da opção'}" aria-label="${g.tipo==='combo'?'Acréscimo por unidade':'Preço da opção'}" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">${g.tipo==='combo'?'+ Sabor':'+ Opção'}</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
     }
     async function salvarPersonalizacao(){
       if(salvandoCustom||!customProduto||!usuarioAtual)return;
@@ -1578,7 +1612,7 @@
         enviandoPedido = true; btn.disabled = true; btn.textContent = 'Enviando pedido...';
         const payload = {restaurante_id:RESTAURANTE_ID, cliente:nome, telefone,
           endereco:tipoConsumo === 'delivery' ? rua + ' - ' + bairro : '',
-          tipo_entrega:tipoConsumo,taxa_esperada:tipoConsumo==='delivery'?Number(CONFIG_LOJA.taxa_entrega):0, itens:itens.map(i => ({prodId:i.prodId,qtd:i.qtd,det:i.det,opcoes:i.opcoes}))};
+          tipo_entrega:tipoConsumo,whatsapp_autorizado:document.getElementById('chk-whatsapp-atualizacoes').checked===true,taxa_esperada:tipoConsumo==='delivery'?Number(CONFIG_LOJA.taxa_entrega):0, itens:itens.map(i => ({prodId:i.prodId,qtd:i.qtd,det:i.det,opcoes:i.opcoes}))};
         const tentativaKey = 'malik-tentativa-' + RESTAURANTE_ID;
         const assinatura = JSON.stringify(payload);
         let tentativa;
@@ -1737,7 +1771,7 @@
     const acoesPedidosEmCurso=new Set();
     function escaparHTML(v) { return String(v == null ? '' : v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function sinalTempoPreparo(p,agora=Date.now()){
-      if(!['preparando','entrega'].includes(p.status))return null;
+      if(!['preparando','pronto','entrega'].includes(p.status))return null;
       const inicio=Date.parse(p.preparo_iniciado_em||'');
       if(!Number.isFinite(inicio))return {nivel:'sem-tempo',cor:'var(--text-muted)',texto:'Tempo de preparo não registrado'};
       const decorrido=Math.max(0,agora-inicio),min=Math.floor(decorrido/60000);
@@ -1756,7 +1790,8 @@
     setInterval(atualizarRelogiosPreparo,1000);
     document.addEventListener('visibilitychange',atualizarRelogiosPreparo);
     function renderKanban() {
-      const cols=[{id:'novo',t:'Novos',cor:'var(--danger)'},{id:'preparando',t:'Em preparo',cor:'#e39721'},{id:'entrega',t:'Em entrega / retirada',cor:'#3b82f6'},{id:'fim',t:'Concluídos',cor:'var(--success)'}];
+      renderKDS();
+      const cols=[{id:'novo',t:'Novos',cor:'var(--danger)'},{id:'preparando',t:'Em preparo',cor:'#e39721'},{id:'pronto',t:'Prontos · aguardando despacho',cor:'#8b5cf6'},{id:'entrega',t:'Despachados / servindo',cor:'#3b82f6'},{id:'fim',t:'Concluídos',cor:'var(--success)'}];
       const ativos=pedidos.filter(p=>!p.arquivado_em);
       document.getElementById('resumo-cozinha').innerHTML=cols.map(c=>`<div class="kitchen-stat"><span style="color:${c.cor}">${c.t}</span><strong>${ativos.filter(p=>p.status===c.id).length}</strong></div>`).join('');
       const busca=normalizarBusca(document.getElementById('busca-pedidos').value||'');
@@ -1774,14 +1809,51 @@
           const horario=new Date(p.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
           const disabled=acoesPedidosEmCurso.has(id)?'disabled':'';
           let botoes='';
-          const transicoes={novo:['preparando','Iniciar preparo'],preparando:['entrega',p.tipo_entrega==='delivery'?'Saiu para entrega':'Pronto para retirada'],entrega:['fim','Concluir pedido']};
-          if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
+          const transicoes={novo:['preparando','Aceitar e iniciar preparo'],preparando:['pronto','Marcar pronto'],pronto:['entrega',p.tipo_entrega==='delivery'?'Despachar para motoboy':p.tipo_entrega==='mesa'?'Enviar ao salão':'Liberar para retirada'],entrega:['fim','Concluir pedido']};
+          if(p.status==='novo'&&!p.pagamento_confirmado_em){botoes=`<button class="order-main-action" ${disabled} onclick="confirmarPixPedido('${id}')">Conferir e confirmar Pix</button>`;}else if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
           if(p.status==='fim') botoes=`<button class="order-secondary" ${disabled} onclick="gerenciarConcluido('${id}','${p.arquivado_em?'restaurar':'arquivar'}')">${p.arquivado_em?'Restaurar':'Arquivar'}</button><button class="order-delete" ${disabled} onclick="gerenciarConcluido('${id}','excluir')">Excluir</button>`;
           const itens=(Array.isArray(p.itens)?p.itens:[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}×</b> ${escaparHTML(i.nome)}${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}</div>`).join('');
-          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">Pix pendente de conferência</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}')">Comanda</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
+          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">${p.pagamento_confirmado_em?'Pix confirmado':'Pix aguardando conferência'}</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}','cozinha')">Imprimir cozinha</button><button class="order-secondary" onclick="imprimirPedido('${id}','expedicao')">${p.tipo_entrega==='delivery'?'Imprimir motoboy':'Imprimir salão / retirada'}</button><button class="order-secondary" onclick="abrirMensagensPedido('${id}')">WhatsApp · mensagens</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
         }).join('');
         return `<div class="kanban-col"><div class="col-header" style="color:${c.cor}"><span>${c.t}</span><span>${lista.length}</span></div><div class="kitchen-cards">${cards||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
       }).join('');
+    }
+    function renderKDS(){
+      const ativos=pedidos.filter(p=>!p.arquivado_em&&((p.status==='novo'&&p.pagamento_confirmado_em)||['preparando','pronto'].includes(p.status))).sort((a,b)=>new Date(a.criado_em)-new Date(b.criado_em)||String(a.id).localeCompare(String(b.id)));
+      const ultimo=ativos.reduce((u,p)=>!u||new Date(p.criado_em)>new Date(u.criado_em)?p:u,null);
+      document.getElementById('kds-ultimo').textContent=ultimo?'Último recebido: #'+ultimo.codigo_curto+' · '+new Date(ultimo.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+ultimo.cliente:'Sem pedidos pagos na cozinha. Pedidos com Pix pendente ficam no Atendimento.';
+      const fila=ativos.filter(p=>p.status!=='pronto');
+      document.getElementById('kds-cols').innerHTML=[['novo','Aguardando aceite'],['preparando','Em preparo'],['pronto','Prontos · atendente despacha']].map(([status,titulo])=>{
+        const lista=ativos.filter(p=>p.status===status);
+        return `<div class="kanban-col"><div class="col-header"><span>${titulo}</span><span>${lista.length}</span></div><div class="kitchen-cards">${lista.map(p=>{
+          const id=String(p.id);if(!/^[0-9a-f-]{36}$/i.test(id))return '';
+          const sinal=sinalTempoPreparo(p),pos=fila.findIndex(x=>x.id===p.id)+1;
+          const itens=(p.itens||[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}× ${escaparHTML(i.nome)}</b><small>${escaparHTML(resumoItemSacola(i))}</small></div>`).join('');
+          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:'var(--text-muted)'}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${p.tipo_entrega==='mesa'?'SALÃO':p.tipo_entrega==='balcao'?'RETIRADA':'DELIVERY'}</span></div><div class="queue-number">${pos?'Fila #'+pos:'Pronto para despacho'}${ultimo?.id===p.id?' · Último recebido':''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:'<p class="form-help">Aguardando o atendente aceitar.</p>'}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-items">${itens}</div>${status==='preparando'?`<button class="order-main-action" ${acoesPedidosEmCurso.has(id)?'disabled':''} onclick="mudarStatusNaNuvem('${id}','pronto')">Pronto · avisar atendimento</button>`:''}</article>`;
+        }).join('')||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
+      }).join('');
+    }
+    async function alternarTelaCheiaKDS(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.getElementById('sec-kds').requestFullscreen();}catch(_){alert('Não foi possível abrir tela cheia. Você também pode usar F11.');}}
+    async function confirmarPixPedido(id){
+      const p=pedidos.find(p=>p.id===id);if(!usuarioAtual||!p||acoesPedidosEmCurso.has(id)||p.pagamento_confirmado_em)return;
+      if(!confirm('Confirme no extrato o recebimento de '+dinheiro(p.total)+' referente ao pedido #'+p.codigo_curto+'. O valor realmente entrou?'))return;
+      acoesPedidosEmCurso.add(id);renderKanban();
+      try{const {error}=await malikDB.rpc('malik_confirmar_pix_v13',{p_id:id});if(error)throw error;await carregarPedidos();}catch(e){alert(e.message||'Não foi possível confirmar o Pix.');}finally{acoesPedidosEmCurso.delete(id);renderKanban();}
+    }
+    let mensagensPedidoAtual=null;
+    function textoMensagemPedido(p,evento){
+      const inicio='Olá, '+p.cliente+'! Pedido #'+p.codigo_curto+'. ';
+      return inicio+{recebido:'Recebemos seu pedido e confirmamos o pagamento via Pix. Obrigado!',preparando:'Estamos preparando seu pedido com carinho.',a_caminho:'Seu pedido está a caminho! Aguarde a chegada do entregador.'}[evento];
+    }
+    async function abrirMensagensPedido(id){
+      if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(!p)return;
+      mensagensPedidoAtual=id;document.getElementById('modal-mensagens').style.display='flex';document.getElementById('mensagens-title').textContent='WhatsApp · #'+p.codigo_curto;
+      const el=document.getElementById('mensagens-lista');el.textContent='Consultando mensagens…';
+      const {data,error}=await malikDB.from('malik_whatsapp_fila').select('evento,estado,erro').eq('pedido_id',id).eq('restaurante_id',RESTAURANTE_ID);
+      if(!usuarioAtual||mensagensPedidoAtual!==id)return;if(error){el.textContent='Não foi possível consultar a fila. Confira a instalação do SQL 07.';return;}
+      if(!data?.length){el.textContent=p.whatsapp_autorizado?'Nenhuma mensagem gerada. A primeira será gerada após a confirmação do Pix.':'O cliente não escolheu receber atualizações pelo WhatsApp. Nenhuma mensagem automática será gerada.';return;}
+      let numero=String(p.telefone||'').replace(/\D/g,'');if(numero.length===10||numero.length===11)numero='55'+numero;
+      el.innerHTML=['recebido','preparando','a_caminho'].flatMap(evento=>{const m=data.find(m=>m.evento===evento);if(!m)return [];const txt=textoMensagemPedido(p,evento);return [`<div class="message-event"><strong>${{recebido:'1 · Pedido recebido',preparando:'2 · Em preparo',a_caminho:'3 · A caminho'}[evento]}</strong><p>${escaparHTML(txt)}</p><small>${escaparHTML({pendente:'Na fila · envio requer integração ativa',enviando:'Enviando pela integração',aceito_api:'Aceita pela API · entrega ao cliente ainda não comprovada',falha:'Falha no envio',revisar:'Verificar envio na API antes de repetir'}[m.estado]||m.estado)}</small>${m.erro?`<p class="form-help">${escaparHTML(m.erro)}</p>`:''}${/^[0-9]{12,13}$/.test(numero)?`<br><a href="https://wa.me/${numero}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener noreferrer">Abrir WhatsApp para envio manual</a>`:''}</div>`];}).join('');
     }
     async function alternarArquivados() {
       mostrandoArquivados=!mostrandoArquivados;
@@ -1814,17 +1886,18 @@
 
     async function mudarStatusNaNuvem(id, status) {
       if (!usuarioAtual || acoesPedidosEmCurso.has(id)) return;
-      const permitidos = {novo:'preparando', preparando:'entrega', entrega:'fim'};
+      const permitidos = {novo:'preparando', preparando:'pronto', pronto:'entrega', entrega:'fim'};
       const pedido = pedidos.find(p => p.id === id);
       if (!pedido || permitidos[pedido.status] !== status) return;
+      if(pedido.status==='novo'&&!pedido.pagamento_confirmado_em){alert('Confira e confirme o Pix antes de aceitar.');return;}
       const aceitar = pedido.status === 'novo';
       const janela = aceitar && configOperacao.auto && configOperacao.mode==='browser' ? window.open('', '_blank','width=480,height=720') : null;
       if(janela) janela.document.body.textContent='Confirmando o pedido…';
       acoesPedidosEmCurso.add(id); renderKanban();
       try {
-        const {data,error} = await malikDB.from('pedidos').update({status}).eq('id',id).eq('restaurante_id',RESTAURANTE_ID).eq('status',pedido.status).select('id');
-        if(error || !data?.length) { janela?.close(); alert(error?'Não foi possível atualizar o pedido.':'Este pedido já foi atualizado. Atualize a lista.'); return; }
-        if(aceitar && configOperacao.auto) await enviarComanda(pedido,janela);
+        const {data,error} = await malikDB.rpc('malik_mudar_etapa_v13',{p_id:id,p_anterior:pedido.status,p_status:status});
+        if(error || !data?.id) { janela?.close(); alert(error?(error.message||'Não foi possível atualizar o pedido.'):'Este pedido já foi atualizado. Atualize a lista.'); return; }
+        if(aceitar && configOperacao.auto) await enviarComanda(data,janela,'cozinha');
         await carregarPedidos();
       } finally { acoesPedidosEmCurso.delete(id); renderKanban(); }
     }
@@ -1916,20 +1989,20 @@
       if(c.mode==='qz' && (c.type!=='thermal'||!c.name)){alert('Para QZ Tray, selecione térmica e informe o nome exato da impressora.');return;}
       try{localStorage.setItem(PRINT_KEY,JSON.stringify(c));configOperacao=c;document.getElementById('print-feedback').textContent='Preferências salvas neste computador.';}catch(e){alert('Não foi possível salvar as preferências no navegador.');}
     }
-    function htmlComanda(p,c=configOperacao){
+    function htmlComanda(p,c=configOperacao,destino='cozinha'){
       const e=escaparHTML;
-      const via=()=>`<article><header><h2>${e(CONFIG_LOJA.nome||'Malik')}</h2><h1>COMANDA #${e(p.codigo_curto)}</h1><b>${e(p.tipo_entrega).toUpperCase()}</b><p>${e(new Date(p.criado_em).toLocaleString('pt-BR'))}</p></header>${p.entrega_minutos_min?`<p>Entrega estimada: ${e(prazoEntrega(p))}</p>`:''}<p><b>${e(p.cliente)}</b><br>${e(p.telefone)}<br>${e(p.endereco)}</p><hr>${(p.itens||[]).map(i=>`<section><b>${Number(i.qtd)} × ${e(i.nome)}</b>${i.det?`<p class="obs">OBS: ${e(i.det)}</p>`:''}<div>${dinheiro(Number(i.preco)*Number(i.qtd))}</div></section>`).join('')}<hr><p>Subtotal: ${dinheiro(p.subtotal)}<br>Entrega: ${dinheiro(p.taxa_entrega)}</p><h2>TOTAL ${dinheiro(p.total)}</h2><p>${e(p.forma_pagamento||'Pix')} — conferir pagamento</p><footer>Comanda de preparo • não é documento fiscal</footer></article>`;
+      const via=()=>`<article><header><h2>${e(CONFIG_LOJA.nome||'Malik')}</h2><h1>COMANDA #${e(p.codigo_curto)}</h1><h2>${destino==='cozinha'?'COZINHA':p.tipo_entrega==='delivery'?'MOTOBOY':'SALÃO / RETIRADA'}</h2><b>${e(p.tipo_entrega).toUpperCase()}</b><p>${e(new Date(p.criado_em).toLocaleString('pt-BR'))}</p></header>${p.entrega_minutos_min?`<p>Entrega estimada: ${e(prazoEntrega(p))}</p>`:''}<p><b>${e(p.cliente)}</b>${destino==='cozinha'?'':`<br>${e(p.telefone)}<br>${e(p.endereco)}`}</p><hr>${(p.itens||[]).map(i=>`<section><b>${Number(i.qtd)} × ${e(i.nome)}</b>${i.det?`<p class="obs">OBS: ${e(i.det)}</p>`:''}<div>${dinheiro(Number(i.preco)*Number(i.qtd))}</div></section>`).join('')}<hr><p>Subtotal: ${dinheiro(p.subtotal)}<br>Entrega: ${dinheiro(p.taxa_entrega)}</p><h2>TOTAL ${dinheiro(p.total)}</h2><p>${e(p.forma_pagamento||'Pix')} — ${p.pagamento_confirmado_em?'CONFIRMADO · não cobrar novamente':'PENDENTE · conferir pagamento'}</p><footer>${destino==='cozinha'?'Comanda de preparo':'Comanda de despacho'} • não é documento fiscal</footer></article>`;
       const size=c.type==='a4'?'A4':`${c.width}mm 297mm`;
       const content=c.type==='a4'?'180mm':`${c.width===58?48:72}mm`;
       return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Comanda ${e(p.codigo_curto)}</title><style>@page{size:${size};margin:3mm}*{box-sizing:border-box}body{color:#000;background:#fff;font: ${c.width===58&&c.type==='thermal'?11:13}px monospace;margin:0}article{width:${content};margin:auto;padding:3mm 0;break-after:page}article:last-child{break-after:auto}header{text-align:center}h1{font-size:20px}h2{font-size:16px}section{margin:12px 0;break-inside:avoid}p{white-space:pre-line;overflow-wrap:anywhere}hr{border:0;border-top:1px dashed #000}.obs{font-weight:bold;margin:5px 0}footer{font-size:10px;margin-top:16px}button{margin:16px;padding:12px}@media print{button{display:none}}.combo-choice{gap:12px}.combo-choice>div:first-child{min-width:0;flex:1}.combo-choice small{display:block;color:var(--text-muted);font-size:12px;margin-top:4px}.combo-choice strong{overflow-wrap:anywhere}.combo-stepper{display:flex;align-items:center;gap:8px;flex-shrink:0}.combo-stepper button{width:40px;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-subsurface);color:var(--accent);font-size:22px;cursor:pointer}.combo-stepper button:disabled{opacity:.35;cursor:default}.combo-stepper span{min-width:20px;text-align:center;font-weight:700}
 .prep-legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 20px;font-size:12px}.prep-legend>span{padding:7px 10px;border-radius:8px;font-weight:700}.prep-legend>small{width:100%;color:var(--text-muted)}.prep-green,.order-card[data-tempo="verde"] .order-prep-time{background:#dcfce7;color:#166534}.prep-orange,.order-card[data-tempo="laranja"] .order-prep-time{background:#ffedd5;color:#9a3412}.prep-red,.order-card[data-tempo="vermelho"] .order-prep-time{background:#fee2e2;color:#991b1b}.order-card[data-tempo="verde"],.order-card[data-tempo="laranja"],.order-card[data-tempo="vermelho"]{border-left:6px solid var(--order-color);box-shadow:0 0 0 1px var(--order-color)}.order-prep-time{font-size:12px;font-weight:700;line-height:1.5;border-radius:8px;padding:10px;margin:10px 0}.order-card[data-tempo="sem-tempo"] .order-prep-time{background:var(--bg-subsurface);color:var(--text-muted)}
 </style></head><body><button onclick="window.print()">Imprimir novamente</button>${Array.from({length:c.copies},via).join('')}</body></html>`;
     }
-    function textoComanda(p,c=configOperacao){
+    function textoComanda(p,c=configOperacao,destino='cozinha'){
       const cols=c.width===58?32:48;
       const clean=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7E\n]/g,'');
       const wrap=t=>clean(t).split('\n').flatMap(line=>{const out=[];while(line.length>cols){let n=line.lastIndexOf(' ',cols);if(n<1)n=cols;out.push(line.slice(0,n));line=line.slice(n).trimStart();}out.push(line);return out;}).join('\n');
-      const lines=[CONFIG_LOJA.nome||'Malik','COMANDA #'+p.codigo_curto,p.tipo_entrega,new Date(p.criado_em).toLocaleString('pt-BR'),'-'.repeat(cols),p.cliente,p.telefone,p.endereco,p.entrega_minutos_min?'Entrega estimada: '+prazoEntrega(p):'','-'.repeat(cols),...(p.itens||[]).flatMap(i=>[i.qtd+' x '+i.nome,i.det?'OBS: '+i.det:'',dinheiro(i.qtd*i.preco)]),'-'.repeat(cols),'Subtotal: '+dinheiro(p.subtotal),'Entrega: '+dinheiro(p.taxa_entrega),'TOTAL: '+dinheiro(p.total),(p.forma_pagamento||'Pix')+' - conferir pagamento','Comanda de preparo / nao fiscal'];
+      const lines=[CONFIG_LOJA.nome||'Malik','COMANDA #'+p.codigo_curto,destino==='cozinha'?'COZINHA':p.tipo_entrega==='delivery'?'MOTOBOY':'SALAO / RETIRADA',p.tipo_entrega,new Date(p.criado_em).toLocaleString('pt-BR'),'-'.repeat(cols),p.cliente,destino==='cozinha'?'':p.telefone,destino==='cozinha'?'':p.endereco,p.entrega_minutos_min?'Entrega estimada: '+prazoEntrega(p):'','-'.repeat(cols),...(p.itens||[]).flatMap(i=>[i.qtd+' x '+i.nome,i.det?'OBS: '+i.det:'',dinheiro(i.qtd*i.preco)]),'-'.repeat(cols),'Subtotal: '+dinheiro(p.subtotal),'Entrega: '+dinheiro(p.taxa_entrega),'TOTAL: '+dinheiro(p.total),(p.forma_pagamento||'Pix')+(p.pagamento_confirmado_em?' - CONFIRMADO / nao cobrar novamente':' - PENDENTE / conferir pagamento'),'Comanda de preparo / nao fiscal'];
       return '\x1b@'+lines.filter(Boolean).map(wrap).join('\n')+'\n\n\n\n\x1dV\x00';
     }
     let carregandoQZ;
@@ -1939,7 +2012,7 @@
       return carregandoQZ;
     }
     let filaImpressao=Promise.resolve();
-    function enviarComanda(p,janela=null){
+    function enviarComanda(p,janela=null,destino='cozinha'){
       const c={...configOperacao};
       const executar=async()=>{
         try{
@@ -1947,12 +2020,12 @@
             const qz=await obterQZ();
             if(!qz.websocket.isActive())await qz.websocket.connect();
             const printer=await qz.printers.find(c.name);
-            await qz.print(qz.configs.create(printer,{copies:c.copies,encoding:'ISO-8859-1'}),[textoComanda(p,c)]);
+            await qz.print(qz.configs.create(printer,{copies:c.copies,encoding:'ISO-8859-1'}),[textoComanda(p,c,destino)]);
             estadoImpressao[p.id]='Comanda enviada à impressora via QZ Tray.';
           }else{
             const w=janela||window.open('','_blank','width=480,height=720');
             if(!w)throw new Error('O navegador bloqueou a janela. Permita pop-ups e clique em Comanda para tentar novamente.');
-            w.document.open();w.document.write(htmlComanda(p,c));w.document.close();
+            w.document.open();w.document.write(htmlComanda(p,c,destino));w.document.close();
             await new Promise(resolve=>setTimeout(resolve,200));w.focus();w.print();
             estadoImpressao[p.id]='Diálogo de impressão aberto. Confirme na impressora selecionada.';
           }
@@ -1962,11 +2035,11 @@
       };
       filaImpressao=filaImpressao.then(executar,executar);return filaImpressao;
     }
-    function imprimirPedido(id){if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(p)return enviarComanda(p,configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null);}
+    function imprimirPedido(id,destino='cozinha'){if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(p)return enviarComanda(p,configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null,destino);}
     function testarImpressora(){if(!usuarioAtual)return;return enviarComanda({id:'teste',codigo_curto:'TESTE',cliente:'COMANDA DE TESTE',telefone:'',endereco:'Não preparar / não entregar',tipo_entrega:'teste',criado_em:new Date().toISOString(),subtotal:0,taxa_entrega:0,total:0,forma_pagamento:'TESTE',itens:[{nome:'Item para conferir a impressão',qtd:1,preco:0,det:'Verifique largura, acentos e legibilidade.'}]},configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null);}
     document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharDetalheProduto();});
 
-    const CAMPOS_PEDIDO='id,restaurante_id,codigo_curto,cliente,telefone,endereco,tipo_entrega,status,subtotal,taxa_entrega,total,forma_pagamento,itens,criado_em,arquivado_em,entrega_minutos_min,entrega_minutos_max,preparo_iniciado_em';
+    const CAMPOS_PEDIDO='id,restaurante_id,codigo_curto,cliente,telefone,endereco,tipo_entrega,status,subtotal,taxa_entrega,total,forma_pagamento,itens,criado_em,arquivado_em,entrega_minutos_min,entrega_minutos_max,preparo_iniciado_em,pagamento_confirmado_em,pagamento_origem,pronto_em,despachado_em,whatsapp_autorizado';
     let canalPedidos=null;
     let estadoRealtime='conectando';
     let ultimaConsultaPedidos='nenhuma';
@@ -1974,8 +2047,9 @@
     let consultaPendente=false;
     function atualizarConexaoCozinha(){
       const el=document.getElementById('conexao-cozinha');if(!el)return;
-      el.textContent='Malik v12 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
+      el.textContent='Malik v13 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
         ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
+      document.getElementById('kds-conexao').textContent=el.textContent;
     }
     function receberEventoPedido(payload){
       if(!usuarioAtual||!payload.new||payload.new.restaurante_id!==RESTAURANTE_ID)return;
@@ -2008,7 +2082,7 @@
       try{
         const base=()=>malikDB.from('pedidos').select(CAMPOS_PEDIDO).eq('restaurante_id',RESTAURANTE_ID).is('arquivado_em',null);
         const resultados=await Promise.all([
-          base().in('status',['novo','preparando','entrega']).order('criado_em',{ascending:true}).limit(500),
+          base().in('status',['novo','preparando','pronto','entrega']).order('criado_em',{ascending:true}).limit(500),
           base().eq('status','fim').order('criado_em',{ascending:false}).limit(100)
         ]);
         if(!usuarioAtual||usuarioAtual.id!==userId)return;
@@ -2053,7 +2127,7 @@
     restaurarAudioLocal();
     document.addEventListener('visibilitychange', () => { if (usuarioAtual && !document.hidden) carregarPedidos(); });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
+      if (e.key === 'Escape') {fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-mensagens','modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
     });
 
   </script>
