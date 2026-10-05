@@ -305,7 +305,7 @@
                 <span class="badge-closed" id="badge-status-loja-cliente">Carregando...</span>
             </h1>
             <div class="store-address" id="loja-endereco-view">Aguarde...</div>
-            <div class="store-service"><span id="loja-taxa-view">Entrega</span><span id="loja-prazo-view"></span><span>Retirada • sem taxa</span><span>Pedidos na mesa</span></div><div class="store-actions-bar">
+            <div class="store-service"><span id="loja-taxa-view">Entrega</span><span id="loja-prazo-view"></span><span id="loja-retirada-view">Retirada • sem taxa</span><span id="loja-mesa-view">Pedidos na mesa</span></div><div class="store-actions-bar">
                 <button class="btn-store-action" onclick="abrirModalInfoLoja()">ℹ️ Informação</button>
                 <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;" id="client-social-links"></div>
             </div>
@@ -390,6 +390,14 @@
       <h3>Atendimento e entrega</h3><p class="form-help">Estas preferências valem para todos os clientes e computadores.</p>
       <div class="store-state-field"><label class="switch"><input id="conf-aberto" type="checkbox" aria-label="Restaurante aberto" onchange="atualizarRascunhoStatus()"><span class="slider"></span></label><div><strong id="conf-status-label">Restaurante fechado</strong><small>Fechado: o cardápio continua disponível, mas novos pedidos ficam bloqueados.</small></div></div>
       <div class="atendimento-fields"><label for="conf-taxa">Taxa de entrega (R$)<input id="conf-taxa" class="input-text" type="number" min="0" max="9999.99" step="0.01" required></label><label for="conf-prazo-min">Prazo mínimo (minutos)<input id="conf-prazo-min" class="input-text" type="number" min="1" max="1440" step="1" required></label><label for="conf-prazo-max">Prazo máximo (minutos)<input id="conf-prazo-max" class="input-text" type="number" min="1" max="1440" step="1" required></label></div>
+      <fieldset class="modalidades-config" style="border:1px solid var(--border-color);border-radius:12px;padding:16px;margin:16px 0">
+        <legend style="font-weight:700;padding:0 8px">Modalidades de atendimento</legend>
+        <div style="display:flex;flex-wrap:wrap;gap:20px">
+          <label><input id="conf-delivery" type="checkbox"> Delivery</label>
+          <label><input id="conf-retirada" type="checkbox"> Retirada no balcão</label>
+          <label><input id="conf-mesa" type="checkbox"> Pedidos na mesa</label>
+        </div><p class="form-help">Habilite pelo menos uma modalidade. O cliente verá somente as opções habilitadas.</p>
+      </fieldset>
       <p class="config-status-note">Use taxa 0 para entrega grátis. A taxa é única para delivery; retirada e mesa continuam sem taxa. O prazo é uma estimativa exibida ao cliente.</p>
       <p id="atendimento-feedback" role="status" class="form-help"></p><button type="submit" id="btn-salvar-atendimento" class="btn-submit" style="max-width:300px">Salvar atendimento</button>
     </form>
@@ -619,8 +627,8 @@
           <div id="info-modal-endereco">Endereço</div>
       </div>
 
-      <h4 style="font-size:16px; font-weight:800; margin-top:32px; margin-bottom:16px;">Tipos de Serviço</h4>
-      <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px; margin-bottom:12px;">
+      <h4 style="font-size:16px; font-weight:800; margin-top:32px; margin-bottom:16px;">Tipos de Serviço</h4><p id="info-servico-mesa" class="form-help">Pedidos na mesa disponíveis.</p>
+      <div id="info-servico-delivery" style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px; margin-bottom:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
               <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛵 Delivery</div>
               <div style="color:var(--success); font-weight:800;">✓</div>
@@ -629,7 +637,7 @@
               <div>⏱ Tempo de entrega: <b id="info-modal-prazo">Carregando...</b></div><div>Taxa: <b id="info-modal-taxa">Carregando...</b></div>
           </div>
       </div>
-      <div style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px;">
+      <div id="info-servico-retirada" style="background:var(--bg-subsurface); border:1px solid var(--border-color); border-radius:16px; padding:16px;">
           <div style="display:flex; align-items:center; justify-content:space-between;">
               <div style="font-weight:700; display:flex; align-items:center; gap:8px;">🛍️ Retirada no Balcão</div>
               <div style="color:var(--success); font-weight:800;">✓</div>
@@ -980,10 +988,10 @@
     function abrirModalInfoLoja() { document.getElementById('modal-info-loja').style.display = 'flex'; }
     function fecharModalInfoLoja() { document.getElementById('modal-info-loja').style.display = 'none'; }
     
-    function configAtendimentoValida(c){return c&&typeof c.aberto==='boolean'&&Number.isFinite(Number(c.taxa_entrega))&&Number(c.taxa_entrega)>=0&&Number(c.taxa_entrega)<=9999.99&&Number.isInteger(c.entrega_minutos_min)&&Number.isInteger(c.entrega_minutos_max)&&c.entrega_minutos_min>=1&&c.entrega_minutos_max>=c.entrega_minutos_min&&c.entrega_minutos_max<=1440;}
+    function configAtendimentoValida(c){return c&&['delivery_habilitado','retirada_habilitada','mesa_habilitada'].every(k=>typeof c[k]==='boolean')&&(c.delivery_habilitado||c.retirada_habilitada||c.mesa_habilitada)&&typeof c.aberto==='boolean'&&Number.isFinite(Number(c.taxa_entrega))&&Number(c.taxa_entrega)>=0&&Number(c.taxa_entrega)<=9999.99&&Number.isInteger(c.entrega_minutos_min)&&Number.isInteger(c.entrega_minutos_max)&&c.entrega_minutos_min>=1&&c.entrega_minutos_max>=c.entrega_minutos_min&&c.entrega_minutos_max<=1440;}
     function prazoEntrega(c){return c.entrega_minutos_min===c.entrega_minutos_max?c.entrega_minutos_min+' min':c.entrega_minutos_min+'–'+c.entrega_minutos_max+' min';}
     function atualizarRascunhoStatus(){document.getElementById('conf-status-label').textContent=document.getElementById('conf-aberto').checked?'Restaurante aberto':'Restaurante fechado';}
-    function preencherAtendimento(){if(!atendimentoCarregado)return;document.getElementById('conf-aberto').checked=CONFIG_LOJA.aberto;document.getElementById('conf-taxa').value=Number(CONFIG_LOJA.taxa_entrega).toFixed(2);document.getElementById('conf-prazo-min').value=CONFIG_LOJA.entrega_minutos_min;document.getElementById('conf-prazo-max').value=CONFIG_LOJA.entrega_minutos_max;atualizarRascunhoStatus();}
+    function preencherAtendimento(){if(!atendimentoCarregado)return;document.getElementById('conf-aberto').checked=CONFIG_LOJA.aberto;document.getElementById('conf-taxa').value=Number(CONFIG_LOJA.taxa_entrega).toFixed(2);document.getElementById('conf-prazo-min').value=CONFIG_LOJA.entrega_minutos_min;document.getElementById('conf-prazo-max').value=CONFIG_LOJA.entrega_minutos_max;document.getElementById('conf-delivery').checked=CONFIG_LOJA.delivery_habilitado;document.getElementById('conf-retirada').checked=CONFIG_LOJA.retirada_habilitada;document.getElementById('conf-mesa').checked=CONFIG_LOJA.mesa_habilitada;atualizarRascunhoStatus();}
     function aplicarAtendimentoVisual(){
       lojaAberta=atendimentoCarregado&&CONFIG_LOJA.aberto===true;
       for(const id of ['badge-status-loja-cliente','info-modal-status','admin-status-loja']){const el=document.getElementById(id);el.textContent=!atendimentoCarregado?'Indisponível':lojaAberta?'Aberto':'Fechado';el.className=lojaAberta?'badge-open':'badge-closed';}
@@ -991,21 +999,23 @@
       document.getElementById('loja-taxa-view').textContent='Entrega • '+taxa;document.getElementById('info-modal-taxa').textContent=taxa;
       const prazo=atendimentoCarregado?prazoEntrega(CONFIG_LOJA):'Indisponível';document.getElementById('loja-prazo-view').textContent=atendimentoCarregado?'Entrega em '+prazo:'';document.getElementById('info-modal-prazo').textContent=prazo;
       const aviso=document.getElementById('loja-fechada-aviso');if(aviso){aviso.hidden=lojaAberta;aviso.textContent=atendimentoCarregado?'Estamos fechados no momento. Você pode consultar o cardápio e voltar para pedir quando a loja abrir.':'Não foi possível conferir o atendimento. Atualize a página para tentar novamente.';}
+      aplicarModalidadesVisual();
       renderProdutos();renderDestaques();atualizarSacolaBar();
-      if(document.getElementById('sec-checkout').style.display==='block'&&sacola.length){const sub=sacola.reduce((n,i)=>n+i.preco*i.qtd,0),fee=tipoConsumo==='delivery'&&atendimentoCarregado?Number(CONFIG_LOJA.taxa_entrega):0;document.getElementById('chk-taxa').textContent=atendimentoCarregado?dinheiro(fee):'Indisponível';document.getElementById('chk-tot').textContent=dinheiro(sub+fee);document.getElementById('chk-prazo').textContent=lojaAberta?(tipoConsumo==='delivery'?'Entrega estimada: '+prazo:'Retirada e mesa: sem taxa de entrega.'):'O restaurante está fechado. Sua sacola foi mantida.';document.getElementById('btn-finalizar-pedido').disabled=!lojaAberta||enviandoPedido;}
+      if(document.getElementById('sec-checkout').style.display==='block'&&sacola.length){const sub=sacola.reduce((n,i)=>n+i.preco*i.qtd,0),fee=tipoConsumo==='delivery'&&atendimentoCarregado?Number(CONFIG_LOJA.taxa_entrega):0;document.getElementById('chk-taxa').textContent=atendimentoCarregado?dinheiro(fee):'Indisponível';document.getElementById('chk-tot').textContent=dinheiro(sub+fee);document.getElementById('chk-prazo').textContent=lojaAberta?(tipoConsumo==='delivery'?'Entrega estimada: '+prazo:'Retirada e mesa: sem taxa de entrega.'):'O restaurante está fechado. Sua sacola foi mantida.';document.getElementById('btn-finalizar-pedido').disabled=!lojaAberta||!modalidadeHabilitada(tipoConsumo)||enviandoPedido;}
     }
     async function atualizarAtendimento(){
       if(!malikDB)return false;
-      try{const {data,error}=await malikDB.from('configuracoes').select('restaurante_id,aberto,taxa_entrega,entrega_minutos_min,entrega_minutos_max').eq('restaurante_id',RESTAURANTE_ID).single();if(error||!configAtendimentoValida(data))throw new Error('Configuração indisponível');CONFIG_LOJA={...CONFIG_LOJA,...data};atendimentoCarregado=true;aplicarAtendimentoVisual();return true;}
+      try{const {data,error}=await malikDB.from('configuracoes').select('restaurante_id,aberto,taxa_entrega,entrega_minutos_min,entrega_minutos_max,delivery_habilitado,retirada_habilitada,mesa_habilitada').eq('restaurante_id',RESTAURANTE_ID).single();if(error||!configAtendimentoValida(data))throw new Error('Configuração indisponível');CONFIG_LOJA={...CONFIG_LOJA,...data};atendimentoCarregado=true;aplicarAtendimentoVisual();return true;}
       catch(e){atendimentoCarregado=false;aplicarAtendimentoVisual();return false;}
     }
     async function salvarAtendimento(e){
       e.preventDefault();if(!usuarioAtual||salvandoAtendimento)return;
       const btn=document.getElementById('btn-salvar-atendimento'),feedback=document.getElementById('atendimento-feedback');feedback.textContent='';
-      const c={aberto:document.getElementById('conf-aberto').checked,taxa_entrega:Number(document.getElementById('conf-taxa').value),entrega_minutos_min:Number(document.getElementById('conf-prazo-min').value),entrega_minutos_max:Number(document.getElementById('conf-prazo-max').value)};
+      const c={delivery_habilitado:document.getElementById('conf-delivery').checked,retirada_habilitada:document.getElementById('conf-retirada').checked,mesa_habilitada:document.getElementById('conf-mesa').checked,aberto:document.getElementById('conf-aberto').checked,taxa_entrega:Number(document.getElementById('conf-taxa').value),entrega_minutos_min:Number(document.getElementById('conf-prazo-min').value),entrega_minutos_max:Number(document.getElementById('conf-prazo-max').value)};
+      if(!c.delivery_habilitado&&!c.retirada_habilitada&&!c.mesa_habilitada){feedback.textContent='Habilite pelo menos uma modalidade de atendimento.';return;}
       if(!configAtendimentoValida(c)||Math.abs(c.taxa_entrega*100-Math.round(c.taxa_entrega*100))>1e-6||document.getElementById('conf-taxa').value.trim()===''){feedback.textContent='Confira taxa e prazo. O máximo deve ser igual ou maior que o mínimo.';return;}
       salvandoAtendimento=true;btn.disabled=true;btn.textContent='Salvando...';
-      try{const {data,error}=await malikDB.rpc('malik_salvar_atendimento_v1',{p_aberto:c.aberto,p_taxa:c.taxa_entrega,p_minimo:c.entrega_minutos_min,p_maximo:c.entrega_minutos_max});if(error)throw error;if(!configAtendimentoValida(data))throw new Error('Resposta inesperada. Atualize a página para conferir.');CONFIG_LOJA={...CONFIG_LOJA,...data};atendimentoCarregado=true;aplicarAtendimentoVisual();preencherAtendimento();feedback.textContent='Atendimento salvo. A taxa, o prazo e o status já valem para novos pedidos.';}
+      try{const {data,error}=await malikDB.rpc('malik_salvar_atendimento_v2',{p_aberto:c.aberto,p_taxa:c.taxa_entrega,p_minimo:c.entrega_minutos_min,p_maximo:c.entrega_minutos_max,p_delivery:c.delivery_habilitado,p_retirada:c.retirada_habilitada,p_mesa:c.mesa_habilitada});if(error)throw error;if(!configAtendimentoValida(data))throw new Error('Resposta inesperada. Atualize a página para conferir.');CONFIG_LOJA={...CONFIG_LOJA,...data};atendimentoCarregado=true;aplicarAtendimentoVisual();preencherAtendimento();feedback.textContent='Atendimento salvo. As modalidades, a taxa, o prazo e o status já valem para novos pedidos.';}
       catch(e){feedback.textContent=String(e.message||'Não foi possível salvar. Tente novamente.').replace(/^MALIK:\s*/,'');}
       finally{salvandoAtendimento=false;btn.disabled=false;btn.textContent='Salvar atendimento';}
     }
@@ -1476,7 +1486,24 @@
     }
 
     // CHECKOUT E KANBAN
-    function setConsumo(c) { 
+    function modalidadeHabilitada(c){
+      const chave={delivery:'delivery_habilitado',balcao:'retirada_habilitada',mesa:'mesa_habilitada'}[c];
+      return atendimentoCarregado&&!!chave&&CONFIG_LOJA[chave]===true;
+    }
+    function aplicarModalidadesVisual(){
+      const mapa={delivery:['btn-cons-deliv','loja-taxa-view','loja-prazo-view','info-servico-delivery'],balcao:['btn-cons-balcao','loja-retirada-view','info-servico-retirada'],mesa:['btn-cons-mesa','loja-mesa-view','info-servico-mesa']};
+      for(const [tipo,ids] of Object.entries(mapa))for(const id of ids){const el=document.getElementById(id);if(el)el.style.display=modalidadeHabilitada(tipo)?'':'none';}
+      atualizarSelecaoConsumo();
+      if(document.getElementById('sec-checkout').style.display==='block'&&!modalidadeHabilitada(tipoConsumo))document.getElementById('checkout-erro').textContent='Esta modalidade ficou indisponível. Escolha outra opção para continuar. Sua sacola foi mantida.';
+    }
+    function atualizarSelecaoConsumo(){
+      const mapa={delivery:'btn-cons-deliv',balcao:'btn-cons-balcao',mesa:'btn-cons-mesa'};
+      for(const [tipo,id] of Object.entries(mapa)){const el=document.getElementById(id),ativo=tipo===tipoConsumo&&modalidadeHabilitada(tipo);el.classList[ativo?'add':'remove']('active');el.style.background=ativo?'var(--text-main)':'transparent';el.style.color=ativo?'var(--bg-surface)':'var(--text-muted)';el.setAttribute?.('aria-pressed',String(ativo));}
+      document.getElementById('chk-endereco-box').style.display=tipoConsumo==='delivery'?'block':'none';
+    }
+    function setConsumo(c) {
+      if(!modalidadeHabilitada(c)){alert('Esta modalidade está indisponível. Escolha outra opção.');return;}
+      document.getElementById('checkout-erro').textContent='';
       tipoConsumo = c; 
       ['btn-cons-deliv', 'btn-cons-balcao', 'btn-cons-mesa'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; });
       const btnMap = {'delivery': 'btn-cons-deliv', 'balcao': 'btn-cons-balcao', 'mesa': 'btn-cons-mesa'};
@@ -1489,6 +1516,9 @@
       if(!await atualizarAtendimento()){alert('Não foi possível conferir o atendimento da loja. Tente novamente.');return;}
       if(!lojaAberta){alert('O restaurante está fechado no momento.');return;}
       if (!sacola.length) { mostrarAba('cardapio'); return; }
+      if(!modalidadeHabilitada(tipoConsumo)){tipoConsumo=['delivery','balcao','mesa'].find(modalidadeHabilitada);document.getElementById('checkout-erro').textContent='Selecione a modalidade disponível para seu pedido.';}
+      atualizarSelecaoConsumo();
+      document.getElementById('btn-finalizar-pedido').disabled=enviandoPedido;
       document.getElementById('chk-form').style.display = 'block';
       document.getElementById('box-pix').style.display = 'none';
       document.getElementById('chk-rua').required = tipoConsumo === 'delivery';
@@ -1509,6 +1539,7 @@
         const taxaAnterior=Number(CONFIG_LOJA.taxa_entrega);
         if(!await atualizarAtendimento())throw new Error('Não foi possível conferir o atendimento. Sua sacola foi mantida.');
         if (!lojaAberta || !sacola.length) throw new Error('A loja está fechada ou sua sacola está vazia.');
+        if(!modalidadeHabilitada(tipoConsumo))throw new Error('Esta modalidade ficou indisponível. Escolha outra opção para continuar. Sua sacola foi mantida.');
         if(tipoConsumo==='delivery'&&taxaAnterior!==Number(CONFIG_LOJA.taxa_entrega))throw new Error('A taxa de entrega foi atualizada. Confira o novo total e confirme novamente.');
         const nome = document.getElementById('chk-nome').value.trim();
         const telefone = document.getElementById('chk-tel').value.replace(/\D/g, '');
@@ -1558,7 +1589,7 @@
         carregarProdutosDaNuvem().catch(() => {});
       } catch (erro) {
         erroEl.textContent = erro.message || 'Falha de conexão. Sua sacola foi mantida; confira com a loja antes de tentar novamente.';
-      } finally { enviandoPedido = false; btn.disabled = !lojaAberta||!atendimentoCarregado; btn.textContent = 'Confirmar Pedido'; }
+      } finally { enviandoPedido = false; btn.disabled = !lojaAberta||!atendimentoCarregado||!modalidadeHabilitada(tipoConsumo); btn.textContent = 'Confirmar Pedido'; }
     }
 
     let audioCtx = null;
