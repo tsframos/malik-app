@@ -260,7 +260,8 @@
     .admin-products-heading{flex-wrap:wrap;gap:12px}.admin-products-heading h3{min-width:0;overflow-wrap:anywhere}
     .category-navigation{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:18px;padding:20px;margin-bottom:24px}.category-nav-head{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}.category-nav-head h3{font-size:17px;margin:0}.category-nav-head p{font-size:12px;color:var(--text-muted);margin:4px 0 0}.category-nav-select{display:flex;gap:10px;align-items:center;margin:16px 0}.category-nav-select select{flex:1;min-width:0;max-width:400px}.category-nav-select button,.category-nav-head button{width:auto;margin:0;padding:11px 16px}.admin-category-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}.admin-category-tab{white-space:nowrap;display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--border-color);background:var(--bg-subsurface);border-radius:10px;cursor:pointer;color:var(--text-main);font-size:13px}.admin-category-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}.admin-category-tab small{background:#0000000a;border-radius:6px;padding:3px 6px}.category-manager-dialog{max-width:760px!important;max-height:90dvh;overflow:auto}.category-manager-tools{display:flex;gap:10px;margin:18px 0}.category-manager-tools input{flex:1;min-width:0}.category-manager-row{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--border-color)}.category-manager-name{flex:1;min-width:0}.category-manager-name strong{display:block;font-size:15px;overflow-wrap:anywhere}.category-manager-name small{color:var(--text-muted);font-size:12px}.category-manager-actions{display:flex;gap:5px;flex-wrap:wrap}.category-manager-actions button{border:1px solid var(--border-color);border-radius:8px;background:var(--bg-subsurface);color:var(--text-main);padding:8px 10px;cursor:pointer}.category-manager-actions button:disabled{opacity:.3;cursor:not-allowed}.atendimento-form{margin-bottom:24px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:20px;padding:28px}.store-state-field{display:flex;align-items:center;gap:12px;margin:18px 0}.store-state-field strong{display:block;font-size:15px}.store-state-field small{display:block;color:var(--text-muted);font-size:12px;margin-top:4px}.atendimento-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:24px 0}.atendimento-fields .input-text{margin-top:8px}.closed-notice{padding:12px 18px;border:1px solid var(--border-color);background:var(--bg-subsurface);color:var(--text-muted);border-radius:12px;margin:0 24px 20px;font-size:13px}.config-status-note{font-size:12px;color:var(--text-muted);line-height:1.6}#sec-admin .table-container{max-width:100%;overflow:auto}#category-edit-title{overflow-wrap:anywhere}
     @media(max-width:650px){.atendimento-form{padding:20px}.atendimento-fields{grid-template-columns:1fr}.category-navigation{padding:16px}.category-nav-select{flex-wrap:wrap}.category-nav-select select{max-width:none;flex-basis:100%}.category-manager-dialog{width:calc(100% - 24px)!important;padding:20px!important}.category-manager-row{flex-wrap:wrap}.category-manager-name{flex-basis:100%}.category-manager-tools{flex-wrap:wrap}.category-manager-tools{flex-direction:column}.category-manager-tools input{width:100%;flex:auto}.category-manager-tools button{width:100%!important;margin:0}.closed-notice{margin:0 16px 20px}.atendimento-fields label{font-size:14px}}
-  </style>
+  .combo-choice{gap:12px}.combo-choice>div:first-child{min-width:0;flex:1}.combo-choice small{display:block;color:var(--text-muted);font-size:12px;margin-top:4px}.combo-choice strong{overflow-wrap:anywhere}.combo-stepper{display:flex;align-items:center;gap:8px;flex-shrink:0}.combo-stepper button{width:40px;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-subsurface);color:var(--accent);font-size:22px;cursor:pointer}.combo-stepper button:disabled{opacity:.35;cursor:default}.combo-stepper span{min-width:20px;text-align:center;font-weight:700}
+</style>
 </head>
 <body>
 
@@ -574,9 +575,9 @@
   <div class="modal-overlay" id="modal-personalizacao" style="display:none;z-index:1002">
     <div class="modal-box custom-editor" role="dialog" aria-modal="true" aria-labelledby="custom-title">
       <div class="modal-header"><h3 id="custom-title">Personalizar produto</h3><button type="button" aria-label="Fechar personalização" onclick="fecharPersonalizacao()">✕</button></div>
-      <p class="form-help">Crie grupos para sabores, bordas e adicionais. Em sabores, informe o preço da pizza inteira: prevalece o maior valor escolhido. Cadastre cada tamanho como um produto.</p>
+      <p class="form-help">Crie grupos para pizzas, bordas, adicionais ou sabores de combos com quantidade. Em sabores, informe o preço da pizza inteira: prevalece o maior valor escolhido. Cadastre cada tamanho como um produto.</p>
       <div id="custom-grupos"></div>
-      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('sabores')">+ Sabores</button><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button></div>
+      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('sabores')">+ Sabores</button><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button><button type="button" onclick="adicionarGrupoCustom('combo')">+ Sabores do combo</button></div>
       <div class="custom-save"><p id="custom-erro" role="alert" style="color:var(--danger)"></p><button type="button" class="btn-submit" id="custom-salvar" onclick="salvarPersonalizacao()">Salvar opções</button></div>
     </div>
   </div>
@@ -1167,27 +1168,31 @@
     }
     function gruposProduto(id){return DADOS.grupos.filter(g=>g.produto_id===id&&g.ativo!==false).sort((a,b)=>a.ordem-b.ordem||a.id.localeCompare(b.id));}
     function opcoesGrupo(id){return DADOS.opcoes.filter(o=>o.grupo_id===id&&o.ativo!==false).sort((a,b)=>a.ordem-b.ordem||a.id.localeCompare(b.id));}
-    function produtoConfiguravel(p){return gruposProduto(p.id).every(g=>opcoesGrupo(g.id).length>=g.minimo);}
+    function produtoConfiguravel(p){const gs=gruposProduto(p.id);return !(gs.some(g=>g.tipo==='combo')&&gs.some(g=>g.tipo==='sabores'))&&gs.every(g=>g.tipo==='combo'?opcoesGrupo(g.id).length>0:opcoesGrupo(g.id).length>=g.minimo);}
     function precoInicial(p){
       let base=Number(p.preco)||0,extras=0;
       for(const g of gruposProduto(p.id)){
         const prices=opcoesGrupo(g.id).map(o=>Number(o.preco)).sort((a,b)=>a-b);
         if(g.tipo==='sabores')base=prices[Math.max(0,g.minimo-1)]??base;
+        else if(g.tipo==='combo')extras+=(prices[0]||0)*g.minimo;
         else extras+=prices.slice(0,g.minimo).reduce((a,b)=>a+b,0);
       }return Math.round((base+extras)*100)/100;
     }
     function validarEscolhas(p,ids){
       if(!personalizacaoCarregada)return {ok:false,erro:'As opções não foram carregadas. Atualize a página.'};
-      if(!Array.isArray(ids)||ids.length>200||new Set(ids).size!==ids.length)return {ok:false,erro:'Seleção inválida.'};
+      if(!Array.isArray(ids)||ids.length>200)return {ok:false,erro:'Seleção inválida.'};
       const grupos=gruposProduto(p.id),permitidas=grupos.flatMap(g=>opcoesGrupo(g.id));
       if(ids.some(id=>!permitidas.some(o=>o.id===id)))return {ok:false,erro:'Uma opção está indisponível. Escolha o produto novamente.'};
+      if(!produtoConfiguravel(p))return {ok:false,erro:'Este produto precisa de revisão das opções pela loja.'};
+      if(ids.some(id=>ids.filter(v=>v===id).length>1&&grupos.find(g=>opcoesGrupo(g.id).some(o=>o.id===id))?.tipo!=='combo'))return {ok:false,erro:'Opção repetida fora de um combo.'};
       let base=Number(p.preco),extras=0,resumo=[];
       for(const g of grupos){
         const escolhidas=opcoesGrupo(g.id).filter(o=>ids.includes(o.id));
-        if(escolhidas.length<g.minimo||escolhidas.length>g.maximo)return {ok:false,erro:`${g.nome}: selecione ${g.minimo===g.maximo?g.minimo:g.minimo+' a '+g.maximo} opção(ões).`};
+        const contagem=g.tipo==='combo'?escolhidas.reduce((n,o)=>n+ids.filter(id=>id===o.id).length,0):escolhidas.length;
+        if(contagem<g.minimo||contagem>g.maximo)return {ok:false,erro:`${g.nome}: selecione ${g.minimo===g.maximo?g.minimo:g.minimo+' a '+g.maximo} ${g.tipo==='combo'?'unidade(s)':'opção(ões)'}.`};
         if(g.tipo==='sabores')base=Math.max(...escolhidas.map(o=>Number(o.preco)));
-        else extras+=escolhidas.reduce((a,o)=>a+Number(o.preco),0);
-        if(escolhidas.length)resumo.push(g.nome+': '+escolhidas.map(o=>o.nome).join(' / '));
+        else extras+=escolhidas.reduce((a,o)=>a+Number(o.preco)*(g.tipo==='combo'?ids.filter(id=>id===o.id).length:1),0);
+        if(escolhidas.length)resumo.push(g.nome+': '+escolhidas.map(o=>(g.tipo==='combo'?ids.filter(id=>id===o.id).length+'× ':'')+o.nome).join(' / '));
       }
       const preco=Math.round((base+extras)*100)/100;
       if(!Number.isFinite(preco)||preco<0)return {ok:false,erro:'Preço inválido. Contate a loja.'};
@@ -1196,12 +1201,23 @@
     function resumoItemSacola(i){return [i.escolhas,i.det].filter(Boolean).join('\n');}
     function renderEscolhasDetalhe(){
       document.getElementById('detalhe-grupos').innerHTML=gruposProduto(produtoDetalheAtual.id).map(g=>{
-        const count=opcoesGrupo(g.id).filter(o=>escolhasDetalhe.includes(o.id)).length;
+        const count=escolhasDetalhe.filter(id=>opcoesGrupo(g.id).some(o=>o.id===id)).length;
+        if(g.tipo==='combo')return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)}</h3><p aria-live="polite">${count}/${g.maximo} unidades escolhidas · ${g.minimo===g.maximo?'Escolha exatamente '+g.maximo:'Escolha de '+g.minimo+' a '+g.maximo} unidades. Pode repetir sabores.</p></div>${opcoesGrupo(g.id).map(o=>{const qtd=escolhasDetalhe.filter(id=>id===o.id).length;return `<div class="choice-row combo-choice"><div><strong>${escaparHTML(o.nome)}</strong><small>${Number(o.preco)?'+ '+dinheiro(o.preco)+' por unidade':'Incluído no combo'}</small></div><div class="combo-stepper"><button type="button" aria-label="Diminuir ${escaparHTML(o.nome)}" ${qtd===0?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',-1)">−</button><span aria-label="Quantidade de ${escaparHTML(o.nome)}">${qtd}</span><button type="button" aria-label="Aumentar ${escaparHTML(o.nome)}" ${count>=g.maximo?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',1)">+</button></div></div>`;}).join('')}</section>`;
+
         return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)} <small style="float:right;font-size:11px">${g.minimo?'Obrigatório':'Opcional'} · ${count}/${g.maximo}</small></h3><p>${g.minimo?`Escolha de ${g.minimo} a ${g.maximo}`:`Escolha até ${g.maximo}`} opção(ões).${g.tipo==='sabores'?' O maior preço escolhido define o valor da pizza.':''}</p></div>${opcoesGrupo(g.id).map(o=>`<label class="choice-row"><input type="checkbox" aria-label="${escaparHTML(o.nome)}" ${escolhasDetalhe.includes(o.id)?'checked':''} ${g.maximo>1&&count>=g.maximo&&!escolhasDetalhe.includes(o.id)?'disabled':''} onchange="selecionarOpcaoDetalhe('${g.id}','${o.id}',this.checked)"><span>${escaparHTML(o.nome)}</span><strong>${g.tipo==='sabores'?'':Number(o.preco)?'+ ':''}${Number(o.preco)?dinheiro(o.preco):'Grátis'}</strong></label>`).join('')}</section>`;
       }).join('');
     }
+    function mudarQuantidadeOpcao(gid,id,delta){
+      if(!produtoDetalheAtual||![-1,1].includes(delta))return;
+      const g=gruposProduto(produtoDetalheAtual.id).find(g=>g.id===gid);
+      if(!g||g.tipo!=='combo'||!opcoesGrupo(gid).some(o=>o.id===id))return;
+      const count=escolhasDetalhe.filter(v=>opcoesGrupo(gid).some(o=>o.id===v)).length;
+      if(delta===1){if(count>=g.maximo)return;escolhasDetalhe.push(id);}
+      else {const pos=escolhasDetalhe.indexOf(id);if(pos<0)return;escolhasDetalhe.splice(pos,1);}
+      renderEscolhasDetalhe();atualizarPrecoDetalhe();
+    }
     function selecionarOpcaoDetalhe(gid,id,marcada){
-      const g=gruposProduto(produtoDetalheAtual.id).find(g=>g.id===gid);if(!g||!opcoesGrupo(gid).some(o=>o.id===id))return;
+      const g=gruposProduto(produtoDetalheAtual.id).find(g=>g.id===gid);if(!g||g.tipo==='combo'||!opcoesGrupo(gid).some(o=>o.id===id))return;
       if(!marcada)escolhasDetalhe=escolhasDetalhe.filter(v=>v!==id);
       else{
         const atuais=opcoesGrupo(gid).filter(o=>escolhasDetalhe.includes(o.id));
@@ -1223,23 +1239,25 @@
       if(salvandoCustom)return;
       if(customGrupos.length>=10){alert('Limite de 10 grupos por produto.');return;}
       if(tipo==='sabores'&&customGrupos.some(g=>g.tipo==='sabores'&&g.ativo!==false)){alert('Este produto já tem um grupo ativo de sabores.');return;}
-      customGrupos.push({id:crypto.randomUUID(),nome:tipo==='sabores'?'Escolha os sabores':'Escolha a borda',tipo,minimo:tipo==='sabores'?1:0,maximo:tipo==='sabores'?2:1,ativo:true,opcoes:[]});renderEditorCustom();
+      customGrupos.push({id:crypto.randomUUID(),nome:tipo==='combo'?'Escolha os sabores do combo':tipo==='sabores'?'Escolha os sabores':'Escolha a borda',tipo,minimo:tipo==='combo'?8:tipo==='sabores'?1:0,maximo:tipo==='combo'?8:tipo==='sabores'?2:1,ativo:true,opcoes:[]});renderEditorCustom();
     }
     function adicionarOpcaoCustom(i){if(salvandoCustom)return;customGrupos[i].opcoes.push({id:crypto.randomUUID(),nome:'',preco:0,ativo:true});renderEditorCustom();}
     function removerGrupoCustom(i){if(!salvandoCustom&&confirm('Remover este grupo e suas opções?')){customGrupos.splice(i,1);renderEditorCustom();}}
     function removerOpcaoCustom(i,j){if(!salvandoCustom){customGrupos[i].opcoes.splice(j,1);renderEditorCustom();}}
     function renderEditorCustom(){
-      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label><label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option><option value="sabores" ${g.tipo==='sabores'?'selected':''}>Sabores</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='sabores'?1:0}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label></div><p class="form-help">${g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input aria-label="Preço da opção" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">+ Opção</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
+      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label><label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option><option value="sabores" ${g.tipo==='sabores'?'selected':''}>Sabores de pizza</option><option value="combo" ${g.tipo==='combo'?'selected':''}>Combo com quantidades</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='adicional'?0:1}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label></div><p class="form-help">${g.tipo==='combo'?'Mínimo e máximo contam unidades. Preço base no produto; informe aqui o acréscimo por unidade, ou 0 para sabor incluído. Para um combo de 8, mínimo 8 e máximo 8.':g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='combo'?'Sabores podem ser repetidos.':g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='combo'?'Carne':g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input aria-label="${g.tipo==='combo'?'Acréscimo por unidade':'Preço da opção'}" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">+ Opção</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
     }
     async function salvarPersonalizacao(){
       if(salvandoCustom||!customProduto||!usuarioAtual)return;
       const btn=document.getElementById('custom-salvar'),erro=document.getElementById('custom-erro');erro.textContent='';
       try{
         if(customGrupos.filter(g=>g.tipo==='sabores'&&g.ativo!==false).length>1)throw new Error('Use apenas um grupo ativo de sabores por produto.');
+        if(customGrupos.some(g=>g.tipo==='combo'&&g.ativo!==false)&&customGrupos.some(g=>g.tipo==='sabores'&&g.ativo!==false))throw new Error('Use grupos de combo ou sabores de pizza no mesmo produto, sem misturar.');
         for(const g of customGrupos){
-          if(!g.nome.trim()||!Number.isInteger(g.minimo)||!Number.isInteger(g.maximo)||g.minimo<0||g.maximo<1||g.maximo>20||g.minimo>g.maximo||(g.tipo==='sabores'&&g.minimo<1))throw new Error('Confira o nome e os limites de cada grupo.');
+          if(!['combo','sabores','adicional'].includes(g.tipo))throw new Error('Tipo de grupo inválido.');
+          if(!g.nome.trim()||!Number.isInteger(g.minimo)||!Number.isInteger(g.maximo)||g.minimo<0||g.maximo<1||g.maximo>20||g.minimo>g.maximo||(g.tipo!=='adicional'&&g.minimo<1))throw new Error('Confira o nome e os limites de cada grupo.');
           if(g.opcoes.length>100||g.opcoes.some(o=>!o.nome.trim()||!Number.isFinite(o.preco)||o.preco<0||o.preco>999999||Math.abs(o.preco*100-Math.round(o.preco*100))>1e-6||(g.tipo==='sabores'&&o.preco<=0)))throw new Error('Confira os nomes e preços das opções. Sabores precisam ter preço maior que zero.');
-          if(g.ativo!==false&&g.opcoes.filter(o=>o.ativo!==false).length<g.minimo)throw new Error('O grupo '+g.nome+' precisa de mais opções ativas para atender ao mínimo.');
+          if(g.ativo!==false&&g.opcoes.filter(o=>o.ativo!==false).length<(g.tipo==='combo'?1:g.minimo))throw new Error('O grupo '+g.nome+' precisa de mais opções ativas para atender ao mínimo.');
         }
         salvandoCustom=true;btn.disabled=true;btn.textContent='Salvando...';
         document.getElementById('custom-grupos').inert=true;
@@ -1292,7 +1310,7 @@
       document.getElementById('detalhe-qtd').innerText = qtdDetalheAtual;
       const validacao=validarEscolhas(produtoDetalheAtual,escolhasDetalhe);
       const total = (validacao.ok?validacao.preco:precoInicial(produtoDetalheAtual)) * qtdDetalheAtual;
-      document.getElementById('detalhe-aviso').textContent=validacao.ok?'Preço por unidade. As escolhas serão repetidas em todas as unidades.':validacao.erro;
+      document.getElementById('detalhe-aviso').textContent=validacao.ok?(gruposProduto(produtoDetalheAtual.id).some(g=>g.tipo==='combo')?'Preço por combo. A composição será repetida em cada combo.':'Preço por unidade. As escolhas serão repetidas em todas as unidades.'):validacao.erro;
       document.getElementById('detalhe-adicionar').disabled=!validacao.ok;
       document.getElementById('detalhe-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
     }
@@ -1882,7 +1900,8 @@
       const via=()=>`<article><header><h2>${e(CONFIG_LOJA.nome||'Malik')}</h2><h1>COMANDA #${e(p.codigo_curto)}</h1><b>${e(p.tipo_entrega).toUpperCase()}</b><p>${e(new Date(p.criado_em).toLocaleString('pt-BR'))}</p></header>${p.entrega_minutos_min?`<p>Entrega estimada: ${e(prazoEntrega(p))}</p>`:''}<p><b>${e(p.cliente)}</b><br>${e(p.telefone)}<br>${e(p.endereco)}</p><hr>${(p.itens||[]).map(i=>`<section><b>${Number(i.qtd)} × ${e(i.nome)}</b>${i.det?`<p class="obs">OBS: ${e(i.det)}</p>`:''}<div>${dinheiro(Number(i.preco)*Number(i.qtd))}</div></section>`).join('')}<hr><p>Subtotal: ${dinheiro(p.subtotal)}<br>Entrega: ${dinheiro(p.taxa_entrega)}</p><h2>TOTAL ${dinheiro(p.total)}</h2><p>${e(p.forma_pagamento||'Pix')} — conferir pagamento</p><footer>Comanda de preparo • não é documento fiscal</footer></article>`;
       const size=c.type==='a4'?'A4':`${c.width}mm 297mm`;
       const content=c.type==='a4'?'180mm':`${c.width===58?48:72}mm`;
-      return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Comanda ${e(p.codigo_curto)}</title><style>@page{size:${size};margin:3mm}*{box-sizing:border-box}body{color:#000;background:#fff;font: ${c.width===58&&c.type==='thermal'?11:13}px monospace;margin:0}article{width:${content};margin:auto;padding:3mm 0;break-after:page}article:last-child{break-after:auto}header{text-align:center}h1{font-size:20px}h2{font-size:16px}section{margin:12px 0;break-inside:avoid}p{white-space:pre-line;overflow-wrap:anywhere}hr{border:0;border-top:1px dashed #000}.obs{font-weight:bold;margin:5px 0}footer{font-size:10px;margin-top:16px}button{margin:16px;padding:12px}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir novamente</button>${Array.from({length:c.copies},via).join('')}</body></html>`;
+      return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Comanda ${e(p.codigo_curto)}</title><style>@page{size:${size};margin:3mm}*{box-sizing:border-box}body{color:#000;background:#fff;font: ${c.width===58&&c.type==='thermal'?11:13}px monospace;margin:0}article{width:${content};margin:auto;padding:3mm 0;break-after:page}article:last-child{break-after:auto}header{text-align:center}h1{font-size:20px}h2{font-size:16px}section{margin:12px 0;break-inside:avoid}p{white-space:pre-line;overflow-wrap:anywhere}hr{border:0;border-top:1px dashed #000}.obs{font-weight:bold;margin:5px 0}footer{font-size:10px;margin-top:16px}button{margin:16px;padding:12px}@media print{button{display:none}}.combo-choice{gap:12px}.combo-choice>div:first-child{min-width:0;flex:1}.combo-choice small{display:block;color:var(--text-muted);font-size:12px;margin-top:4px}.combo-choice strong{overflow-wrap:anywhere}.combo-stepper{display:flex;align-items:center;gap:8px;flex-shrink:0}.combo-stepper button{width:40px;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-subsurface);color:var(--accent);font-size:22px;cursor:pointer}.combo-stepper button:disabled{opacity:.35;cursor:default}.combo-stepper span{min-width:20px;text-align:center;font-weight:700}
+</style></head><body><button onclick="window.print()">Imprimir novamente</button>${Array.from({length:c.copies},via).join('')}</body></html>`;
     }
     function textoComanda(p,c=configOperacao){
       const cols=c.width===58?32:48;
