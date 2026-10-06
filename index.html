@@ -267,8 +267,9 @@
   @media(max-width:1000px){.kds-board{grid-template-columns:1fr}#kanban-cols{grid-template-columns:repeat(5,minmax(280px,1fr))}}@media(max-width:600px){#kanban-cols{grid-template-columns:1fr;overflow:visible}.combo-presets button{flex:1}.top-nav{overflow-x:auto}.kds-board .order-card{padding:14px}}
 @media(min-width:1100px){.kitchen-summary{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
-  .system-version{padding:18px 24px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.system-version p{font-weight:700;color:var(--accent);margin:6px 0}.system-version small{color:var(--text-muted);max-width:360px;line-height:1.5}.whatsapp-settings{padding:28px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-surface);margin-bottom:24px}.wa-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.wa-state{padding:8px 12px;border-radius:20px;background:var(--bg-subsurface);color:var(--text-muted);font-size:12px}.wa-state[data-connected="true"]{background:#dcfce7;color:#166534}.wa-number{font-weight:700;margin:16px 0 8px}.wa-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.wa-buttons button:disabled{opacity:.45;cursor:default}.wa-qr{padding:20px;border:1px solid var(--border-color);border-radius:14px;gap:24px;align-items:center;margin:20px 0}.wa-qr img{max-width:100%;background:white;flex-shrink:0}.wa-qr p{margin:12px 0;line-height:1.6}.wa-message-form{margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color)}.wa-message-form textarea{margin-bottom:16px;resize:vertical;line-height:1.5}.wa-message-form .form-help{margin:12px 0 18px}.wa-message-form label{display:block}
-  @media(max-width:650px){.system-version,.wa-heading,.wa-qr{flex-direction:column;align-items:flex-start}.whatsapp-settings{padding:20px}.wa-qr img{align-self:center;width:240px;height:240px}.wa-buttons button{flex:1 1 140px}.wa-heading{gap:14px}}
+  .system-version{padding:18px 24px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.system-version p{font-weight:700;color:var(--accent);margin:6px 0}.system-version small{color:var(--text-muted);max-width:360px;line-height:1.5}
+  #pedido-whatsapp{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;line-height:1.4;min-height:48px}
+  @media(max-width:650px){.system-version{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -397,20 +398,6 @@
     </div>
 
     <div class="system-version"><div><strong>Sobre o sistema</strong><p id="versao-sistema"></p></div><small>Versão desta página. Após atualizar, use Ctrl + Shift + R em cada computador.</small></div>
-    <section class="whatsapp-settings" aria-labelledby="whatsapp-config-title">
-      <div class="wa-heading"><div><h3 id="whatsapp-config-title">WhatsApp da loja</h3><p class="form-help">Conecte seu número e envie atualizações dos pedidos.</p></div><strong id="wa-conexao-status" class="wa-state" role="status">Ainda não consultado</strong></div>
-      <p id="wa-numero" class="wa-number"></p><p id="wa-automacao-status" class="form-help"></p><p id="wa-agendamento-status" class="form-help"></p>
-      <div class="wa-buttons"><button type="button" id="wa-conectar" class="btn-action" onclick="acaoWhatsApp('conectar')">Conectar por QR Code</button><button type="button" id="wa-atualizar" class="btn-action" onclick="consultarWhatsApp()">Atualizar conexão</button><button type="button" id="wa-ativar" class="btn-action" onclick="acaoWhatsApp('ativar')" disabled>Ativar mensagens</button><button type="button" id="wa-pausar" class="btn-action" onclick="acaoWhatsApp('pausar')" disabled>Pausar mensagens</button><button type="button" id="wa-teste" class="btn-action" onclick="acaoWhatsApp('teste')" disabled>Enviar teste para meu número</button><button type="button" id="wa-desconectar" class="btn-action" onclick="acaoWhatsApp('desconectar')" disabled>Desconectar número</button></div>
-      <div id="wa-qr-box" class="wa-qr" style="display:none"><img id="wa-qr-imagem" alt="QR Code para vincular seu WhatsApp" width="280" height="280"><div><strong>Vincule seu número pelo celular</strong><p>Abra WhatsApp → Dispositivos conectados → Conectar dispositivo e escaneie o QR Code.</p><p class="form-help">O código pode mudar enquanto você aguarda. Esta tela atualiza a conexão automaticamente.</p></div></div>
-      <p id="wa-feedback" class="form-help" role="status"></p><p class="form-help">A conexão por QR usa um serviço de WhatsApp que deve estar instalado e online. A instalação está no guia da V14.</p>
-      <form class="wa-message-form" onsubmit="salvarMensagensWhatsApp(event)">
-        <h4>Mensagens automáticas do pedido</h4><p class="form-help">Use {{cliente}}, {{pedido}} e {{loja}}. Mantenha {{pedido}} em cada mensagem. Só enviamos para clientes que escolheram receber atualizações.</p>
-        <label class="form-label" for="wa-msg-recebido">1 · Recebido, após confirmar o Pix</label><textarea id="wa-msg-recebido" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
-        <label class="form-label" for="wa-msg-preparando">2 · Aceito e em preparo</label><textarea id="wa-msg-preparando" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
-        <label class="form-label" for="wa-msg-a_caminho">3 · Despachado para o motoboy</label><textarea id="wa-msg-a_caminho" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
-        <button id="wa-salvar-mensagens" class="btn-submit" style="max-width:280px" disabled>Salvar mensagens</button>
-      </form>
-    </section>
 
     <form class="atendimento-form" onsubmit="salvarAtendimento(event)">
       <h3>Atendimento e entrega</h3><p class="form-help">Estas preferências valem para todos os clientes e computadores.</p>
@@ -463,7 +450,7 @@
 
         <h3 style="font-size: 18px; margin-top: 32px; margin-bottom: 16px; border-top: 1px solid var(--border-color); padding-top: 32px;">Redes Sociais e Contatos</h3>
         <div class="identity-social-grid">
-            <div class="form-group"><label class="form-label">WhatsApp (Apenas Números)</label><input type="text" id="conf-whatsapp" class="input-text" placeholder="5511999999999"></div>
+            <div class="form-group"><label class="form-label" for="conf-whatsapp">WhatsApp para receber pedidos</label><input type="tel" id="conf-whatsapp" class="input-text" placeholder="5522999999999"><p class="form-help">Informe o número da loja com DDD. O cliente abre o WhatsApp com o resumo do pedido e toca em Enviar.</p></div>
             <div class="form-group"><label class="form-label">Link do Instagram</label><input type="url" id="conf-instagram" class="input-text" placeholder="https://instagram.com/sua_loja"></div>
             <div class="form-group"><label class="form-label">Link do Facebook</label><input type="url" id="conf-facebook" class="input-text" placeholder="https://facebook.com/sua_loja"></div>
         </div>
@@ -526,8 +513,8 @@
         <h2>Pedido registrado <span id="pedido-codigo"></span></h2>
         <p>O pagamento ainda não foi confirmado. Consulte a loja para receber os dados do Pix.</p>
         <div id="pix-total" class="mono" style="font-size:28px;margin:20px 0;">R$ 0,00</div>
-        <a id="pedido-whatsapp" class="btn-submit" target="_blank" rel="noopener noreferrer">Falar com a loja no WhatsApp</a>
-        <p style="font-size:13px;color:var(--text-muted);">O botão abre uma mensagem para você revisar e enviar. O pedido já foi registrado no sistema.</p>
+        <a id="pedido-whatsapp" class="btn-submit" target="_blank" rel="noopener noreferrer">Enviar resumo pelo WhatsApp</a>
+        <p id="pedido-whatsapp-aviso" class="form-help" style="margin-top:14px">Seu pedido já está registrado. Abra o WhatsApp, revise o resumo e toque em Enviar.</p>
         <button class="btn-action" onclick="mostrarAba('cardapio')">Voltar ao cardápio</button>
       </div>
       <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
@@ -548,7 +535,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size: 20px; font-weight:800;">Total:</span><span id="chk-tot" class="mono" style="font-size: 28px; font-weight:800; color:var(--accent);">R$ 0,00</span></div>
         </div>
         <p id="checkout-erro" role="alert" style="color:var(--danger);"></p>
-        <label class="form-help" style="display:block;margin:16px 0"><input type="checkbox" id="chk-whatsapp-atualizacoes"> Quero receber atualizações deste pedido pelo WhatsApp.</label><button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
+        <button type="submit" id="btn-finalizar-pedido" class="btn-submit" style="margin-top: 32px;">Confirmar Pedido</button>
       </form>
     </div>
   </section>
@@ -615,7 +602,6 @@
   </div>
   <div id="modal-categorias" class="modal-overlay" style="display:none;z-index:1004"><div class="modal-box category-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="categorias-title"><div class="modal-header"><h3 id="categorias-title">Gerenciar categorias</h3><button type="button" aria-label="Fechar categorias" onclick="fecharGestaoCategorias()">✕</button></div><p class="form-help">Edite os nomes e a ordem das categorias. Categorias com produtos só podem ser excluídas depois que os produtos forem movidos.</p><input id="busca-categorias-admin" class="input-text" type="search" placeholder="Buscar categoria..." aria-label="Buscar categoria" oninput="renderListaGestaoCategorias()"><div id="gestao-categorias-lista"></div><form class="category-manager-tools" onsubmit="adicionarCategoriaAdmin(event)"><input id="nova-cat-nome" class="input-text" maxlength="80" required placeholder="Nome da nova categoria" aria-label="Nome da nova categoria"><button id="btn-criar-categoria" type="submit" class="btn-submit" style="width:auto;margin:0">+ Criar categoria</button></form><p id="gestao-categorias-feedback" class="form-help" role="status"></p></div></div>
   <div id="modal-editar-categoria" class="modal-overlay" style="display:none;z-index:1005"><form class="modal-box" style="max-width:440px" role="dialog" aria-modal="true" aria-labelledby="category-edit-title" onsubmit="salvarNomeCategoria(event)"><div class="modal-header"><h3 id="category-edit-title">Editar categoria</h3><button type="button" aria-label="Fechar edição" onclick="fecharEdicaoCategoria()">✕</button></div><p class="form-help">O novo nome será aplicado aos produtos, preservando a ordem deles.</p><label for="editar-cat-nome" class="form-label">Nome da categoria</label><input id="editar-cat-nome" class="input-text" maxlength="80" required><p id="editar-cat-feedback" role="status" class="form-help"></p><button id="btn-salvar-categoria" type="submit" class="btn-submit">Salvar nome</button></form></div>
-  <div id="modal-mensagens" class="modal-overlay" style="display:none;z-index:1006"><div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="mensagens-title"><div class="modal-header"><h3 id="mensagens-title">Mensagens do pedido</h3><button aria-label="Fechar mensagens" onclick="document.getElementById('modal-mensagens').style.display='none'">✕</button></div><p class="form-help">O envio automático exige a integração do WhatsApp ativa. Sem integração, os eventos ficam na fila. Abrir WhatsApp permite enviar manualmente; não comprova envio automático.</p><div id="mensagens-lista"></div></div></div>
   <!-- MODAL: CARRINHO DE COMPRAS -->
   <div class="modal-overlay" id="modal-carrinho" style="display:none; z-index: 999;">
     <div class="modal-box" style="max-width: 450px;">
@@ -939,55 +925,11 @@
       if (aba === 'admin') renderAdmin();
       if (['cozinha','kds'].includes(aba)) carregarPedidos();
       if (aba === 'crm') carregarPedidosCRM();
-      if(aba==='config')iniciarMonitorWhatsApp();else pararMonitorWhatsApp(); 
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='14';
+    const MALIK_VERSION='15';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
-    let timerWhatsApp=null,consultandoWhatsApp=false,acaoWhatsAppEmCurso=false,mensagensWhatsAppEditadas=false,whatsappConfig=null,whatsappConectado=false,whatsappNumero='',qrWhatsAppSolicitado=false;
-    function pararMonitorWhatsApp(){clearInterval(timerWhatsApp);timerWhatsApp=null;qrWhatsAppSolicitado=false;whatsappConectado=false;whatsappNumero='';document.getElementById('wa-qr-box').style.display='none';document.getElementById('wa-qr-imagem').removeAttribute('src');}
-    function iniciarMonitorWhatsApp(){if(!usuarioAtual)return;consultarWhatsApp();if(!timerWhatsApp)timerWhatsApp=setInterval(()=>{if(usuarioAtual&&!document.hidden&&document.getElementById('sec-config').style.display==='block')consultarWhatsApp(true);},5000);}
-    function renderConfigWhatsApp(data){
-      whatsappConfig=data.config||whatsappConfig;whatsappConectado=data.conectado===true;whatsappNumero=data.numero||'';
-      const status=document.getElementById('wa-conexao-status');status.textContent=whatsappConectado?'Conectado':data.configurado===false?'Serviço não configurado':data.qr?'Aguardando leitura do QR Code':data.estado==='connecting'?'Conectando…':'Desconectado';status.dataset.connected=String(whatsappConectado);
-      document.getElementById('wa-numero').textContent=whatsappNumero?'Número conectado: +'+whatsappNumero:whatsappConectado?'Número conectado · identificação indisponível':'';
-      document.getElementById('wa-automacao-status').textContent=whatsappConfig?.auto_ativo?(whatsappConectado?'Mensagens ativadas para novos eventos dos pedidos.':'Mensagens ativadas, aguardando reconexão. A fila está preservada.'):'Mensagens automáticas pausadas.';
-      document.getElementById('wa-agendamento-status').textContent=whatsappConfig?.ultimo_worker_em?'Última execução do serviço: '+new Date(whatsappConfig.ultimo_worker_em).toLocaleString('pt-BR')+(whatsappConfig.ultimo_erro?' · '+whatsappConfig.ultimo_erro:''):'Agendamento: aguardando primeira execução. Instale o serviço de envio conforme o guia.';
-      const qr=typeof data.qr==='string'&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(data.qr)&&data.qr.length<500000?data.qr:null;
-      document.getElementById('wa-qr-box').style.display=qr&&!whatsappConectado?'flex':'none';if(qr&&!whatsappConectado)document.getElementById('wa-qr-imagem').src=qr;else document.getElementById('wa-qr-imagem').removeAttribute('src');
-      if(whatsappConectado)qrWhatsAppSolicitado=false;
-      document.getElementById('wa-conectar').disabled=whatsappConectado||acaoWhatsAppEmCurso;
-      document.getElementById('wa-ativar').disabled=!whatsappConectado||whatsappConfig?.auto_ativo||acaoWhatsAppEmCurso;
-      document.getElementById('wa-pausar').disabled=!whatsappConfig?.auto_ativo||acaoWhatsAppEmCurso;
-      document.getElementById('wa-teste').disabled=!whatsappConectado||!whatsappNumero||acaoWhatsAppEmCurso;
-      document.getElementById('wa-desconectar').disabled=(!whatsappConectado&&!qrWhatsAppSolicitado)||acaoWhatsAppEmCurso;
-      document.getElementById('wa-salvar-mensagens').disabled=!whatsappConfig||acaoWhatsAppEmCurso;
-      if(whatsappConfig?.mensagens&&!mensagensWhatsAppEditadas)for(const [evento,txt] of Object.entries(whatsappConfig.mensagens)){const el=document.getElementById('wa-msg-'+evento);if(el)el.value=txt;}
-      if(data.aviso)document.getElementById('wa-feedback').textContent=data.aviso;
-    }
-    async function chamarConexaoWhatsApp(body){
-      if(!malikDB?.functions?.invoke)throw new Error('Atualize a página e instale a função de conexão da V14.');
-      const {data,error}=await malikDB.functions.invoke('malik-whatsapp-conexao',{body});
-      if(error)throw new Error('Não foi possível acessar a conexão do WhatsApp. Confira o login e a instalação das funções da V14.');
-      if(data?.error)throw new Error(data.error);if(!data||typeof data.conectado!=='boolean')throw new Error('Resposta inválida do serviço de WhatsApp.');return data;
-    }
-    async function consultarWhatsApp(silencioso=false){
-      if(!usuarioAtual||consultandoWhatsApp||acaoWhatsAppEmCurso)return;consultandoWhatsApp=true;const uid=usuarioAtual.id;
-      try{const data=await chamarConexaoWhatsApp({acao:'status',qr:qrWhatsAppSolicitado});if(usuarioAtual?.id!==uid)return;renderConfigWhatsApp(data);if(!silencioso&&!data.aviso)document.getElementById('wa-feedback').textContent='Conexão consultada.';}
-      catch(e){if(usuarioAtual?.id===uid){whatsappConectado=false;document.getElementById('wa-conexao-status').textContent='Não foi possível consultar';document.getElementById('wa-qr-box').style.display='none';document.getElementById('wa-qr-imagem').removeAttribute('src');document.getElementById('wa-ativar').disabled=true;document.getElementById('wa-teste').disabled=true;document.getElementById('wa-feedback').textContent=e.message;}}
-      finally{consultandoWhatsApp=false;}
-    }
-    async function acaoWhatsApp(acao,mensagens=null){
-      if(!usuarioAtual||acaoWhatsAppEmCurso||consultandoWhatsApp)return;
-      if(acao==='desconectar'&&!confirm('Desconectar este número do Malik e pausar as mensagens? Seu WhatsApp no celular continua disponível.'))return;
-      acaoWhatsAppEmCurso=true;document.querySelectorAll('.wa-buttons button,#wa-salvar-mensagens').forEach(b=>b.disabled=true);const uid=usuarioAtual.id;
-      document.getElementById('wa-feedback').textContent=acao==='conectar'?'Gerando QR Code pelo serviço…':'Aguarde…';
-      try{const data=await chamarConexaoWhatsApp({acao,...(mensagens?{mensagens}:{})});if(usuarioAtual?.id!==uid)return;if(acao==='conectar')qrWhatsAppSolicitado=data.configurado!==false&&!data.conectado;if(acao==='desconectar')qrWhatsAppSolicitado=false;if(acao==='salvar_mensagens')mensagensWhatsAppEditadas=false;acaoWhatsAppEmCurso=false;renderConfigWhatsApp(data);if(!data.aviso)document.getElementById('wa-feedback').textContent=acao==='salvar_mensagens'?'Mensagens salvas.':acao==='conectar'?data.conectado?'Número conectado.':data.qr?'Escaneie o QR Code com seu WhatsApp.':'Conexão iniciada. Aguarde o código ou clique em Conectar novamente.':'Configuração atualizada.';}
-      catch(e){if(usuarioAtual?.id===uid)document.getElementById('wa-feedback').textContent=e.message;}
-      finally{acaoWhatsAppEmCurso=false;if(usuarioAtual?.id===uid){document.getElementById('wa-atualizar').disabled=false;document.getElementById('wa-conectar').disabled=whatsappConectado;document.getElementById('wa-salvar-mensagens').disabled=!whatsappConfig;document.getElementById('wa-pausar').disabled=!whatsappConfig?.auto_ativo;document.getElementById('wa-desconectar').disabled=!whatsappConectado&&!qrWhatsAppSolicitado;document.getElementById('wa-ativar').disabled=!whatsappConectado||whatsappConfig?.auto_ativo;document.getElementById('wa-teste').disabled=!whatsappConectado||!whatsappNumero;}}
-    }
-    async function salvarMensagensWhatsApp(e){e.preventDefault();const mensagens={};for(const evento of ['recebido','preparando','a_caminho']){const txt=document.getElementById('wa-msg-'+evento).value.trim();if(!txt||txt.length>1000||!txt.includes('{{pedido}}')||txt.replace(/\{\{(cliente|pedido|loja)\}\}/g,'').includes('{{')){document.getElementById('wa-feedback').textContent='Confira as três mensagens e mantenha {{pedido}} em cada uma.';return;}mensagens[evento]=txt;}await acaoWhatsApp('salvar_mensagens',mensagens);}
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
     async function carregarConfigDaNuvem() {
@@ -1035,7 +977,7 @@
         };
         const links=[];
         const add=(network,label,url)=>links.push(`<a href="${escaparHTML(url)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${label} da loja" class="btn-social-pill social-${network}">${icons[network]}<span>${label}</span></a>`);
-        const phone=String(CONFIG_LOJA.whatsapp||'').replace(/\D/g,'');
+        const phone=numeroWhatsAppLoja(CONFIG_LOJA.whatsapp);
         if(phone)add('whatsapp','WhatsApp','https://wa.me/'+phone);
         for(const [network,label] of [['instagram','Instagram'],['facebook','Facebook']]){
           try{const url=new URL(CONFIG_LOJA[network]);if(['https:','http:'].includes(url.protocol))add(network,label,url.href);}catch(e){}
@@ -1678,7 +1620,7 @@
         enviandoPedido = true; btn.disabled = true; btn.textContent = 'Enviando pedido...';
         const payload = {restaurante_id:RESTAURANTE_ID, cliente:nome, telefone,
           endereco:tipoConsumo === 'delivery' ? rua + ' - ' + bairro : '',
-          tipo_entrega:tipoConsumo,whatsapp_autorizado:document.getElementById('chk-whatsapp-atualizacoes').checked===true,taxa_esperada:tipoConsumo==='delivery'?Number(CONFIG_LOJA.taxa_entrega):0, itens:itens.map(i => ({prodId:i.prodId,qtd:i.qtd,det:i.det,opcoes:i.opcoes}))};
+          tipo_entrega:tipoConsumo,whatsapp_autorizado:false,taxa_esperada:tipoConsumo==='delivery'?Number(CONFIG_LOJA.taxa_entrega):0, itens:itens.map(i => ({prodId:i.prodId,qtd:i.qtd,det:i.det,opcoes:i.opcoes}))};
         const tentativaKey = 'malik-tentativa-' + RESTAURANTE_ID;
         const assinatura = JSON.stringify(payload);
         let tentativa;
@@ -1702,8 +1644,9 @@
         document.getElementById('pix-total').textContent = dinheiro(novo.total);
         document.getElementById('pedido-codigo').textContent = '#' + novo.codigo_curto;
         const link = document.getElementById('pedido-whatsapp');
-        const numero = String(CONFIG_LOJA.whatsapp || '').replace(/\D/g,'');
-        link.style.display = /^\d{10,15}$/.test(numero) ? 'inline-flex' : 'none';
+        const numero = numeroWhatsAppLoja(CONFIG_LOJA.whatsapp);
+        link.style.display = numero ? 'inline-flex' : 'none';
+        document.getElementById('pedido-whatsapp-aviso').textContent=numero?'Seu pedido já está registrado. Abra o WhatsApp, revise o resumo e toque em Enviar.':'Seu pedido já está registrado. O WhatsApp da loja não está disponível; aguarde o atendimento.';
         link.href = numero ? 'https://wa.me/' + numero + '?text=' + encodeURIComponent(resumoWhatsApp(novo)) : '#';
         carregarProdutosDaNuvem().catch(() => {});
       } catch (erro) {
@@ -1879,7 +1822,7 @@
           if(p.status==='novo'&&!p.pagamento_confirmado_em){botoes=`<button class="order-main-action" ${disabled} onclick="confirmarPixPedido('${id}')">Conferir e confirmar Pix</button>`;}else if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
           if(p.status==='fim') botoes=`<button class="order-secondary" ${disabled} onclick="gerenciarConcluido('${id}','${p.arquivado_em?'restaurar':'arquivar'}')">${p.arquivado_em?'Restaurar':'Arquivar'}</button><button class="order-delete" ${disabled} onclick="gerenciarConcluido('${id}','excluir')">Excluir</button>`;
           const itens=(Array.isArray(p.itens)?p.itens:[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}×</b> ${escaparHTML(i.nome)}${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}</div>`).join('');
-          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">${p.pagamento_confirmado_em?'Pix confirmado':'Pix aguardando conferência'}</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}','cozinha')">Imprimir cozinha</button><button class="order-secondary" onclick="imprimirPedido('${id}','expedicao')">${p.tipo_entrega==='delivery'?'Imprimir motoboy':'Imprimir salão / retirada'}</button><button class="order-secondary" onclick="abrirMensagensPedido('${id}')">WhatsApp · mensagens</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
+          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">${p.pagamento_confirmado_em?'Pix confirmado':'Pix aguardando conferência'}</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}','cozinha')">Imprimir cozinha</button><button class="order-secondary" onclick="imprimirPedido('${id}','expedicao')">${p.tipo_entrega==='delivery'?'Imprimir motoboy':'Imprimir salão / retirada'}</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
         }).join('');
         return `<div class="kanban-col"><div class="col-header" style="color:${c.cor}"><span>${c.t}</span><span>${lista.length}</span></div><div class="kitchen-cards">${cards||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
       }).join('');
@@ -1905,21 +1848,6 @@
       if(!confirm('Confirme no extrato o recebimento de '+dinheiro(p.total)+' referente ao pedido #'+p.codigo_curto+'. O valor realmente entrou?'))return;
       acoesPedidosEmCurso.add(id);renderKanban();
       try{const {error}=await malikDB.rpc('malik_confirmar_pix_v13',{p_id:id});if(error)throw error;await carregarPedidos();}catch(e){alert(e.message||'Não foi possível confirmar o Pix.');}finally{acoesPedidosEmCurso.delete(id);renderKanban();}
-    }
-    let mensagensPedidoAtual=null;
-    function textoMensagemPedido(p,evento){
-      const inicio='Olá, '+p.cliente+'! Pedido #'+p.codigo_curto+'. ';
-      return inicio+{recebido:'Recebemos seu pedido e confirmamos o pagamento via Pix. Obrigado!',preparando:'Estamos preparando seu pedido com carinho.',a_caminho:'Seu pedido está a caminho! Aguarde a chegada do entregador.'}[evento];
-    }
-    async function abrirMensagensPedido(id){
-      if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(!p)return;
-      mensagensPedidoAtual=id;document.getElementById('modal-mensagens').style.display='flex';document.getElementById('mensagens-title').textContent='WhatsApp · #'+p.codigo_curto;
-      const el=document.getElementById('mensagens-lista');el.textContent='Consultando mensagens…';
-      const {data,error}=await malikDB.from('malik_whatsapp_fila').select('evento,estado,erro').eq('pedido_id',id).eq('restaurante_id',RESTAURANTE_ID);
-      if(!usuarioAtual||mensagensPedidoAtual!==id)return;if(error){el.textContent='Não foi possível consultar a fila. Confira a instalação do SQL 07.';return;}
-      if(!data?.length){el.textContent=p.whatsapp_autorizado?'Nenhuma mensagem gerada. A primeira será gerada após a confirmação do Pix.':'O cliente não escolheu receber atualizações pelo WhatsApp. Nenhuma mensagem automática será gerada.';return;}
-      let numero=String(p.telefone||'').replace(/\D/g,'');if(numero.length===10||numero.length===11)numero='55'+numero;
-      el.innerHTML='<p class="form-help">Os textos abaixo são sugestões para envio manual. A automação usa as mensagens salvas em Configurações.</p>'+['recebido','preparando','a_caminho'].flatMap(evento=>{const m=data.find(m=>m.evento===evento);if(!m)return [];const txt=textoMensagemPedido(p,evento);return [`<div class="message-event"><strong>${{recebido:'1 · Pedido recebido',preparando:'2 · Em preparo',a_caminho:'3 · A caminho'}[evento]}</strong><p>${escaparHTML(txt)}</p><small>${escaparHTML({pendente:'Na fila · envio requer integração ativa',enviando:'Enviando pela integração',aceito_api:'Aceita pelo serviço de WhatsApp · entrega ao cliente ainda não comprovada',falha:'Falha no envio',revisar:'Verificar envio na API antes de repetir'}[m.estado]||m.estado)}</small>${m.erro?`<p class="form-help">${escaparHTML(m.erro)}</p>`:''}${/^[0-9]{12,13}$/.test(numero)?`<br><a href="https://wa.me/${numero}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener noreferrer">Abrir WhatsApp para envio manual</a>`:''}</div>`];}).join('');
     }
     async function alternarArquivados() {
       mostrandoArquivados=!mostrandoArquivados;
@@ -2032,12 +1960,19 @@
         if(removidos)alert('Alguns itens salvos ficaram indisponíveis ou suas opções mudaram. Confira a sacola e escolha-os novamente.');
       } catch(e) { sacola = []; }
     }
+    function numeroWhatsAppLoja(valor){
+      let numero=String(valor||'').replace(/\D/g,'');
+      if(numero.length===10||numero.length===11)numero='55'+numero;
+      return /^55\d{10,11}$/.test(numero)?numero:'';
+    }
     function resumoWhatsApp(p) {
       return ['Olá! Registrei o pedido #' + p.codigo_curto + ' no cardápio.',
         ...p.itens.map(i => i.qtd + 'x ' + i.nome + ' — ' + dinheiro(i.qtd*i.preco)+(i.det?'\n'+i.det:'')),
-        'Modalidade: ' + p.tipo_entrega, 'Entrega: ' + dinheiro(p.taxa_entrega||0),
+        'Cliente: '+(p.cliente||''), 'Telefone: '+(p.telefone||''),
+        'Modalidade: ' + ({delivery:'Delivery',balcao:'Retirada',mesa:'Mesa'}[p.tipo_entrega]||p.tipo_entrega),
+        ...((p.endereco||'').trim()?['Local: '+p.endereco]:[]), 'Subtotal: '+dinheiro(p.subtotal||0), 'Entrega: ' + dinheiro(p.taxa_entrega||0),
         ...(p.entrega_minutos_min&&p.entrega_minutos_max?['Entrega estimada: '+prazoEntrega(p)]:[]), 'Total: ' + dinheiro(p.total),
-        'Pode me orientar sobre o pagamento via Pix?'].join('\n');
+        'Pagamento: Pix aguardando confirmação.', 'Pode me orientar sobre o pagamento via Pix?'].join('\n');
     }
     function quantidadeNaSacola(id){return sacola.filter(i=>i.prodId===id).reduce((n,i)=>n+i.qtd,0);}
     const PRINT_KEY='malik-print-v1-'+RESTAURANTE_ID;
@@ -2137,7 +2072,6 @@
       }else if(!canalPedidos){estadoRealtime='indisponível';atualizarConexaoCozinha();}
     }
     function encerrarMonitorPedidos(){
-      pararMonitorWhatsApp();whatsappConfig=null;mensagensWhatsAppEditadas=false;document.getElementById('wa-conexao-status').textContent='Ainda não consultado';document.getElementById('wa-feedback').textContent='';
       if(canalPedidos&&malikDB&&malikDB.removeChannel)malikDB.removeChannel(canalPedidos);
       canalPedidos=null;estadoRealtime='desconectado';revisaoPedidos++;consultaPendente=false;
       pedidosArquivados=[];pedidosCRM=[];mostrandoArquivados=false;
@@ -2194,7 +2128,7 @@
     restaurarAudioLocal();
     document.addEventListener('visibilitychange', () => { if (usuarioAtual && !document.hidden) carregarPedidos(); });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-mensagens','modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
+      if (e.key === 'Escape') {fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
     });
 
   </script>
