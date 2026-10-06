@@ -306,6 +306,9 @@
 .product-photo:has(.youtube-holder[style*="block"]){height:auto;aspect-ratio:auto;min-height:0}
 @media(max-width:650px){.media-guide{padding:12px}.media-guide td{font-size:12px}.media-guide td:last-child{white-space:nowrap}.product-photo:has(.youtube-holder[style*="block"]){padding:12px}}
 
+
+/* V19: mídias sociais carregadas por clique, preservando capa e controles oficiais. */
+.social-placeholder{display:flex;align-items:center;justify-content:center;background:var(--bg-subsurface);color:var(--accent);font-size:48px;width:100%;height:100%;min-height:160px}.social-cover .youtube-play{text-decoration:none;text-align:center;min-width:0;width:85%;max-width:250px}.social-help{font-size:12px!important;line-height:1.5!important;color:var(--text-muted);padding:8px 0;margin:0!important}.portrait-player{aspect-ratio:9/16;max-height:620px}.instagram-host{width:100%;min-width:0;overflow:hidden}.instagram-host .instagram-media,.instagram-host iframe{width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important}.instagram-host blockquote{padding:18px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-surface)}
 </style>
 </head>
 <body>
@@ -733,7 +736,7 @@
           <img id="novo-img-preview" class="media-preview" src="" alt="Prévia da foto" style="display:none">
           <div id="novo-youtube-preview" class="youtube-holder" style="display:none"></div><video id="novo-video-preview" class="media-preview" controls playsinline muted style="display:none"></video>
           <label class="form-label" for="novo-img">Link da foto (opcional)</label><input id="novo-img" class="input-text" type="text" oninput="atualizarPreviewMidia()" placeholder="https://...">
-          <label class="form-label" for="novo-video">Link do vídeo (opcional)</label><input id="novo-video" type="url" class="input-text" oninput="editarLinkVideoProduto()" placeholder="https://youtu.be/... ou https://.../video.mp4"><p class="form-help">Cole um link do YouTube (vídeo, Shorts ou youtu.be) ou um link direto MP4/WebM. O vídeo do YouTube abre no detalhe do produto; a vitrine usa uma foto de capa. Instagram e links de compartilhamento do Drive não são aceitos.</p>
+          <label class="form-label" for="novo-video">Link do vídeo (opcional)</label><input id="novo-video" type="url" class="input-text" oninput="editarLinkVideoProduto()" placeholder="Cole o link do vídeo ou da publicação"><p class="form-help">Aceita YouTube, Instagram (Reels/publicações), TikTok, Google Drive e link direto MP4/WebM. O vídeo abre no detalhe do produto; use uma foto 1200 × 900 px como capa. Instagram: publicação pública com incorporação permitida. Drive: compartilhar como “Qualquer pessoa com o link”, leitor. Links curtos de Instagram/TikTok abrem na plataforma; use o endereço completo do vídeo para incorporar. Stories, perfis e pastas do Drive não são aceitos.</p>
           <div class="custom-toolbar"><button type="button" onclick="removerMidiaProduto('foto')">Remover foto</button><button type="button" onclick="removerMidiaProduto('video')">Remover vídeo</button></div>
         </div>
 
@@ -980,7 +983,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='18';
+    const MALIK_VERSION='19';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1041,7 +1044,7 @@
     async function salvarConfiguracoes(e) {
         e.preventDefault();
         const linkVideo=document.getElementById('conf-banner-video').value.trim();
-        if(linkVideo&&!linkVideoDiretoValido(linkVideo)){alert('Use um link direto HTTPS de vídeo MP4 ou WebM, não uma página do YouTube, Instagram ou Drive.');return;}
+        if(linkVideo&&!linkVideoDiretoValido(linkVideo)){alert('Use um link direto HTTPS de vídeo MP4 ou WebM, não uma página do YouTube, Instagram, TikTok ou Drive.');return;}
         const btn = document.getElementById('btn-submit-config'); btn.innerText = 'Salvando...'; btn.disabled = true;
 
         const dadosConfig = {
@@ -1190,7 +1193,61 @@
         return /^[A-Za-z0-9_-]{11}$/.test(id||'')?id:null;
       }catch(_){return null;}
     }
-    function linkVideoProdutoValido(url){return !!idYouTube(url)||linkVideoDiretoValido(url);}
+
+    function videoSocial(valor){
+      try{
+        const u=new URL(String(valor||'').trim());if(u.protocol!=='https:'||u.username||u.password||u.port)return null;
+        const h=u.hostname,p=u.pathname;let m;
+        if(['instagram.com','www.instagram.com','m.instagram.com'].includes(h)){
+          m=p.match(/^\/(reel|reels|p|tv)\/([A-Za-z0-9_-]{5,64})\/?$/);
+          if(m){const tipo=m[1]==='reels'?'reel':m[1];return {provider:'instagram',label:'Instagram',url:'https://www.instagram.com/'+tipo+'/'+m[2]+'/',short:false};}
+          if(/^\/share\/(reel|p)\/[A-Za-z0-9_-]{5,64}\/?$/.test(p))return {provider:'instagram',label:'Instagram',url:'https://www.instagram.com'+p,short:true};
+        }
+        if(['tiktok.com','www.tiktok.com','m.tiktok.com'].includes(h)){
+          m=p.match(/^\/@([A-Za-z0-9_.]{1,40})\/video\/(\d{15,25})\/?$/);
+          if(m)return {provider:'tiktok',label:'TikTok',id:m[2],url:'https://www.tiktok.com/@'+m[1]+'/video/'+m[2],embed:'https://www.tiktok.com/player/v1/'+m[2]+'?autoplay=1&controls=1',short:false};
+          if(/^\/t\/[A-Za-z0-9]{5,64}\/?$/.test(p))return {provider:'tiktok',label:'TikTok',url:'https://www.tiktok.com'+p,short:true};
+        }
+        if(['vm.tiktok.com','vt.tiktok.com'].includes(h)&&/^\/[A-Za-z0-9]{5,64}\/?$/.test(p))return {provider:'tiktok',label:'TikTok',url:'https://'+h+p,short:true};
+        if(h==='drive.google.com'){
+          m=p.match(/^\/file\/d\/([A-Za-z0-9_-]{10,200})(?:\/(view|preview))?\/?$/);
+          const id=m?m[1]:['/open','/uc'].includes(p)?u.searchParams.get('id'):null;
+          if(/^[A-Za-z0-9_-]{10,200}$/.test(id||'')){
+            const key=u.searchParams.get('resourcekey'),query=/^[A-Za-z0-9_-]{1,200}$/.test(key||'')?'?resourcekey='+key:'';
+            return {provider:'drive',label:'Google Drive',id,url:'https://drive.google.com/file/d/'+id+'/view'+query,embed:'https://drive.google.com/file/d/'+id+'/preview'+query,short:false};
+          }
+        }
+        return null;
+      }catch(_){return null;}
+    }
+    function normalizarLinkVideo(valor){const v=String(valor||'').trim(),yt=idYouTube(v),social=videoSocial(v);return yt?'https://www.youtube.com/watch?v='+yt:social?social.url:v;}
+    function socialHTML(info,nome,capa,container){
+      const foto=urlMidiaValida(capa,true)?`<img src="${escaparHTML(capa)}" alt="${escaparHTML(nome)}">`:'<span class="social-placeholder" aria-hidden="true">▶</span>';
+      const abrir=`<a class="youtube-open" href="${escaparHTML(info.url)}" target="_blank" rel="noopener noreferrer">Assistir no ${info.label}</a>`;
+      return `<div class="youtube-cover social-cover">${foto}${info.short?`<a class="youtube-play" href="${escaparHTML(info.url)}" target="_blank" rel="noopener noreferrer">▶ Abrir no ${info.label}</a>`:`<button type="button" class="youtube-play" onclick="reproduzirSocial('${container}')">▶ Carregar ${info.label}</button>`}</div>${info.short?'<p class="social-help">Este link abre na plataforma. Para incorporar, use o endereço completo do vídeo após abrir o link.</p>':`<p class="social-help">Carregue o vídeo e use os controles do player. Se não abrir aqui, assista na plataforma.</p>`}${abrir}`;
+    }
+    function mostrarSocial(container,info,nome,capa){const el=document.getElementById(container);el.dataset.socialUrl=info.url;el.dataset.socialNome=nome||'Produto';el.dataset.socialCapa=capa||'';el.style.display='block';el.innerHTML=socialHTML(info,nome,capa,container);}
+    let instagramSDK=null;
+    function carregarInstagram(){
+      if(window.instgrm?.Embeds){window.instgrm.Embeds.process();return Promise.resolve();}
+      if(instagramSDK)return instagramSDK;
+      instagramSDK=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://www.instagram.com/embed.js';script.async=true;script.onload=()=>{window.instgrm?.Embeds?.process();resolve();};script.onerror=()=>{script.remove();instagramSDK=null;reject(new Error('Instagram indisponível'));};document.head.appendChild(script);});return instagramSDK;
+    }
+    function reproduzirSocial(container){
+      if(!['detalhe-youtube','novo-youtube-preview'].includes(container))return;
+      const el=document.getElementById(container),info=videoSocial(el.dataset.socialUrl);if(!info||info.short)return;
+      const link=`<a class="youtube-open" href="${escaparHTML(info.url)}" target="_blank" rel="noopener noreferrer">Assistir no ${info.label}</a>`;
+      if(info.provider==='instagram'){
+        el.innerHTML=`<div class="instagram-host"><blockquote class="instagram-media" data-instgrm-permalink="${escaparHTML(info.url)}" data-instgrm-version="14"><a href="${escaparHTML(info.url)}" target="_blank" rel="noopener noreferrer">Ver publicação no Instagram</a></blockquote></div><p class="social-help">A publicação precisa estar pública e permitir incorporação. Se o conteúdo não carregar, use o link abaixo.</p>${link}`;
+        carregarInstagram().catch(()=>{if(el.querySelector('.instagram-host'))el.querySelector('.social-help').textContent='Não foi possível carregar o Instagram. Use o link abaixo.';});
+      }else el.innerHTML=`<iframe class="youtube-player social-player ${info.provider==='tiktok'?'portrait-player':''}" data-provider="${info.provider}" src="${escaparHTML(info.embed)}" title="Vídeo do produto no ${info.label}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><p class="social-help">${info.provider==='drive'?'O arquivo precisa ser um vídeo compartilhado para qualquer pessoa com o link.':'Se o vídeo não abrir, use o link abaixo.'}</p>${link}`;
+    }
+    function pausarSociais(){
+      document.querySelectorAll('iframe[data-provider="tiktok"]').forEach(f=>{try{f.contentWindow.postMessage({type:'pause','x-tiktok-player':true},'https://www.tiktok.com');}catch(_){}});
+      for(const id of ['detalhe-youtube','novo-youtube-preview']){const el=document.getElementById(id);if(el.querySelector('.instagram-host,iframe[data-provider="drive"]')){const info=videoSocial(el.dataset.socialUrl);if(info)el.innerHTML=socialHTML(info,el.dataset.socialNome,el.dataset.socialCapa,id);}}
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)pausarSociais();});
+    function linkVideoProdutoValido(url){return !!idYouTube(url)||!!videoSocial(url)||linkVideoDiretoValido(url);}
     function capaYouTube(id){return 'https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg';}
     function youtubeHTML(id,nome,capa,container){
       const img=urlMidiaValida(capa,true)?capa:capaYouTube(id),fallback='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
@@ -1202,14 +1259,14 @@
       const url='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(origin);
       document.getElementById(container).innerHTML=`<iframe class="youtube-player" src="${escaparHTML(url)}" title="Vídeo do produto no YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><a class="youtube-open" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">Assistir no YouTube</a>`;
     }
-    function limparYouTubeProduto(container){const el=document.getElementById(container);el.innerHTML='';el.style.display='none';}
+    function limparYouTubeProduto(container){const el=document.getElementById(container);el.innerHTML='';el.style.display='none';delete el.dataset.socialUrl;delete el.dataset.socialNome;delete el.dataset.socialCapa;}
     function pausarYouTube(){document.querySelectorAll('.youtube-player').forEach(f=>{try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'https://www.youtube-nocookie.com');}catch(_){}});}
     document.addEventListener('visibilitychange',()=>{if(document.hidden)pausarYouTube();});
     function editarLinkVideoProduto(){if(midiaPendente?.file.type==='video/mp4')limparMidiaTemporaria();atualizarPreviewMidia();}
 
     function linkVideoDiretoValido(url){
       if(!urlMidiaValida(url))return false;
-      try{const u=new URL(url);return !/(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be|instagram\.com|drive\.google\.com)$/i.test(u.hostname);}catch(_){return false;}
+      try{const u=new URL(url);return !/(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be|instagram\.com|tiktok\.com|drive\.google\.com)$/i.test(u.hostname);}catch(_){return false;}
     }
     function previewVideoBanner(){
       const v=document.getElementById('conf-banner-video-preview'),url=document.getElementById('conf-banner-video').value.trim();v.pause();v.removeAttribute('src');v.style.display='none';
@@ -1272,9 +1329,10 @@
       try{return new URL(url).protocol==='https:';}catch(_){return false;}
     }
     function midiaProdutoHTML(p,classe){
-      const alt=escaparHTML(p.nome||'Produto'),yt=idYouTube(p.video_url);
+      const alt=escaparHTML(p.nome||'Produto'),yt=idYouTube(p.video_url),social=videoSocial(p.video_url);
+      if(social){const foto=urlMidiaValida(p.img_url,true)?`<img loading="lazy" src="${escaparHTML(p.img_url)}" alt="${alt}" class="${classe}">`:`<div class="${classe} social-placeholder" aria-label="Vídeo de ${alt}">▶</div>`;return foto+`<span class="media-badge youtube-badge">▶ ${social.label}</span>`;}
       if(yt){const capa=urlMidiaValida(p.img_url,true)?p.img_url:capaYouTube(yt);return `<img loading="lazy" src="${escaparHTML(capa)}" alt="${alt}" class="${classe}" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${yt}/hqdefault.jpg'"><span class="media-badge youtube-badge">▶ YouTube</span>`;}
-      if(urlMidiaValida(p.video_url))return `<video class="${classe} catalog-video" onerror="falhaVideoCatalogo(this)" data-src="${escaparHTML(p.video_url)}" ${urlMidiaValida(p.img_url,true)?`poster="${escaparHTML(p.img_url)}"`:''} muted loop playsinline preload="none" aria-label="Vídeo de ${alt}"></video>${classe==='prod-img'?'<span class="media-badge">▶ Vídeo</span>':''}`;
+      if(linkVideoDiretoValido(p.video_url))return `<video class="${classe} catalog-video" onerror="falhaVideoCatalogo(this)" data-src="${escaparHTML(p.video_url)}" ${urlMidiaValida(p.img_url,true)?`poster="${escaparHTML(p.img_url)}"`:''} muted loop playsinline preload="none" aria-label="Vídeo de ${alt}"></video>${classe==='prod-img'?'<span class="media-badge">▶ Vídeo</span>':''}`;
       if(urlMidiaValida(p.img_url,true))return `<img loading="lazy" src="${escaparHTML(p.img_url)}" alt="${alt}" class="${classe}">`;
       return `<div class="${classe}" style="display:flex;align-items:center;justify-content:center;font-size:48px">🍽️</div>`;
     }
@@ -1313,7 +1371,7 @@
       const pendVideo=midiaPendente?.file.type==='video/mp4',pendFoto=midiaPendente&&!pendVideo;
       const foto=pendFoto?midiaObjectURL:document.getElementById('novo-img').value;
       const link=document.getElementById('novo-video').value.trim();const clip=pendVideo?midiaObjectURL:linkVideoDiretoValido(link)?link:'';
-      limparYouTubeProduto('novo-youtube-preview');const yt=!pendVideo&&idYouTube(link);if(yt){const holder=document.getElementById('novo-youtube-preview');holder.style.display='block';holder.innerHTML=youtubeHTML(yt,document.getElementById('novo-nome').value||'Produto',foto,'novo-youtube-preview');}
+      limparYouTubeProduto('novo-youtube-preview');const yt=!pendVideo&&idYouTube(link);if(yt){const holder=document.getElementById('novo-youtube-preview');holder.style.display='block';holder.innerHTML=youtubeHTML(yt,document.getElementById('novo-nome').value||'Produto',foto,'novo-youtube-preview');}else if(!pendVideo&&videoSocial(link))mostrarSocial('novo-youtube-preview',videoSocial(link),document.getElementById('novo-nome').value||'Produto',foto);
       img.src=foto||'';img.style.display=foto?'block':'none';video.removeAttribute('src');video.style.display=clip?'block':'none';if(clip)video.src=clip;
     }
     function removerMidiaProduto(tipo){
@@ -1562,7 +1620,8 @@
       limparYouTubeProduto('detalhe-youtube');
       const video=document.getElementById('detalhe-video');video.pause();video.removeAttribute('src');video.style.display='none';
       if(idYouTube(produtoDetalheAtual.video_url)){const yt=idYouTube(produtoDetalheAtual.video_url),holder=document.getElementById('detalhe-youtube');imgEl.style.display='none';holder.style.display='block';holder.innerHTML=youtubeHTML(yt,produtoDetalheAtual.nome,produtoDetalheAtual.img_url,'detalhe-youtube');}
-      else if(urlMidiaValida(produtoDetalheAtual.video_url)){imgEl.style.display='none';video.src=produtoDetalheAtual.video_url;video.poster=urlMidiaValida(produtoDetalheAtual.img_url,true)?produtoDetalheAtual.img_url:'';video.style.display='block';video.onerror=()=>{video.style.display='none';imgEl.style.display=produtoDetalheAtual.img_url?'block':'none';document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';};}
+      else if(videoSocial(produtoDetalheAtual.video_url)){imgEl.style.display='none';mostrarSocial('detalhe-youtube',videoSocial(produtoDetalheAtual.video_url),produtoDetalheAtual.nome,produtoDetalheAtual.img_url);}
+      else if(linkVideoDiretoValido(produtoDetalheAtual.video_url)){imgEl.style.display='none';video.src=produtoDetalheAtual.video_url;video.poster=urlMidiaValida(produtoDetalheAtual.img_url,true)?produtoDetalheAtual.img_url:'';video.style.display='block';video.onerror=()=>{video.style.display='none';imgEl.style.display=produtoDetalheAtual.img_url?'block':'none';document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';};}
       document.getElementById('detalhe-nome').innerText = produtoDetalheAtual.nome;
       document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Preparado com cuidado pela nossa cozinha.';
       atualizarPrecoDetalhe();
@@ -1722,13 +1781,13 @@
       const tamanhos=pizza?{Brotinho:Number(document.getElementById('novo-brotinho').value),Grande:Number(document.getElementById('novo-grande').value)}:null;
       if(pizza&&Object.values(tamanhos).some(v=>!Number.isFinite(v)||v<=0||v>999999||Math.abs(v*100-Math.round(v*100))>1e-6)){alert('Informe os preços de Brotinho e Grande, maiores que zero, com até duas casas decimais.');return;}
       if(pizza&&DADOS.grupos.some(g=>g.produto_id===produtoEmEdicaoId&&g.tipo==='sabores')&&!confirm('Substituir as opções antigas de sabores por Brotinho e Grande? Cadastre cada sabor como um produto. Os pedidos anteriores serão preservados.'))return;
-      const linkVideo=document.getElementById('novo-video').value.trim();if(linkVideo&&!linkVideoProdutoValido(linkVideo)){alert('Use um link de vídeo válido do YouTube ou um link direto HTTPS MP4/WebM.');return;}
+      const linkVideo=document.getElementById('novo-video').value.trim();if(linkVideo&&!linkVideoProdutoValido(linkVideo)){alert('Use um link de vídeo válido do YouTube, Instagram, TikTok ou Google Drive, ou um link direto HTTPS MP4/WebM.');return;}
       salvandoProduto=true;btn.innerText='Salvando...';btn.disabled=true;
       document.querySelector('#modal-novo-produto form').inert=true;
       try{
         await enviarMidiaProduto();
         const estoque=document.getElementById('novo-estoque').value;
-        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:idYouTube(document.getElementById('novo-video').value)?'https://www.youtube.com/watch?v='+idYouTube(document.getElementById('novo-video').value):document.getElementById('novo-video').value.trim(),preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
+        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:normalizarLinkVideo(document.getElementById('novo-video').value),preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
         const {error,data}=await malikDB.rpc('malik_salvar_produto_v16',{p_id:produtoSalvarId,p_dados:dados,p_tamanhos:tamanhos});
         if(error)throw error;if(!data?.id)throw new Error('Produto não foi salvo.');
         salvandoProduto=false;fecharModalNovoProduto();await carregarProdutosDaNuvem();
