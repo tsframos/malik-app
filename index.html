@@ -270,6 +270,21 @@
   .system-version{padding:18px 24px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.system-version p{font-weight:700;color:var(--accent);margin:6px 0}.system-version small{color:var(--text-muted);max-width:360px;line-height:1.5}
   #pedido-whatsapp{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;line-height:1.4;min-height:48px}
   @media(max-width:650px){.system-version{flex-direction:column;align-items:flex-start}}
+
+/* V16: vitrine com mídia ampla, mantendo transparência das fotos. */
+.grid-produtos{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.prod-card{display:flex;flex-direction:column-reverse;align-items:stretch;padding:0;overflow:hidden;gap:0;min-height:0;cursor:pointer}
+.prod-img-wrap{width:100%;height:auto;aspect-ratio:4/3;border-radius:0;position:relative;font-size:48px}
+.prod-img{width:100%;height:100%;object-fit:contain!important;padding:12px}
+.prod-img-wrap video.prod-img{object-fit:cover!important;padding:0}
+.prod-content{padding:18px}.prod-name{font-size:17px;line-height:1.4}.prod-price{font-size:18px}.prod-desc{min-height:38px;font-size:13px}
+.destaque-card{min-width:260px;max-width:260px}.destaque-img{width:100%;height:195px;object-fit:contain}.destaque-card video{object-fit:cover}
+.media-badge{position:absolute;bottom:10px;right:10px;background:#0009;color:white;padding:5px 9px;border-radius:8px;font-size:11px;pointer-events:none}
+.product-photo video{width:100%;max-height:420px;object-fit:contain;border-radius:12px}.product-photo{overflow:hidden}
+.media-preview{width:100%;max-height:220px;object-fit:contain;margin:10px 0;border-radius:12px;background:var(--bg-subsurface)}
+.pizza-prices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.size-settings{background:var(--bg-subsurface);padding:18px;border-radius:16px;margin-bottom:20px}.size-settings>label{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:12px}.size-settings input[type=checkbox]{width:20px;height:20px}
+@media(max-width:650px){.grid-produtos{grid-template-columns:1fr;gap:20px}.prod-img-wrap{width:100%;height:auto;aspect-ratio:4/3}.prod-content{padding:18px}.prod-name{font-size:18px}.prod-price{font-size:19px}.destaque-card{min-width:240px;max-width:240px}.destaque-img{height:180px}.product-photo{height:auto;min-height:0;aspect-ratio:4/3;padding:12px}.product-photo video{height:100%}.pizza-prices{gap:10px}}
+
 </style>
 </head>
 <body>
@@ -578,7 +593,7 @@
   <div class="modal-overlay" id="modal-detalhe-produto" style="display:none; z-index: 1000;">
     <div class="modal-box product-dialog" role="dialog" aria-modal="true" aria-labelledby="detalhe-nome">
       <button class="product-close" aria-label="Fechar produto" onclick="fecharDetalheProduto()">✕</button>
-      <div class="product-photo"><img id="detalhe-img" src="" alt=""><span id="detalhe-placeholder">🍽️</span></div>
+      <div class="product-photo"><img id="detalhe-img" src="" alt=""><video id="detalhe-video" style="display:none" controls playsinline muted preload="metadata"></video><span id="detalhe-placeholder">🍽️</span></div>
       <div class="product-details"><span class="menu-eyebrow">FEITO PARA VOCÊ</span><h2 id="detalhe-nome"></h2>
         <p id="detalhe-desc"></p><strong id="detalhe-preco" class="detail-price"></strong>
         <div id="detalhe-grupos"></div><p id="detalhe-aviso" aria-live="polite"></p>
@@ -596,7 +611,7 @@
       <div class="modal-header"><h3 id="custom-title">Personalizar produto</h3><button type="button" aria-label="Fechar personalização" onclick="fecharPersonalizacao()">✕</button></div>
       <p class="form-help">Para esfihas, escolha o tamanho do combo abaixo e cadastre os sabores. O cliente completa exatamente essa quantidade; pode repetir sabores. O preço do combo fica no cadastro do produto.</p>
       <div class="combo-quick"><strong>Configurar combo de esfihas</strong><div class="combo-presets"><button type="button" onclick="configurarComboEsfihas(2)">Combo 2</button><button type="button" onclick="configurarComboEsfihas(3)">Combo 3</button><button type="button" onclick="configurarComboEsfihas(4)">Combo 4</button><button type="button" onclick="configurarComboEsfihas(8)">Combo 8</button></div><p class="form-help">1. Escolha a quantidade. 2. Adicione os sabores. 3. Salve. Sabores incluídos têm acréscimo R$ 0.</p></div><div id="custom-grupos"></div>
-      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('sabores')">+ Sabores de pizza</button><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button><button type="button" onclick="adicionarGrupoCustom('combo')">+ Outro combo</button></div>
+      <div class="custom-toolbar"><button type="button" onclick="adicionarGrupoCustom('adicional')">+ Bordas / adicionais</button><button type="button" onclick="adicionarGrupoCustom('combo')">+ Outro combo</button></div>
       <div class="custom-save"><p id="custom-erro" role="alert" style="color:var(--danger)"></p><button type="button" class="btn-submit" id="custom-salvar" onclick="salvarPersonalizacao()">Salvar opções</button></div>
     </div>
   </div>
@@ -682,27 +697,35 @@
   <!-- MODAL: NOVO PRODUTO -->
   <div class="modal-overlay" id="modal-novo-produto" style="display:none; z-index: 100;">
     <div class="modal-box" style="max-width: 600px;">
-      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="document.getElementById('modal-novo-produto').style.display='none'" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
+      <div class="modal-header"><h3 id="modal-produto-titulo" style="font-size:22px;">Configurar Produto</h3><button type="button" onclick="fecharModalNovoProduto()" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">✕</button></div>
       <form onsubmit="salvarProduto(event)">
-        <div class="form-group" style="background:var(--bg-subsurface); padding:20px; border-radius:16px; border:1px solid var(--border-color);">
-            <label class="form-label" style="font-size:14px;">Foto do Produto</label>
-            <div style="display:flex; gap:16px; align-items:flex-start; margin-top:12px;">
-                <img id="novo-img-preview" class="img-upload-preview" src="">
-                <div style="flex:1;">
-                    <input type="text" id="novo-img" class="input-text" placeholder="Cole o link (URL) da foto..." oninput="document.getElementById('novo-img-preview').src = this.value; document.getElementById('novo-img-preview').style.display = 'flex';" style="margin-bottom:12px; padding:12px;">
-                    <div style="font-size:12px; font-weight:700; margin-bottom:8px;">OU ESCOLHA DO COMPUTADOR:</div>
-                    <input type="file" accept="image/png, image/jpeg" style="font-size:13px;" onchange="processarImagem(this, 'novo-img-preview', 'novo-img'); document.getElementById('novo-img-preview').style.display='flex';">
-                </div>
-            </div>
+        <div class="form-group">
+          <label class="form-label" for="novo-midia-arquivo">Foto ou vídeo do produto</label>
+          <p class="form-help">Foto PNG, JPG ou WebP até 10 MB. Vídeo MP4 até 20 MB; prefira vídeos curtos (5–15 segundos). PNG mantém o fundo transparente.</p>
+          <input id="novo-midia-arquivo" type="file" accept="image/png,image/jpeg,image/webp,video/mp4" onchange="selecionarMidiaProduto(this)">
+          <p id="novo-midia-feedback" class="form-help" role="status"></p>
+          <img id="novo-img-preview" class="media-preview" src="" alt="Prévia da foto" style="display:none">
+          <video id="novo-video-preview" class="media-preview" controls playsinline muted style="display:none"></video>
+          <label class="form-label" for="novo-img">Link da foto (opcional)</label><input id="novo-img" class="input-text" type="text" oninput="atualizarPreviewMidia()" placeholder="https://...">
+          <input id="novo-video" type="hidden">
+          <div class="custom-toolbar"><button type="button" onclick="removerMidiaProduto('foto')">Remover foto</button><button type="button" onclick="removerMidiaProduto('video')">Remover vídeo</button></div>
         </div>
 
         <div class="form-group"><label class="form-label">Nome do Item</label><input type="text" id="novo-nome" required class="input-text"></div>
         
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
             <div class="form-group"><label class="form-label">Categoria</label><select id="novo-cat" class="input-text"></select></div>
-            <div class="form-group"><label class="form-label">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
+            <div class="form-group"><label id="novo-preco-label" class="form-label" for="novo-preco">Preço Base (R$)</label><input type="number" step="0.01" id="novo-preco" required class="input-text mono"></div>
         </div>
         
+        <div class="size-settings">
+          <label><input id="novo-pizza" type="checkbox" onchange="alternarTamanhosPizza()">Pizza com dois tamanhos</label>
+          <p class="form-help">Um sabor por produto. O cliente escolhe Brotinho ou Grande; não há metade/metade.</p>
+          <div id="novo-tamanhos" class="pizza-prices" style="display:none">
+            <label class="form-label">Brotinho (R$)<input id="novo-brotinho" oninput="atualizarBasePizza()" type="number" min="0.01" max="999999" step="0.01" class="input-text"></label>
+            <label class="form-label">Grande (R$)<input id="novo-grande" oninput="atualizarBasePizza()" type="number" min="0.01" max="999999" step="0.01" class="input-text"></label>
+          </div>
+        </div>
         <div class="form-group"><label class="form-label">Descrição</label><textarea id="novo-desc" class="input-text" rows="4" maxlength="2000" placeholder="Descreva ingredientes, tamanho e acompanhamentos"></textarea></div>
         
         <div style="display:flex; align-items:center; background:var(--accent-soft); padding:20px; border-radius:16px; margin-bottom:24px; border:1px solid rgba(217, 45, 32, 0.2);">
@@ -928,7 +951,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='15';
+    const MALIK_VERSION='16';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1101,6 +1124,7 @@
                 descricao: p.descricao,
                 preco: parseFloat(p.preco) || 0,
                 img_url: p.img_url,
+                video_url: p.video_url,
                 tipo: p.tipo,
                 ativo: false, // Cria como esgotado por segurança
                 destaque: false,
@@ -1120,6 +1144,87 @@
         }
     }
 
+    let produtoSalvarId=null,salvandoProduto=false,midiaPendente=null,midiaObjectURL=null,videosObserver=null;
+    function urlMidiaValida(url,foto=false){
+      if(!url)return false;
+      if(foto&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(url))return true;
+      try{return new URL(url).protocol==='https:';}catch(_){return false;}
+    }
+    function midiaProdutoHTML(p,classe){
+      const alt=escaparHTML(p.nome||'Produto');
+      if(urlMidiaValida(p.video_url))return `<video class="${classe} catalog-video" onerror="falhaVideoCatalogo(this)" data-src="${escaparHTML(p.video_url)}" ${urlMidiaValida(p.img_url,true)?`poster="${escaparHTML(p.img_url)}"`:''} muted loop playsinline preload="none" aria-label="Vídeo de ${alt}"></video>${classe==='prod-img'?'<span class="media-badge">▶ Vídeo</span>':''}`;
+      if(urlMidiaValida(p.img_url,true))return `<img loading="lazy" src="${escaparHTML(p.img_url)}" alt="${alt}" class="${classe}">`;
+      return `<div class="${classe}" style="display:flex;align-items:center;justify-content:center;font-size:48px">🍽️</div>`;
+    }
+    function falhaVideoCatalogo(video){
+      video.pause();video.style.display='none';
+      if(video.parentElement.querySelector('.video-fallback'))return;
+      const imagem=document.createElement('img');imagem.className=video.className.replace('catalog-video','video-fallback');imagem.alt='Imagem do produto';
+      if(urlMidiaValida(video.poster,true)){imagem.src=video.poster;video.parentElement.appendChild(imagem);}
+      else{const aviso=document.createElement('span');aviso.className='video-fallback';aviso.textContent='▶ Abra o produto para ver os detalhes';video.parentElement.appendChild(aviso);}
+    }
+    function observarVideosCatalogo(){
+      if(videosObserver)videosObserver.disconnect();
+      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const videos=document.querySelectorAll('.catalog-video');
+      if(typeof IntersectionObserver==='undefined')return;
+      videosObserver=new IntersectionObserver(entries=>entries.forEach(({target:v,isIntersecting})=>{
+        if(isIntersecting&&!document.hidden){if(!v.getAttribute('src'))v.src=v.dataset.src;if(!reduced)v.play().catch(()=>{});}
+        else v.pause();
+      }),{threshold:.25});videos.forEach(v=>{v.muted=true;videosObserver.observe(v);});
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)document.querySelectorAll('video').forEach(v=>v.pause());else observarVideosCatalogo();});
+    function validarArquivoMidia(file){
+      const foto=['image/png','image/jpeg','image/webp'].includes(file.type),video=file.type==='video/mp4';
+      if(!foto&&!video)return 'Escolha uma foto PNG, JPG ou WebP, ou um vídeo MP4.';
+      if(file.size<=0||file.size>(video?20:10)*1024*1024)return video?'O vídeo deve ter até 20 MB.':'A foto deve ter até 10 MB.';
+      return '';
+    }
+    function limparMidiaTemporaria(){if(midiaObjectURL)URL.revokeObjectURL(midiaObjectURL);midiaObjectURL=null;midiaPendente=null;document.getElementById('novo-midia-arquivo').value='';document.getElementById('novo-midia-feedback').textContent='';document.getElementById('novo-video-preview').pause();}
+    function selecionarMidiaProduto(input){
+      if(salvandoProduto)return;const file=input.files?.[0];if(!file)return;const erro=validarArquivoMidia(file);
+      if(erro){alert(erro);input.value='';return;}limparMidiaTemporaria();midiaPendente={file,url:null};midiaObjectURL=URL.createObjectURL(file);
+      document.getElementById('novo-midia-feedback').textContent=file.name+' — será enviado ao salvar.';atualizarPreviewMidia();
+    }
+    function atualizarPreviewMidia(){
+      const img=document.getElementById('novo-img-preview'),video=document.getElementById('novo-video-preview');video.pause();
+      const pendVideo=midiaPendente?.file.type==='video/mp4',pendFoto=midiaPendente&&!pendVideo;
+      const foto=pendFoto?midiaObjectURL:document.getElementById('novo-img').value;
+      const clip=pendVideo?midiaObjectURL:document.getElementById('novo-video').value;
+      img.src=foto||'';img.style.display=foto?'block':'none';video.removeAttribute('src');video.style.display=clip?'block':'none';if(clip)video.src=clip;
+    }
+    function removerMidiaProduto(tipo){
+      if(salvandoProduto)return;
+      if(midiaPendente&&((tipo==='video')===(midiaPendente.file.type==='video/mp4')))limparMidiaTemporaria();
+      document.getElementById(tipo==='video'?'novo-video':'novo-img').value='';atualizarPreviewMidia();
+    }
+    async function enviarMidiaProduto(){
+      if(!midiaPendente)return;
+      if(!midiaPendente.url){
+        const file=midiaPendente.file,ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','video/mp4':'mp4'}[file.type];
+        const path=RESTAURANTE_ID+'/'+crypto.randomUUID()+'.'+ext;
+        document.getElementById('novo-midia-feedback').textContent='Enviando arquivo…';
+        const bucket=malikDB.storage.from('malik-produtos');const {error}=await bucket.upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
+        if(error)throw new Error('Não foi possível enviar o arquivo. Confira sua conexão e se o SQL 13 da V16 foi instalado. '+(error.message||''));
+        midiaPendente.url=bucket.getPublicUrl(path).data.publicUrl;
+      }
+      document.getElementById(midiaPendente.file.type==='video/mp4'?'novo-video':'novo-img').value=midiaPendente.url;
+      document.getElementById('novo-midia-feedback').textContent='Arquivo enviado. Salvando produto…';
+    }
+    function alternarTamanhosPizza(){
+      const on=document.getElementById('novo-pizza').checked;
+      document.getElementById('novo-tamanhos').style.display=on?'grid':'none';
+      document.getElementById('novo-preco').required=!on;document.getElementById('novo-preco').disabled=on;
+      for(const id of ['novo-brotinho','novo-grande'])document.getElementById(id).required=on;
+      document.getElementById('novo-preco-label').textContent=on?'Preço a partir de (automático)':'Preço Base (R$)';atualizarBasePizza();
+    }
+
+    function atualizarBasePizza(){
+      if(!document.getElementById('novo-pizza').checked)return;
+      const valores=['novo-brotinho','novo-grande'].map(id=>Number(document.getElementById(id).value)).filter(n=>Number.isFinite(n)&&n>0);
+      document.getElementById('novo-preco').value=valores.length?Math.min(...valores).toFixed(2):'';
+    }
+
     function rolarDestaques(direcao) { const container = document.getElementById('destaques-list'); container.scrollBy({ left: direcao * 300, behavior: 'smooth' }); }
 
     function renderDestaques() {
@@ -1131,7 +1236,7 @@
             box.style.display = 'block'; let htmlDestaques = '';
             destaques.forEach(p => {
                 const precoF = precoInicial(p);
-                const img = (p.img_url) ? `<img src="${escaparHTML(p.img_url)}" class="destaque-img">` : `<div class="destaque-img">🌟</div>`;
+                const img = midiaProdutoHTML(p,'destaque-img');
                 const isDisponivel = p.ativo !== false && lojaAberta && personalizacaoCarregada && produtoConfiguravel(p) && (p.estoque == null || Number(p.estoque) > 0);
                 let onclickCode = ''; if (isDisponivel) { onclickCode = `abrirDetalheProduto('${p.id}')`; }
                 const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
@@ -1139,7 +1244,7 @@
                 
                 htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${escaparHTML(p.nome || 'Produto')}</div><div class="destaque-desc">${escaparHTML(p.descricao || '')}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">${gruposProduto(p.id).length?'A partir de ':''}R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
             });
-            list.innerHTML = htmlDestaques;
+            list.innerHTML = htmlDestaques; observarVideosCatalogo();
         } else { box.style.display = 'none'; }
     }
 
@@ -1161,7 +1266,7 @@
           categoriaAnterior=p.categoria;htmlFinal+=`<section class="menu-product-section"><div class="category-heading"><h3>${escaparHTML(p.categoria||'Produtos')}</h3><span>${list.filter(i=>i.categoria===p.categoria).length} ${list.filter(i=>i.categoria===p.categoria).length===1?'opção':'opções'}</span></div><div class="grid-produtos">`;
         }
         const qtd = quantidadeNaSacola(p.id);
-        const img = (p.img_url) ? `<img src="${escaparHTML(p.img_url)}" class="prod-img">` : `<div style="font-size:32px;">🍽️</div>`;
+        const img = midiaProdutoHTML(p,'prod-img');
         const isDisponivel = p.ativo !== false && lojaAberta && personalizacaoCarregada && produtoConfiguravel(p) && (p.estoque == null || Number(p.estoque) > 0); const precoF = precoInicial(p);
         
         let acaoHTML = '';
@@ -1180,7 +1285,7 @@
         htmlFinal += `<div class="prod-card" style="${opacity}" ${cliqueAcao}><div class="prod-content"><div class="prod-name">${nomeFinal} ${destaqueSelo}</div><div class="prod-desc">${escaparHTML(p.descricao || '')}</div><div class="prod-bottom"><span class="prod-price mono">${gruposProduto(p.id).length?'A partir de ':''}R$ ${precoF.toFixed(2).replace('.', ',')}</span><div class="prod-add-indicator" style="margin-left:auto;">${acaoHTML || (isDisponivel ? '<span aria-hidden="true" class="prod-plus">+</span>' : '')}</div></div></div><div class="prod-img-wrap">${img}</div></div>`;
       });
       if(!termo && catCliente==='Todas' && categoriaAnterior!==undefined)htmlFinal+='</div></section>';
-      el.innerHTML = !termo&&catCliente==='Todas'?htmlFinal:`<div class="grid-produtos">${htmlFinal}</div>`;
+      el.innerHTML = !termo&&catCliente==='Todas'?htmlFinal:`<div class="grid-produtos">${htmlFinal}</div>`; observarVideosCatalogo();
     }
 
     async function carregarPersonalizacao(){
@@ -1191,12 +1296,12 @@
     }
     function gruposProduto(id){return DADOS.grupos.filter(g=>g.produto_id===id&&g.ativo!==false).sort((a,b)=>a.ordem-b.ordem||a.id.localeCompare(b.id));}
     function opcoesGrupo(id){return DADOS.opcoes.filter(o=>o.grupo_id===id&&o.ativo!==false).sort((a,b)=>a.ordem-b.ordem||a.id.localeCompare(b.id));}
-    function produtoConfiguravel(p){const gs=gruposProduto(p.id);return !(gs.some(g=>g.tipo==='combo')&&gs.some(g=>g.tipo==='sabores'))&&gs.every(g=>g.tipo==='combo'?opcoesGrupo(g.id).length>0:opcoesGrupo(g.id).length>=g.minimo);}
+    function produtoConfiguravel(p){const gs=gruposProduto(p.id);if(gs.filter(g=>['sabores','tamanho'].includes(g.tipo)).length>1||gs.some(g=>g.tipo==='tamanho'&&(g.minimo!==1||g.maximo!==1||opcoesGrupo(g.id).length!==2)))return false;return !(gs.some(g=>g.tipo==='combo')&&gs.some(g=>['sabores','tamanho'].includes(g.tipo)))&&gs.every(g=>g.tipo==='combo'?opcoesGrupo(g.id).length>0:opcoesGrupo(g.id).length>=g.minimo);}
     function precoInicial(p){
       let base=Number(p.preco)||0,extras=0;
       for(const g of gruposProduto(p.id)){
         const prices=opcoesGrupo(g.id).map(o=>Number(o.preco)).sort((a,b)=>a-b);
-        if(g.tipo==='sabores')base=prices[Math.max(0,g.minimo-1)]??base;
+        if(['sabores','tamanho'].includes(g.tipo))base=prices[Math.max(0,g.minimo-1)]??base;
         else if(g.tipo==='combo')extras+=(prices[0]||0)*g.minimo;
         else extras+=prices.slice(0,g.minimo).reduce((a,b)=>a+b,0);
       }return Math.round((base+extras)*100)/100;
@@ -1213,7 +1318,7 @@
         const escolhidas=opcoesGrupo(g.id).filter(o=>ids.includes(o.id));
         const contagem=g.tipo==='combo'?escolhidas.reduce((n,o)=>n+ids.filter(id=>id===o.id).length,0):escolhidas.length;
         if(contagem<g.minimo||contagem>g.maximo)return {ok:false,erro:`${g.nome}: selecione ${g.minimo===g.maximo?g.minimo:g.minimo+' a '+g.maximo} ${g.tipo==='combo'?'unidade(s)':'opção(ões)'}.`};
-        if(g.tipo==='sabores')base=Math.max(...escolhidas.map(o=>Number(o.preco)));
+        if(['sabores','tamanho'].includes(g.tipo))base=Math.max(...escolhidas.map(o=>Number(o.preco)));
         else extras+=escolhidas.reduce((a,o)=>a+Number(o.preco)*(g.tipo==='combo'?ids.filter(id=>id===o.id).length:1),0);
         if(escolhidas.length)resumo.push(g.nome+': '+escolhidas.map(o=>(g.tipo==='combo'?ids.filter(id=>id===o.id).length+'× ':'')+o.nome).join(' / '));
       }
@@ -1227,7 +1332,7 @@
         const count=escolhasDetalhe.filter(id=>opcoesGrupo(g.id).some(o=>o.id===id)).length;
         if(g.tipo==='combo')return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)}</h3><p aria-live="polite">Escolhidas ${count} de ${g.maximo} esfihas · ${g.minimo===g.maximo?'Complete '+g.maximo+' esfihas':'Escolha de '+g.minimo+' a '+g.maximo}. Pode repetir sabores.</p></div>${opcoesGrupo(g.id).map(o=>{const qtd=escolhasDetalhe.filter(id=>id===o.id).length;return `<div class="choice-row combo-choice"><div><strong>${escaparHTML(o.nome)}</strong><small>${Number(o.preco)?'+ '+dinheiro(o.preco)+' por unidade':'Incluído no combo'}</small></div><div class="combo-stepper"><button type="button" aria-label="Diminuir ${escaparHTML(o.nome)}" ${qtd===0?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',-1)">−</button><span aria-label="Quantidade de ${escaparHTML(o.nome)}">${qtd}</span><button type="button" aria-label="Aumentar ${escaparHTML(o.nome)}" ${count>=g.maximo?'disabled':''} onclick="mudarQuantidadeOpcao('${g.id}','${o.id}',1)">+</button></div></div>`;}).join('')}</section>`;
 
-        return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)} <small style="float:right;font-size:11px">${g.minimo?'Obrigatório':'Opcional'} · ${count}/${g.maximo}</small></h3><p>${g.minimo?`Escolha de ${g.minimo} a ${g.maximo}`:`Escolha até ${g.maximo}`} opção(ões).${g.tipo==='sabores'?' O maior preço escolhido define o valor da pizza.':''}</p></div>${opcoesGrupo(g.id).map(o=>`<label class="choice-row"><input type="checkbox" aria-label="${escaparHTML(o.nome)}" ${escolhasDetalhe.includes(o.id)?'checked':''} ${g.maximo>1&&count>=g.maximo&&!escolhasDetalhe.includes(o.id)?'disabled':''} onchange="selecionarOpcaoDetalhe('${g.id}','${o.id}',this.checked)"><span>${escaparHTML(o.nome)}</span><strong>${g.tipo==='sabores'?'':Number(o.preco)?'+ ':''}${Number(o.preco)?dinheiro(o.preco):'Grátis'}</strong></label>`).join('')}</section>`;
+        return `<section class="choice-group"><div class="choice-head"><h3>${escaparHTML(g.nome)} <small style="float:right;font-size:11px">${g.minimo?'Obrigatório':'Opcional'} · ${count}/${g.maximo}</small></h3><p>${g.tipo==='tamanho'?'Escolha Brotinho ou Grande.':(g.minimo?`Escolha de ${g.minimo} a ${g.maximo}`:`Escolha até ${g.maximo}`)+' opção(ões).'}${g.tipo==='tamanho'?'':g.tipo==='sabores'?' O maior preço escolhido define o valor da pizza.':''}</p></div>${opcoesGrupo(g.id).map(o=>`<label class="choice-row"><input type="${g.tipo==='tamanho'?'radio':'checkbox'}" name="grupo-${g.id}" aria-label="${escaparHTML(o.nome)}" ${escolhasDetalhe.includes(o.id)?'checked':''} ${g.maximo>1&&count>=g.maximo&&!escolhasDetalhe.includes(o.id)?'disabled':''} onchange="selecionarOpcaoDetalhe('${g.id}','${o.id}',this.checked)"><span>${escaparHTML(o.nome)}</span><strong>${['sabores','tamanho'].includes(g.tipo)?'':Number(o.preco)?'+ ':''}${Number(o.preco)?dinheiro(o.preco):'Grátis'}</strong></label>`).join('')}</section>`;
       }).join('');
     }
     function mudarQuantidadeOpcao(gid,id,delta){
@@ -1288,7 +1393,7 @@
       const selecionado=customGrupos.find(g=>g.tipo==='combo'&&g.ativo!==false);
       document.querySelectorAll('.combo-presets button').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.textContent.replace(/\D/g,''))===selecionado?.maximo)));
 
-      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label>${g.tipo==='combo'?`<label>Quantidade de esfihas<select class="input-text" aria-label="Quantidade de esfihas" onchange="definirTamanhoCombo(${i},Number(this.value))">${[...new Set([2,3,4,8,g.maximo])].sort((a,b)=>a-b).map(n=>`<option value="${n}" ${g.maximo===n?'selected':''}>Combo de ${n} esfihas</option>`).join('')}</select></label>`:`<label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option><option value="sabores" ${g.tipo==='sabores'?'selected':''}>Sabores de pizza</option><option value="combo" ${g.tipo==='combo'?'selected':''}>Combo com quantidades</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='adicional'?0:1}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label>`}</div><p class="form-help">${g.tipo==='combo'?'O cliente escolhe exatamente '+g.maximo+' esfihas. Não precisa configurar mínimo e máximo. Cadastre todos os sabores disponíveis; podem ser mais que a quantidade do combo.':g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='combo'?'Sabores podem ser repetidos.':g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.tipo==='combo'?`<label class="form-label">Adicionar vários sabores, um por linha</label><textarea id="combo-lista-${i}" class="input-text" rows="3" placeholder="Carne&#10;Queijo&#10;Frango"></textarea><button class="btn-action" type="button" onclick="adicionarListaSabores(${i})">Adicionar sabores incluídos</button>`:''}${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='combo'?'Carne':g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input title="${g.tipo==='combo'?'Acréscimo por esfiha. Zero = incluído no combo':'Preço da opção'}" aria-label="${g.tipo==='combo'?'Acréscimo por unidade':'Preço da opção'}" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">${g.tipo==='combo'?'+ Sabor':'+ Opção'}</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
+      document.getElementById('custom-grupos').innerHTML=customGrupos.length?customGrupos.map((g,i)=>g.tipo==='tamanho'?`<section class="custom-group"><h3>Tamanho da pizza</h3><p class="form-help">Brotinho: ${dinheiro(g.opcoes.find(o=>o.nome==='Brotinho')?.preco||0)} · Grande: ${dinheiro(g.opcoes.find(o=>o.nome==='Grande')?.preco||0)}. Edite os preços no cadastro do produto.</p></section>`:`<section class="custom-group"><div class="custom-fields"><label>Nome do grupo<input class="input-text" maxlength="100" value="${escaparHTML(g.nome)}" oninput="customGrupos[${i}].nome=this.value"></label>${g.tipo==='combo'?`<label>Quantidade de esfihas<select class="input-text" aria-label="Quantidade de esfihas" onchange="definirTamanhoCombo(${i},Number(this.value))">${[...new Set([2,3,4,8,g.maximo])].sort((a,b)=>a-b).map(n=>`<option value="${n}" ${g.maximo===n?'selected':''}>Combo de ${n} esfihas</option>`).join('')}</select></label>`:`<label>Tipo<select class="input-text" onchange="customGrupos[${i}].tipo=this.value;renderEditorCustom()"><option value="adicional" ${g.tipo==='adicional'?'selected':''}>Adicional / borda</option>${g.tipo==='sabores'?'<option value="sabores" selected>Configuração antiga de pizza</option>':''}<option value="combo" ${g.tipo==='combo'?'selected':''}>Combo com quantidades</option></select></label><label>Mínimo<input class="input-text" type="number" min="${g.tipo==='adicional'?0:1}" max="20" value="${g.minimo}" oninput="customGrupos[${i}].minimo=Number(this.value)"></label><label>Máximo<input class="input-text" type="number" min="1" max="20" value="${g.maximo}" oninput="customGrupos[${i}].maximo=Number(this.value)"></label>`}</div><p class="form-help">${g.tipo==='combo'?'O cliente escolhe exatamente '+g.maximo+' esfihas. Não precisa configurar mínimo e máximo. Cadastre todos os sabores disponíveis; podem ser mais que a quantidade do combo.':g.tipo==='sabores'?'Preço da pizza inteira por sabor. O maior valor prevalece.':'Preço adicional por unidade do produto; use 0 para opção grátis.'} ${g.tipo==='combo'?'Sabores podem ser repetidos.':g.tipo==='sabores'?'Sabores exigem pelo menos uma escolha.':'Mínimo 0 torna a escolha opcional.'}</p>${g.tipo==='combo'?`<label class="form-label">Adicionar vários sabores, um por linha</label><textarea id="combo-lista-${i}" class="input-text" rows="3" placeholder="Carne&#10;Queijo&#10;Frango"></textarea><button class="btn-action" type="button" onclick="adicionarListaSabores(${i})">Adicionar sabores incluídos</button>`:''}${g.opcoes.map((o,j)=>`<div class="custom-option"><input aria-label="Nome da opção" class="input-text" maxlength="150" placeholder="Ex.: ${g.tipo==='combo'?'Carne':g.tipo==='sabores'?'Calabresa':'Catupiry'}" value="${escaparHTML(o.nome)}" oninput="customGrupos[${i}].opcoes[${j}].nome=this.value"><input title="${g.tipo==='combo'?'Acréscimo por esfiha. Zero = incluído no combo':'Preço da opção'}" aria-label="${g.tipo==='combo'?'Acréscimo por unidade':'Preço da opção'}" class="input-text" type="number" min="0" max="999999" step="0.01" value="${o.preco}" oninput="customGrupos[${i}].opcoes[${j}].preco=Number(this.value)"><button type="button" aria-label="Remover opção" onclick="removerOpcaoCustom(${i},${j})">✕</button><label><input type="checkbox" ${o.ativo!==false?'checked':''} onchange="customGrupos[${i}].opcoes[${j}].ativo=this.checked"> Ativa</label></div>`).join('')}<div class="custom-toolbar"><button type="button" onclick="adicionarOpcaoCustom(${i})">${g.tipo==='combo'?'+ Sabor':'+ Opção'}</button><label><input type="checkbox" ${g.ativo!==false?'checked':''} onchange="customGrupos[${i}].ativo=this.checked"> Grupo ativo</label><button type="button" onclick="removerGrupoCustom(${i})">Remover grupo</button></div></section>`).join(''):'<p class="form-help">Este produto usa o preço base. Adicione um grupo para começar.</p>';
     }
     async function salvarPersonalizacao(){
       if(salvandoCustom||!customProduto||!usuarioAtual)return;
@@ -1297,7 +1402,7 @@
         if(customGrupos.filter(g=>g.tipo==='sabores'&&g.ativo!==false).length>1)throw new Error('Use apenas um grupo ativo de sabores por produto.');
         if(customGrupos.some(g=>g.tipo==='combo'&&g.ativo!==false)&&customGrupos.some(g=>g.tipo==='sabores'&&g.ativo!==false))throw new Error('Use grupos de combo ou sabores de pizza no mesmo produto, sem misturar.');
         for(const g of customGrupos){
-          if(!['combo','sabores','adicional'].includes(g.tipo))throw new Error('Tipo de grupo inválido.');
+          if(!['combo','sabores','adicional','tamanho'].includes(g.tipo))throw new Error('Tipo de grupo inválido.');
           if(!g.nome.trim()||!Number.isInteger(g.minimo)||!Number.isInteger(g.maximo)||g.minimo<0||g.maximo<1||g.maximo>20||g.minimo>g.maximo||(g.tipo!=='adicional'&&g.minimo<1))throw new Error('Confira o nome e os limites de cada grupo.');
           if(g.opcoes.length>100||g.opcoes.some(o=>!o.nome.trim()||!Number.isFinite(o.preco)||o.preco<0||o.preco>999999||Math.abs(o.preco*100-Math.round(o.preco*100))>1e-6||(g.tipo==='sabores'&&o.preco<=0)))throw new Error('Confira os nomes e preços das opções. Sabores precisam ter preço maior que zero.');
           if(g.ativo!==false&&g.opcoes.filter(o=>o.ativo!==false).length<(g.tipo==='combo'?1:g.minimo))throw new Error('O grupo '+g.nome+' precisa de mais opções ativas para atender ao mínimo.');
@@ -1322,7 +1427,7 @@
       qtdDetalheAtual = 1; escolhasDetalhe=[]; renderEscolhasDetalhe();
       document.getElementById('detalhe-obs').value='';
       document.getElementById('detalhe-preco').textContent='A partir de ' + dinheiro(precoInicial(produtoDetalheAtual));
-      document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';
+      document.getElementById('detalhe-placeholder').style.display=(produtoDetalheAtual.img_url||produtoDetalheAtual.video_url)?'none':'block';
       const imgEl = document.getElementById('detalhe-img');
       if (produtoDetalheAtual.img_url) {
           imgEl.src = produtoDetalheAtual.img_url;
@@ -1331,6 +1436,8 @@
           imgEl.style.display = 'none';
       }
       
+      const video=document.getElementById('detalhe-video');video.pause();video.removeAttribute('src');video.style.display='none';
+      if(urlMidiaValida(produtoDetalheAtual.video_url)){imgEl.style.display='none';video.src=produtoDetalheAtual.video_url;video.poster=urlMidiaValida(produtoDetalheAtual.img_url,true)?produtoDetalheAtual.img_url:'';video.style.display='block';video.onerror=()=>{video.style.display='none';imgEl.style.display=produtoDetalheAtual.img_url?'block':'none';document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';};}
       document.getElementById('detalhe-nome').innerText = produtoDetalheAtual.nome;
       document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Preparado com cuidado pela nossa cozinha.';
       atualizarPrecoDetalhe();
@@ -1339,6 +1446,7 @@
     }
 
     function fecharDetalheProduto() {
+      document.getElementById('detalhe-video').pause();
       document.getElementById('modal-detalhe-produto').style.display = 'none';
     }
 
@@ -1452,7 +1560,8 @@
     }
 
     function abrirModalProduto(id = null) {
-      produtoEmEdicaoId = id; const t = document.getElementById('modal-produto-titulo');
+      if(salvandoProduto)return;limparMidiaTemporaria();document.getElementById('novo-video').value='';document.getElementById('novo-pizza').checked=false;document.getElementById('novo-brotinho').value='';document.getElementById('novo-grande').value='';
+      produtoEmEdicaoId = id;produtoSalvarId=id||crypto.randomUUID(); const t = document.getElementById('modal-produto-titulo');
       
       document.getElementById('novo-img-preview').src = ''; document.getElementById('novo-img-preview').style.display = 'none'; document.getElementById('novo-img').value = '';
       
@@ -1462,7 +1571,7 @@
         
         document.getElementById('novo-nome').value = p.nome || '';
         document.getElementById('novo-cat').value = p.categoria || catAtiva; 
-        document.getElementById('novo-preco').value = p.preco || '';
+        document.getElementById('novo-preco').value = p.preco ?? '';
         document.getElementById('novo-desc').value = p.descricao || ''; document.getElementById('novo-estoque').value = (p.estoque !== null && p.estoque !== undefined) ? p.estoque : '';
         document.getElementById('novo-destaque').checked = p.destaque === true;
       } else {
@@ -1471,28 +1580,33 @@
         
         document.getElementById('novo-cat').value = catAtiva || (DADOS.categorias.length > 0 ? DADOS.categorias[0].nome : '');
       }
+      const produto=DADOS.produtos.find(p=>p.id===id),grupo=produto&&gruposProduto(id).find(g=>g.tipo==='tamanho');
+      document.getElementById('novo-video').value=produto?.video_url||'';document.getElementById('novo-pizza').checked=!!grupo;
+      if(grupo){document.getElementById('novo-brotinho').value=opcoesGrupo(grupo.id).find(o=>o.nome==='Brotinho')?.preco||'';document.getElementById('novo-grande').value=opcoesGrupo(grupo.id).find(o=>o.nome==='Grande')?.preco||'';}
+      alternarTamanhosPizza();atualizarPreviewMidia();
       document.getElementById('modal-novo-produto').style.display = 'flex';
     }
     
-    function fecharModalNovoProduto() { document.getElementById('modal-novo-produto').style.display = 'none'; }
+    function fecharModalNovoProduto() { if(salvandoProduto)return;limparMidiaTemporaria();document.getElementById('modal-novo-produto').style.display = 'none'; }
 
     async function salvarProduto(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn-submit-produto'); btn.innerText = 'Salvando...'; btn.disabled = true;
-      const estQtd = document.getElementById('novo-estoque').value; const precoF = parseFloat(document.getElementById('novo-preco').value) || 0;
-      const imgFinal = document.getElementById('novo-img').value; 
-
-      const dados = { restaurante_id: RESTAURANTE_ID, categoria: document.getElementById('novo-cat').value, nome: document.getElementById('novo-nome').value, descricao: document.getElementById('novo-desc').value.trim() || null, img_url: imgFinal || null, preco: precoF, tipo: 'uni', estoque: estQtd !== '' ? parseInt(estQtd, 10) : null, destaque: document.getElementById('novo-destaque').checked };
-      
+      e.preventDefault();if(!usuarioAtual||salvandoProduto)return;
+      const btn=document.getElementById('btn-submit-produto');
+      const pizza=document.getElementById('novo-pizza').checked;
+      const tamanhos=pizza?{Brotinho:Number(document.getElementById('novo-brotinho').value),Grande:Number(document.getElementById('novo-grande').value)}:null;
+      if(pizza&&Object.values(tamanhos).some(v=>!Number.isFinite(v)||v<=0||v>999999||Math.abs(v*100-Math.round(v*100))>1e-6)){alert('Informe os preços de Brotinho e Grande, maiores que zero, com até duas casas decimais.');return;}
+      if(pizza&&DADOS.grupos.some(g=>g.produto_id===produtoEmEdicaoId&&g.tipo==='sabores')&&!confirm('Substituir as opções antigas de sabores por Brotinho e Grande? Cadastre cada sabor como um produto. Os pedidos anteriores serão preservados.'))return;
+      salvandoProduto=true;btn.innerText='Salvando...';btn.disabled=true;
+      document.querySelector('#modal-novo-produto form').inert=true;
       try{
-        let resultado;
-        if(produtoEmEdicaoId)resultado=await malikDB.from('produtos').update(dados).eq('id',produtoEmEdicaoId).select('id');
-        else{dados.ativo=true;resultado=await malikDB.from('produtos').insert([dados]).select('id');}
-        if(resultado.error)throw resultado.error;
-        if(!resultado.data?.length)throw new Error('Produto não foi salvo. Atualize a página e tente novamente.');
-        fecharModalNovoProduto();await carregarProdutosDaNuvem();
-      }catch(erro){alert(String(erro.message||'Não foi possível salvar o produto.').replace(/^MALIK:\s*/,''));}
-      finally{btn.innerText='Salvar Alterações';btn.disabled=false;}
+        await enviarMidiaProduto();
+        const estoque=document.getElementById('novo-estoque').value;
+        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:document.getElementById('novo-video').value,preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
+        const {error,data}=await malikDB.rpc('malik_salvar_produto_v16',{p_id:produtoSalvarId,p_dados:dados,p_tamanhos:tamanhos});
+        if(error)throw error;if(!data?.id)throw new Error('Produto não foi salvo.');
+        salvandoProduto=false;fecharModalNovoProduto();await carregarProdutosDaNuvem();
+      }catch(erro){alert(String(erro.message||'Não foi possível salvar.').replace(/^MALIK:\s*/,''));}
+      finally{salvandoProduto=false;btn.innerText='Salvar Alterações';btn.disabled=false;document.querySelector('#modal-novo-produto form').inert=false;}
     }
 
     async function removerProdutoDaNuvem(id) { if (confirm('Apagar este produto permanentemente?')) { await malikDB.from('produtos').delete().eq('id', id); await carregarProdutosDaNuvem(); } }
@@ -2128,7 +2242,7 @@
     restaurarAudioLocal();
     document.addEventListener('visibilitychange', () => { if (usuarioAtual && !document.hidden) carregarPedidos(); });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login','modal-novo-produto'].forEach(id => document.getElementById(id).style.display = 'none');
+      if (e.key === 'Escape') {fecharModalNovoProduto();fecharPersonalizacao();if(document.getElementById('modal-editar-categoria').style.display==='flex')fecharEdicaoCategoria();else fecharGestaoCategorias();} if (e.key === 'Escape') ['modal-carrinho','modal-detalhe-produto','modal-info-loja','modal-login'].forEach(id => document.getElementById(id).style.display = 'none');
     });
 
   </script>
