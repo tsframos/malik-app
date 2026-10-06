@@ -297,6 +297,15 @@
 .banner-container{position:relative;overflow:hidden}.banner-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.banner-video-toggle{position:absolute;right:12px;top:12px;border:0;border-radius:8px;background:#0009;color:#fff;padding:8px 12px;cursor:pointer;font-size:12px;z-index:1}
 @media(max-width:650px){.destaque-card{min-width:280px;max-width:280px;height:220px;min-height:0}.destaque-info{padding:18px}.destaque-nome{font-size:18px}.destaques-heading h2{font-size:18px!important}.slider-pause{padding:8px;font-size:11px}}
 
+
+/* V18: fotos preenchem toda a mídia do cartão, sem margens internas. */
+.prod-img-wrap .prod-img{object-fit:cover!important;padding:0!important;display:block;width:100%;height:100%}
+#novo-img-preview{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;max-height:none;padding:0}
+.media-guide{background:var(--bg-subsurface);border:1px solid var(--border-color);border-radius:12px;padding:14px;margin:12px 0}.media-guide table{width:100%;border-collapse:collapse;font-size:13px}.media-guide caption{text-align:left;font-weight:800;margin-bottom:8px}.media-guide td{padding:7px 0;border-bottom:1px solid var(--border-color)}.media-guide td:last-child{text-align:right;font-weight:700}.media-guide p{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:10px}
+.youtube-holder{width:100%;min-width:0}.youtube-cover{position:relative;width:100%;min-width:0;aspect-ratio:16/9;min-height:200px;background:#191919;border-radius:12px;overflow:hidden}.youtube-cover img{width:100%;height:100%;object-fit:cover;padding:0}.youtube-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#d92d20;color:#fff;border:0;border-radius:12px;padding:14px 18px;font-size:14px;font-weight:700;cursor:pointer;min-width:190px}.youtube-player{display:block;width:100%;aspect-ratio:16/9;min-height:200px;border:0;border-radius:12px}.youtube-open{font-size:12px;display:block;padding:8px 0;color:var(--accent);text-align:center}.youtube-badge{z-index:2;top:12px;bottom:auto}
+.product-photo:has(.youtube-holder[style*="block"]){height:auto;aspect-ratio:auto;min-height:0}
+@media(max-width:650px){.media-guide{padding:12px}.media-guide td{font-size:12px}.media-guide td:last-child{white-space:nowrap}.product-photo:has(.youtube-holder[style*="block"]){padding:12px}}
+
 </style>
 </head>
 <body>
@@ -462,7 +471,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Formato: Retangular (Ex: 1200x400px)</span>
+                <label class="form-label">Banner Principal (Capa)</label><span class="form-help">Foto de capa: 1920 × 600 px. Vídeo direto: 1920 × 1080 px. Recorte central no banner; mantenha o conteúdo principal no centro.</span>
                 <div class="file-input-wrapper" style="margin-top:12px;">
                     <img id="conf-banner-preview" class="img-upload-preview banner-upload-preview" alt="Prévia do banner" src="">
                     <div>
@@ -609,7 +618,7 @@
   <div class="modal-overlay" id="modal-detalhe-produto" style="display:none; z-index: 1000;">
     <div class="modal-box product-dialog" role="dialog" aria-modal="true" aria-labelledby="detalhe-nome">
       <button class="product-close" aria-label="Fechar produto" onclick="fecharDetalheProduto()">✕</button>
-      <div class="product-photo"><img id="detalhe-img" src="" alt=""><video id="detalhe-video" style="display:none" controls playsinline muted preload="metadata"></video><span id="detalhe-placeholder">🍽️</span></div>
+      <div class="product-photo"><img id="detalhe-img" src="" alt=""><div id="detalhe-youtube" class="youtube-holder" style="display:none"></div><video id="detalhe-video" style="display:none" controls playsinline muted preload="metadata"></video><span id="detalhe-placeholder">🍽️</span></div>
       <div class="product-details"><span class="menu-eyebrow">FEITO PARA VOCÊ</span><h2 id="detalhe-nome"></h2>
         <p id="detalhe-desc"></p><strong id="detalhe-preco" class="detail-price"></strong>
         <div id="detalhe-grupos"></div><p id="detalhe-aviso" aria-live="polite"></p>
@@ -718,12 +727,13 @@
         <div class="form-group">
           <label class="form-label" for="novo-midia-arquivo">Foto ou vídeo do produto</label>
           <p class="form-help">Foto PNG, JPG ou WebP até 10 MB. Vídeo MP4 até 20 MB; prefira vídeos curtos (5–15 segundos). PNG mantém o fundo transparente.</p>
+          <div class="media-guide"><table><caption>Tamanhos recomendados para a mídia</caption><tbody><tr><td>Foto do produto · 4:3</td><td>1200 × 900 px</td></tr><tr><td>Vídeo horizontal · 16:9</td><td>1280 × 720 px</td></tr><tr><td>Shorts vertical · 9:16</td><td>1080 × 1920 px</td></tr></tbody></table><p>A foto preenche o cartão com recorte central. Centralize o alimento e deixe margem nas bordas. Vídeo do YouTube mantém a proporção no player; use uma foto 4:3 como capa para a vitrine. Fotos com fundo branco ou transparente continuam com esse fundo.</p></div>
           <input id="novo-midia-arquivo" type="file" accept="image/png,image/jpeg,image/webp,video/mp4" onchange="selecionarMidiaProduto(this)">
           <p id="novo-midia-feedback" class="form-help" role="status"></p>
           <img id="novo-img-preview" class="media-preview" src="" alt="Prévia da foto" style="display:none">
-          <video id="novo-video-preview" class="media-preview" controls playsinline muted style="display:none"></video>
+          <div id="novo-youtube-preview" class="youtube-holder" style="display:none"></div><video id="novo-video-preview" class="media-preview" controls playsinline muted style="display:none"></video>
           <label class="form-label" for="novo-img">Link da foto (opcional)</label><input id="novo-img" class="input-text" type="text" oninput="atualizarPreviewMidia()" placeholder="https://...">
-          <label class="form-label" for="novo-video">Link do vídeo (opcional)</label><input id="novo-video" type="url" class="input-text" oninput="atualizarPreviewMidia()" placeholder="https://.../video.mp4"><p class="form-help">Cole o link direto de um vídeo público MP4 ou WebM. Links de páginas do YouTube, Instagram e Drive não são arquivos de vídeo.</p>
+          <label class="form-label" for="novo-video">Link do vídeo (opcional)</label><input id="novo-video" type="url" class="input-text" oninput="editarLinkVideoProduto()" placeholder="https://youtu.be/... ou https://.../video.mp4"><p class="form-help">Cole um link do YouTube (vídeo, Shorts ou youtu.be) ou um link direto MP4/WebM. O vídeo do YouTube abre no detalhe do produto; a vitrine usa uma foto de capa. Instagram e links de compartilhamento do Drive não são aceitos.</p>
           <div class="custom-toolbar"><button type="button" onclick="removerMidiaProduto('foto')">Remover foto</button><button type="button" onclick="removerMidiaProduto('video')">Remover vídeo</button></div>
         </div>
 
@@ -963,13 +973,14 @@
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
       if(aba==='cardapio'){iniciarRolagemDestaques();observarVideosCatalogo();observarVideoBanner();}
       if(aba!=='config')document.getElementById('conf-banner-video-preview').pause();
+      if(aba!=='cardapio'){fecharDetalheProduto();pausarYouTube();}
       if (aba === 'admin') renderAdmin();
       if (['cozinha','kds'].includes(aba)) carregarPedidos();
       if (aba === 'crm') carregarPedidosCRM();
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='17';
+    const MALIK_VERSION='18';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1167,9 +1178,38 @@
     }
 
     let produtoSalvarId=null,salvandoProduto=false,midiaPendente=null,midiaObjectURL=null,videosObserver=null;
+    function idYouTube(valor){
+      try{
+        const u=new URL(String(valor||'').trim());if(u.protocol!=='https:'||u.username||u.password||u.port)return null;
+        let id=null;
+        if(['youtu.be','www.youtu.be'].includes(u.hostname))id=u.pathname.split('/')[1];
+        else if(['youtube.com','www.youtube.com','m.youtube.com','music.youtube.com','youtube-nocookie.com','www.youtube-nocookie.com'].includes(u.hostname)){
+          if(u.pathname==='/watch')id=u.searchParams.get('v');
+          else if(/^\/(shorts|embed|live)\//.test(u.pathname))id=u.pathname.split('/')[2];
+        }
+        return /^[A-Za-z0-9_-]{11}$/.test(id||'')?id:null;
+      }catch(_){return null;}
+    }
+    function linkVideoProdutoValido(url){return !!idYouTube(url)||linkVideoDiretoValido(url);}
+    function capaYouTube(id){return 'https://i.ytimg.com/vi/'+id+'/maxresdefault.jpg';}
+    function youtubeHTML(id,nome,capa,container){
+      const img=urlMidiaValida(capa,true)?capa:capaYouTube(id),fallback='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
+      return `<div class="youtube-cover"><img src="${escaparHTML(img)}" alt="Capa do vídeo de ${escaparHTML(nome)}" onerror="this.onerror=null;this.src='${fallback}'"><button type="button" class="youtube-play" onclick="reproduzirYouTube('${container}','${id}')">▶ Reproduzir no YouTube</button></div><a class="youtube-open" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">Se o vídeo não abrir, assistir no YouTube</a>`;
+    }
+    function reproduzirYouTube(container,id){
+      if(!['detalhe-youtube','novo-youtube-preview'].includes(container)||!/^[A-Za-z0-9_-]{11}$/.test(id))return;
+      const origin=window.location.origin||'';
+      const url='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(origin);
+      document.getElementById(container).innerHTML=`<iframe class="youtube-player" src="${escaparHTML(url)}" title="Vídeo do produto no YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><a class="youtube-open" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">Assistir no YouTube</a>`;
+    }
+    function limparYouTubeProduto(container){const el=document.getElementById(container);el.innerHTML='';el.style.display='none';}
+    function pausarYouTube(){document.querySelectorAll('.youtube-player').forEach(f=>{try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'https://www.youtube-nocookie.com');}catch(_){}});}
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)pausarYouTube();});
+    function editarLinkVideoProduto(){if(midiaPendente?.file.type==='video/mp4')limparMidiaTemporaria();atualizarPreviewMidia();}
+
     function linkVideoDiretoValido(url){
       if(!urlMidiaValida(url))return false;
-      try{const u=new URL(url);return !/(^|\.)(youtube\.com|youtu\.be|instagram\.com|drive\.google\.com)$/i.test(u.hostname);}catch(_){return false;}
+      try{const u=new URL(url);return !/(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be|instagram\.com|drive\.google\.com)$/i.test(u.hostname);}catch(_){return false;}
     }
     function previewVideoBanner(){
       const v=document.getElementById('conf-banner-video-preview'),url=document.getElementById('conf-banner-video').value.trim();v.pause();v.removeAttribute('src');v.style.display='none';
@@ -1232,7 +1272,8 @@
       try{return new URL(url).protocol==='https:';}catch(_){return false;}
     }
     function midiaProdutoHTML(p,classe){
-      const alt=escaparHTML(p.nome||'Produto');
+      const alt=escaparHTML(p.nome||'Produto'),yt=idYouTube(p.video_url);
+      if(yt){const capa=urlMidiaValida(p.img_url,true)?p.img_url:capaYouTube(yt);return `<img loading="lazy" src="${escaparHTML(capa)}" alt="${alt}" class="${classe}" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${yt}/hqdefault.jpg'"><span class="media-badge youtube-badge">▶ YouTube</span>`;}
       if(urlMidiaValida(p.video_url))return `<video class="${classe} catalog-video" onerror="falhaVideoCatalogo(this)" data-src="${escaparHTML(p.video_url)}" ${urlMidiaValida(p.img_url,true)?`poster="${escaparHTML(p.img_url)}"`:''} muted loop playsinline preload="none" aria-label="Vídeo de ${alt}"></video>${classe==='prod-img'?'<span class="media-badge">▶ Vídeo</span>':''}`;
       if(urlMidiaValida(p.img_url,true))return `<img loading="lazy" src="${escaparHTML(p.img_url)}" alt="${alt}" class="${classe}">`;
       return `<div class="${classe}" style="display:flex;align-items:center;justify-content:center;font-size:48px">🍽️</div>`;
@@ -1261,7 +1302,7 @@
       if(file.size<=0||file.size>(video?20:10)*1024*1024)return video?'O vídeo deve ter até 20 MB.':'A foto deve ter até 10 MB.';
       return '';
     }
-    function limparMidiaTemporaria(){if(midiaObjectURL)URL.revokeObjectURL(midiaObjectURL);midiaObjectURL=null;midiaPendente=null;document.getElementById('novo-midia-arquivo').value='';document.getElementById('novo-midia-feedback').textContent='';document.getElementById('novo-video-preview').pause();}
+    function limparMidiaTemporaria(){if(midiaObjectURL)URL.revokeObjectURL(midiaObjectURL);midiaObjectURL=null;midiaPendente=null;document.getElementById('novo-midia-arquivo').value='';document.getElementById('novo-midia-feedback').textContent='';document.getElementById('novo-video-preview').pause();limparYouTubeProduto('novo-youtube-preview');}
     function selecionarMidiaProduto(input){
       if(salvandoProduto)return;const file=input.files?.[0];if(!file)return;const erro=validarArquivoMidia(file);
       if(erro){alert(erro);input.value='';return;}limparMidiaTemporaria();midiaPendente={file,url:null};midiaObjectURL=URL.createObjectURL(file);
@@ -1272,6 +1313,7 @@
       const pendVideo=midiaPendente?.file.type==='video/mp4',pendFoto=midiaPendente&&!pendVideo;
       const foto=pendFoto?midiaObjectURL:document.getElementById('novo-img').value;
       const link=document.getElementById('novo-video').value.trim();const clip=pendVideo?midiaObjectURL:linkVideoDiretoValido(link)?link:'';
+      limparYouTubeProduto('novo-youtube-preview');const yt=!pendVideo&&idYouTube(link);if(yt){const holder=document.getElementById('novo-youtube-preview');holder.style.display='block';holder.innerHTML=youtubeHTML(yt,document.getElementById('novo-nome').value||'Produto',foto,'novo-youtube-preview');}
       img.src=foto||'';img.style.display=foto?'block':'none';video.removeAttribute('src');video.style.display=clip?'block':'none';if(clip)video.src=clip;
     }
     function removerMidiaProduto(tipo){
@@ -1517,8 +1559,10 @@
           imgEl.style.display = 'none';
       }
       
+      limparYouTubeProduto('detalhe-youtube');
       const video=document.getElementById('detalhe-video');video.pause();video.removeAttribute('src');video.style.display='none';
-      if(urlMidiaValida(produtoDetalheAtual.video_url)){imgEl.style.display='none';video.src=produtoDetalheAtual.video_url;video.poster=urlMidiaValida(produtoDetalheAtual.img_url,true)?produtoDetalheAtual.img_url:'';video.style.display='block';video.onerror=()=>{video.style.display='none';imgEl.style.display=produtoDetalheAtual.img_url?'block':'none';document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';};}
+      if(idYouTube(produtoDetalheAtual.video_url)){const yt=idYouTube(produtoDetalheAtual.video_url),holder=document.getElementById('detalhe-youtube');imgEl.style.display='none';holder.style.display='block';holder.innerHTML=youtubeHTML(yt,produtoDetalheAtual.nome,produtoDetalheAtual.img_url,'detalhe-youtube');}
+      else if(urlMidiaValida(produtoDetalheAtual.video_url)){imgEl.style.display='none';video.src=produtoDetalheAtual.video_url;video.poster=urlMidiaValida(produtoDetalheAtual.img_url,true)?produtoDetalheAtual.img_url:'';video.style.display='block';video.onerror=()=>{video.style.display='none';imgEl.style.display=produtoDetalheAtual.img_url?'block':'none';document.getElementById('detalhe-placeholder').style.display=produtoDetalheAtual.img_url?'none':'block';};}
       document.getElementById('detalhe-nome').innerText = produtoDetalheAtual.nome;
       document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Preparado com cuidado pela nossa cozinha.';
       atualizarPrecoDetalhe();
@@ -1527,6 +1571,7 @@
     }
 
     function fecharDetalheProduto() {
+      limparYouTubeProduto('detalhe-youtube');
       document.getElementById('detalhe-video').pause();
       document.getElementById('modal-detalhe-produto').style.display = 'none';
     }
@@ -1677,13 +1722,13 @@
       const tamanhos=pizza?{Brotinho:Number(document.getElementById('novo-brotinho').value),Grande:Number(document.getElementById('novo-grande').value)}:null;
       if(pizza&&Object.values(tamanhos).some(v=>!Number.isFinite(v)||v<=0||v>999999||Math.abs(v*100-Math.round(v*100))>1e-6)){alert('Informe os preços de Brotinho e Grande, maiores que zero, com até duas casas decimais.');return;}
       if(pizza&&DADOS.grupos.some(g=>g.produto_id===produtoEmEdicaoId&&g.tipo==='sabores')&&!confirm('Substituir as opções antigas de sabores por Brotinho e Grande? Cadastre cada sabor como um produto. Os pedidos anteriores serão preservados.'))return;
-      const linkVideo=document.getElementById('novo-video').value.trim();if(linkVideo&&!linkVideoDiretoValido(linkVideo)){alert('Use um link direto HTTPS de vídeo MP4 ou WebM, não uma página do YouTube, Instagram ou Drive.');return;}
+      const linkVideo=document.getElementById('novo-video').value.trim();if(linkVideo&&!linkVideoProdutoValido(linkVideo)){alert('Use um link de vídeo válido do YouTube ou um link direto HTTPS MP4/WebM.');return;}
       salvandoProduto=true;btn.innerText='Salvando...';btn.disabled=true;
       document.querySelector('#modal-novo-produto form').inert=true;
       try{
         await enviarMidiaProduto();
         const estoque=document.getElementById('novo-estoque').value;
-        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:document.getElementById('novo-video').value.trim(),preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
+        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:idYouTube(document.getElementById('novo-video').value)?'https://www.youtube.com/watch?v='+idYouTube(document.getElementById('novo-video').value):document.getElementById('novo-video').value.trim(),preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
         const {error,data}=await malikDB.rpc('malik_salvar_produto_v16',{p_id:produtoSalvarId,p_dados:dados,p_tamanhos:tamanhos});
         if(error)throw error;if(!data?.id)throw new Error('Produto não foi salvo.');
         salvandoProduto=false;fecharModalNovoProduto();await carregarProdutosDaNuvem();
