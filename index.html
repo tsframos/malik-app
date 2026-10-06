@@ -285,6 +285,18 @@
 .pizza-prices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.size-settings{background:var(--bg-subsurface);padding:18px;border-radius:16px;margin-bottom:20px}.size-settings>label{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:12px}.size-settings input[type=checkbox]{width:20px;height:20px}
 @media(max-width:650px){.grid-produtos{grid-template-columns:1fr;gap:20px}.prod-img-wrap{width:100%;height:auto;aspect-ratio:4/3}.prod-content{padding:18px}.prod-name{font-size:18px}.prod-price{font-size:19px}.destaque-card{min-width:240px;max-width:240px}.destaque-img{height:180px}.product-photo{height:auto;min-height:0;aspect-ratio:4/3;padding:12px}.product-photo video{height:100%}.pizza-prices{gap:10px}}
 
+
+/* V17: destaques com foto/vídeo preenchendo todo o cartão. */
+.destaques-scroll{scroll-behavior:auto;padding-bottom:0;gap:18px}
+.destaque-card{position:relative;display:block;min-width:320px;max-width:320px;height:250px;min-height:0;border:0;border-radius:18px;isolation:isolate}
+.destaque-img,.destaque-card video.destaque-img{position:absolute;inset:0;width:100%;height:100%;padding:0;object-fit:cover!important;background:var(--bg-subsurface)}
+.destaque-info{position:absolute;inset:0;justify-content:flex-end;padding:20px;background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.15) 45%,rgba(0,0,0,.85) 100%);z-index:1;pointer-events:none}
+.destaque-nome{font-size:20px;color:#fff;margin:0;line-height:1.3;text-align:left;text-shadow:0 1px 8px #0008}
+.destaque-preco{color:#fff;font-size:15px}.destaque-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.destaques-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.destaques-heading h2{margin:0!important}.slider-pause{border:1px solid var(--border-color);border-radius:10px;background:var(--bg-surface);color:var(--text-main);padding:8px 12px;cursor:pointer;font-size:12px}
+.banner-container{position:relative;overflow:hidden}.banner-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.banner-video-toggle{position:absolute;right:12px;top:12px;border:0;border-radius:8px;background:#0009;color:#fff;padding:8px 12px;cursor:pointer;font-size:12px;z-index:1}
+@media(max-width:650px){.destaque-card{min-width:280px;max-width:280px;height:220px;min-height:0}.destaque-info{padding:18px}.destaque-nome{font-size:18px}.destaques-heading h2{font-size:18px!important}.slider-pause{padding:8px;font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -323,7 +335,7 @@
   <!-- ========================================================================= -->
   <section id="sec-cardapio" style="flex:1;">
     <div class="store-layout-container">
-        <div class="banner-container" id="loja-banner-view"></div>
+        <div class="banner-container" id="loja-banner-view"><video id="loja-banner-video" class="banner-video" playsinline muted loop preload="none" style="display:none" aria-label="Vídeo de apresentação do restaurante"></video><button id="banner-video-toggle" class="banner-video-toggle" type="button" style="display:none" onclick="alternarVideoBanner()">Pausar vídeo</button></div>
         <div class="store-header">
             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' rx='24' fill='%23d92d20'/%3E%3Ctext x='75' y='105' font-size='95' font-family='sans-serif' text-anchor='middle' fill='white'%3EM%3C/text%3E%3C/svg%3E" class="store-logo" id="loja-logo-view" alt="Logo">
             <h1 class="store-title">
@@ -340,7 +352,7 @@
         <p id="loja-fechada-aviso" class="closed-notice" role="status" hidden>Carregando o atendimento da loja...</p>
         <div class="menu-search-top"><label for="busca-produtos">O que você quer pedir hoje?</label><div class="menu-search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="busca-produtos" type="search" placeholder="Busque um produto ou ingrediente" oninput="renderProdutos()"><button type="button" aria-label="Limpar busca" onclick="document.getElementById('busca-produtos').value='';renderProdutos();document.getElementById('busca-produtos').focus()">✕</button></div></div>
         <div class="destaques-box" id="box-destaques" style="display:none;">
-          <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px; color:var(--text-main); font-family: 'Outfit', sans-serif;">Escolhas da casa</h2>
+          <div class="destaques-heading"><h2 style="font-size:22px;font-weight:800;color:var(--text-main)">Escolhas da casa</h2><button id="destaques-pause" class="slider-pause" type="button" aria-pressed="false" onclick="alternarRolagemDestaques()">Pausar rolagem</button></div>
           <div class="destaques-scroll" id="destaques-list"></div>
         </div>
     </div>
@@ -458,6 +470,10 @@
                         <input id="conf-banner-file" class="upload-file-input" type="file" accept="image/png,image/jpeg" onchange="processarImagem(this, 'conf-banner-preview', 'conf-banner-b64');">
                         <span id="conf-banner-filename" class="upload-filename" role="status">PNG ou JPG • até 10 MB</span>
                         <input type="hidden" id="conf-banner-b64">
+                        <label class="form-label" for="conf-banner-video" style="margin-top:16px">Vídeo no banner (opcional)</label>
+                        <input id="conf-banner-video" type="url" class="input-text" placeholder="https://.../banner.mp4" oninput="previewVideoBanner()">
+                        <p class="form-help">Link direto de vídeo público MP4 ou WebM. O vídeo preenche o banner, sem som e em repetição. A imagem serve de capa. Deixe vazio para usar somente a imagem.</p>
+                        <video id="conf-banner-video-preview" class="media-preview" controls muted playsinline preload="metadata" style="display:none"></video>
                     </div>
                 </div>
             </div>
@@ -707,7 +723,7 @@
           <img id="novo-img-preview" class="media-preview" src="" alt="Prévia da foto" style="display:none">
           <video id="novo-video-preview" class="media-preview" controls playsinline muted style="display:none"></video>
           <label class="form-label" for="novo-img">Link da foto (opcional)</label><input id="novo-img" class="input-text" type="text" oninput="atualizarPreviewMidia()" placeholder="https://...">
-          <input id="novo-video" type="hidden">
+          <label class="form-label" for="novo-video">Link do vídeo (opcional)</label><input id="novo-video" type="url" class="input-text" oninput="atualizarPreviewMidia()" placeholder="https://.../video.mp4"><p class="form-help">Cole o link direto de um vídeo público MP4 ou WebM. Links de páginas do YouTube, Instagram e Drive não são arquivos de vídeo.</p>
           <div class="custom-toolbar"><button type="button" onclick="removerMidiaProduto('foto')">Remover foto</button><button type="button" onclick="removerMidiaProduto('video')">Remover vídeo</button></div>
         </div>
 
@@ -945,13 +961,15 @@
       const tabAtiva = document.getElementById('tab-' + aba); if(tabAtiva) { tabAtiva.classList.add('active'); tabAtiva.style.background = 'var(--bg-surface)'; tabAtiva.style.color = 'var(--text-main)'; }
       
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
+      if(aba==='cardapio'){iniciarRolagemDestaques();observarVideosCatalogo();observarVideoBanner();}
+      if(aba!=='config')document.getElementById('conf-banner-video-preview').pause();
       if (aba === 'admin') renderAdmin();
       if (['cozinha','kds'].includes(aba)) carregarPedidos();
       if (aba === 'crm') carregarPedidosCRM();
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='16';
+    const MALIK_VERSION='17';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -985,6 +1003,7 @@
             document.getElementById('conf-banner-b64').value = CONFIG_LOJA.banner_url;
         }
 
+        document.getElementById('conf-banner-video').value=CONFIG_LOJA.banner_video_url||'';aplicarVideoBanner();
         try {
             document.getElementById('conf-whatsapp').value = CONFIG_LOJA.whatsapp || '';
             document.getElementById('conf-instagram').value = CONFIG_LOJA.instagram || '';
@@ -1010,6 +1029,8 @@
 
     async function salvarConfiguracoes(e) {
         e.preventDefault();
+        const linkVideo=document.getElementById('conf-banner-video').value.trim();
+        if(linkVideo&&!linkVideoDiretoValido(linkVideo)){alert('Use um link direto HTTPS de vídeo MP4 ou WebM, não uma página do YouTube, Instagram ou Drive.');return;}
         const btn = document.getElementById('btn-submit-config'); btn.innerText = 'Salvando...'; btn.disabled = true;
 
         const dadosConfig = {
@@ -1017,7 +1038,8 @@
             nome: document.getElementById('conf-nome').value,
             endereco: document.getElementById('conf-endereco').value,
             logo_url: document.getElementById('conf-logo-b64').value,
-            banner_url: document.getElementById('conf-banner-b64').value
+            banner_url: document.getElementById('conf-banner-b64').value,
+            banner_video_url: document.getElementById('conf-banner-video').value.trim()
         };
 
         try {
@@ -1145,6 +1167,65 @@
     }
 
     let produtoSalvarId=null,salvandoProduto=false,midiaPendente=null,midiaObjectURL=null,videosObserver=null;
+    function linkVideoDiretoValido(url){
+      if(!urlMidiaValida(url))return false;
+      try{const u=new URL(url);return !/(^|\.)(youtube\.com|youtu\.be|instagram\.com|drive\.google\.com)$/i.test(u.hostname);}catch(_){return false;}
+    }
+    function previewVideoBanner(){
+      const v=document.getElementById('conf-banner-video-preview'),url=document.getElementById('conf-banner-video').value.trim();v.pause();v.removeAttribute('src');v.style.display='none';
+      if(linkVideoDiretoValido(url)){v.src=url;v.style.display='block';}
+    }
+    let bannerPausado=null;
+    function aplicarVideoBanner(){
+      const v=document.getElementById('loja-banner-video'),btn=document.getElementById('banner-video-toggle'),url=CONFIG_LOJA.banner_video_url||'';
+      v.pause();v.removeAttribute('src');v.style.display='none';btn.style.display='none';
+      if(!linkVideoDiretoValido(url))return;
+      v.src=url;v.muted=true;v.poster=urlMidiaValida(CONFIG_LOJA.banner_url,true)?CONFIG_LOJA.banner_url:'';v.style.display='block';btn.style.display='block';
+      v.onerror=()=>{v.style.display='none';btn.style.display='none';};
+      if(bannerPausado===null)bannerPausado=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      btn.textContent=bannerPausado?'Reproduzir vídeo':'Pausar vídeo';btn.setAttribute('aria-pressed',String(bannerPausado));
+      if(!bannerPausado)observarVideoBanner();
+    }
+    let bannerObserver=null;
+    function observarVideoBanner(){
+      if(bannerObserver)bannerObserver.disconnect();
+      if(typeof IntersectionObserver==='undefined')return;
+      const v=document.getElementById('loja-banner-video');
+      bannerObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting&&!document.hidden&&!bannerPausado&&v.getAttribute('src'))v.play().catch(()=>{});else v.pause();}),{threshold:.2});bannerObserver.observe(v);
+    }
+    function alternarVideoBanner(){bannerPausado=!bannerPausado;const v=document.getElementById('loja-banner-video'),btn=document.getElementById('banner-video-toggle');btn.textContent=bannerPausado?'Reproduzir vídeo':'Pausar vídeo';btn.setAttribute('aria-pressed',String(bannerPausado));if(bannerPausado)v.pause();else observarVideoBanner();}
+    let destaquesFrame=null,destaquesCiclo=0,destaquesModo=null,destaquesHover=false,destaquesToque=false,destaquesSuspensoAte=0;
+    function pararRolagemDestaques(){if(destaquesFrame!==null&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(destaquesFrame);destaquesFrame=null;}
+    function rolagemDestaquesPausada(){return destaquesModo===null?!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches:destaquesModo;}
+    function alternarRolagemDestaques(){destaquesModo=!rolagemDestaquesPausada();atualizarBotaoDestaques();}
+    function atualizarBotaoDestaques(){const b=document.getElementById('destaques-pause'),p=rolagemDestaquesPausada();b.textContent=p?'Continuar rolagem':'Pausar rolagem';b.setAttribute('aria-pressed',String(p));}
+    function iniciarRolagemDestaques(){
+      pararRolagemDestaques();atualizarBotaoDestaques();destaquesHover=false;destaquesToque=false;
+      const lista=document.getElementById('destaques-list');if(typeof requestAnimationFrame!=='function')return;
+      Array.from(lista.children).filter(c=>c.getAttribute('aria-hidden')==='true').forEach(c=>c.remove());
+      const originais=Array.from(lista.children);if(originais.length<2)return;
+      const largura=originais.reduce((n,c)=>n+c.getBoundingClientRect().width,0)+18*originais.length;
+      const voltas=Math.ceil(lista.clientWidth/Math.max(1,largura))+1;
+      let primeiroClone=null;
+      for(let i=0;i<voltas;i++)for(const card of originais){const clone=card.cloneNode(true);clone.setAttribute('aria-hidden','true');clone.setAttribute('tabindex','-1');lista.appendChild(clone);if(!primeiroClone)primeiroClone=clone;}
+      destaquesCiclo=primeiroClone.offsetLeft-originais[0].offsetLeft;lista.scrollLeft=0;
+      if(!lista.dataset.autoScroll){
+        lista.dataset.autoScroll='1';
+        lista.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')destaquesHover=true});lista.addEventListener('pointerleave',()=>destaquesHover=false);
+        lista.addEventListener('pointerdown',()=>destaquesToque=true);window.addEventListener('pointerup',()=>{destaquesToque=false;destaquesSuspensoAte=Date.now()+4000});window.addEventListener('pointercancel',()=>{destaquesToque=false;destaquesSuspensoAte=Date.now()+4000});
+        lista.addEventListener('wheel',()=>destaquesSuspensoAte=Date.now()+4000,{passive:true});
+      }
+      let anterior=null,posicao=lista.scrollLeft;
+      const passo=t=>{
+        const dt=anterior===null?0:Math.min(t-anterior,50);anterior=t;
+        const modal=Array.from(document.querySelectorAll('.modal-overlay')).some(m=>m.style.display==='flex');
+        if(!document.hidden&&document.getElementById('sec-cardapio').style.display!=='none'&&!rolagemDestaquesPausada()&&!destaquesHover&&!destaquesToque&&!lista.contains(document.activeElement)&&!modal&&Date.now()>destaquesSuspensoAte&&destaquesCiclo>0){
+          destaquesCiclo=primeiroClone.offsetLeft-originais[0].offsetLeft;posicao=(posicao+dt*.035)%Math.max(1,destaquesCiclo);lista.scrollLeft=posicao;
+        }else posicao=lista.scrollLeft;
+        destaquesFrame=requestAnimationFrame(passo);
+      };destaquesFrame=requestAnimationFrame(passo);
+    }
+
     function urlMidiaValida(url,foto=false){
       if(!url)return false;
       if(foto&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(url))return true;
@@ -1173,7 +1254,7 @@
         else v.pause();
       }),{threshold:.25});videos.forEach(v=>{v.muted=true;videosObserver.observe(v);});
     }
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)document.querySelectorAll('video').forEach(v=>v.pause());else observarVideosCatalogo();});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)document.querySelectorAll('video').forEach(v=>v.pause());else{observarVideosCatalogo();observarVideoBanner();}});
     function validarArquivoMidia(file){
       const foto=['image/png','image/jpeg','image/webp'].includes(file.type),video=file.type==='video/mp4';
       if(!foto&&!video)return 'Escolha uma foto PNG, JPG ou WebP, ou um vídeo MP4.';
@@ -1190,7 +1271,7 @@
       const img=document.getElementById('novo-img-preview'),video=document.getElementById('novo-video-preview');video.pause();
       const pendVideo=midiaPendente?.file.type==='video/mp4',pendFoto=midiaPendente&&!pendVideo;
       const foto=pendFoto?midiaObjectURL:document.getElementById('novo-img').value;
-      const clip=pendVideo?midiaObjectURL:document.getElementById('novo-video').value;
+      const link=document.getElementById('novo-video').value.trim();const clip=pendVideo?midiaObjectURL:linkVideoDiretoValido(link)?link:'';
       img.src=foto||'';img.style.display=foto?'block':'none';video.removeAttribute('src');video.style.display=clip?'block':'none';if(clip)video.src=clip;
     }
     function removerMidiaProduto(tipo){
@@ -1242,10 +1323,10 @@
                 const selo = !isDisponivel ? '<span style="font-size:10px; color:var(--danger); font-weight:800; background:var(--accent-soft); padding:2px 6px; border-radius:4px;">ESGOTADO</span>' : '';
                 const opacity = !isDisponivel ? 'opacity:0.5' : '';
                 
-                htmlDestaques += `<div class="destaque-card" style="${opacity}" onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${escaparHTML(p.nome || 'Produto')}</div><div class="destaque-desc">${escaparHTML(p.descricao || '')}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">${gruposProduto(p.id).length?'A partir de ':''}R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
+                htmlDestaques += `<div class="destaque-card" style="${opacity}" ${isDisponivel?`role="button" tabindex="0" aria-label="Ver destaque ${escaparHTML(p.nome)}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${onclickCode}}"`:'aria-disabled="true"'} onclick="${onclickCode}">${img}<div class="destaque-info"><div><div class="destaque-nome">${escaparHTML(p.nome || 'Produto')}</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="destaque-preco mono">${gruposProduto(p.id).length?'A partir de ':''}R$ ${precoF.toFixed(2).replace('.', ',')}</span>${selo}</div></div></div>`;
             });
-            list.innerHTML = htmlDestaques; observarVideosCatalogo();
-        } else { box.style.display = 'none'; }
+            list.innerHTML = htmlDestaques; iniciarRolagemDestaques();observarVideosCatalogo();
+        } else { box.style.display = 'none';pararRolagemDestaques(); }
     }
 
     function renderProdutos() {
@@ -1596,12 +1677,13 @@
       const tamanhos=pizza?{Brotinho:Number(document.getElementById('novo-brotinho').value),Grande:Number(document.getElementById('novo-grande').value)}:null;
       if(pizza&&Object.values(tamanhos).some(v=>!Number.isFinite(v)||v<=0||v>999999||Math.abs(v*100-Math.round(v*100))>1e-6)){alert('Informe os preços de Brotinho e Grande, maiores que zero, com até duas casas decimais.');return;}
       if(pizza&&DADOS.grupos.some(g=>g.produto_id===produtoEmEdicaoId&&g.tipo==='sabores')&&!confirm('Substituir as opções antigas de sabores por Brotinho e Grande? Cadastre cada sabor como um produto. Os pedidos anteriores serão preservados.'))return;
+      const linkVideo=document.getElementById('novo-video').value.trim();if(linkVideo&&!linkVideoDiretoValido(linkVideo)){alert('Use um link direto HTTPS de vídeo MP4 ou WebM, não uma página do YouTube, Instagram ou Drive.');return;}
       salvandoProduto=true;btn.innerText='Salvando...';btn.disabled=true;
       document.querySelector('#modal-novo-produto form').inert=true;
       try{
         await enviarMidiaProduto();
         const estoque=document.getElementById('novo-estoque').value;
-        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:document.getElementById('novo-video').value,preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
+        const dados={categoria:document.getElementById('novo-cat').value,nome:document.getElementById('novo-nome').value.trim(),descricao:document.getElementById('novo-desc').value.trim(),img_url:document.getElementById('novo-img').value.trim(),video_url:document.getElementById('novo-video').value.trim(),preco:pizza?Math.min(...Object.values(tamanhos)):Number(document.getElementById('novo-preco').value),estoque:estoque===''?null:Number(estoque),destaque:document.getElementById('novo-destaque').checked};
         const {error,data}=await malikDB.rpc('malik_salvar_produto_v16',{p_id:produtoSalvarId,p_dados:dados,p_tamanhos:tamanhos});
         if(error)throw error;if(!data?.id)throw new Error('Produto não foi salvo.');
         salvandoProduto=false;fecharModalNovoProduto();await carregarProdutosDaNuvem();
