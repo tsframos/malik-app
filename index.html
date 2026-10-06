@@ -266,6 +266,9 @@
   .combo-quick{padding:16px;background:var(--bg-subsurface);border:1px solid var(--border-color);border-radius:14px;margin:12px 0}.combo-presets{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.combo-presets button{padding:12px 22px;border:1px solid var(--accent);border-radius:10px;background:var(--bg-surface);color:var(--accent);font-weight:700;cursor:pointer}.custom-fields{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}#kanban-cols{grid-template-columns:repeat(5,minmax(260px,1fr));overflow-x:auto}#sec-kds:fullscreen{background:var(--bg-main);overflow:auto;padding:24px;width:100%;max-width:none!important}.kds-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.kds-board .order-card{font-size:17px;padding:18px}.kds-board .order-main-action{display:block;width:100%;padding:14px;border:0;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;margin-top:18px}.kds-board .order-main-action:disabled{opacity:.5;cursor:default}.combo-presets button[aria-pressed="true"]{background:var(--accent);color:white}.kds-board .order-code{font-size:26px}.kds-board .order-items{font-size:19px}.kds-board .order-item small{font-size:17px;white-space:pre-line;color:var(--text-main);line-height:1.5}.kds-board .kitchen-cards{max-height:none}.kds-latest{padding:14px 18px;background:var(--bg-subsurface);border-radius:12px;margin-bottom:16px;font-weight:700}.queue-number{font-weight:700;font-size:15px;margin:8px 0}.message-event{padding:14px 0;border-bottom:1px solid var(--border-color)}.message-event p{white-space:pre-line;margin:8px 0}.message-event a{display:inline-block;color:var(--accent);padding:8px 0}
   @media(max-width:1000px){.kds-board{grid-template-columns:1fr}#kanban-cols{grid-template-columns:repeat(5,minmax(280px,1fr))}}@media(max-width:600px){#kanban-cols{grid-template-columns:1fr;overflow:visible}.combo-presets button{flex:1}.top-nav{overflow-x:auto}.kds-board .order-card{padding:14px}}
 @media(min-width:1100px){.kitchen-summary{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+  .system-version{padding:18px 24px;border:1px solid var(--border-color);border-radius:14px;background:var(--bg-subsurface);display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.system-version p{font-weight:700;color:var(--accent);margin:6px 0}.system-version small{color:var(--text-muted);max-width:360px;line-height:1.5}.whatsapp-settings{padding:28px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-surface);margin-bottom:24px}.wa-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.wa-state{padding:8px 12px;border-radius:20px;background:var(--bg-subsurface);color:var(--text-muted);font-size:12px}.wa-state[data-connected="true"]{background:#dcfce7;color:#166534}.wa-number{font-weight:700;margin:16px 0 8px}.wa-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.wa-buttons button:disabled{opacity:.45;cursor:default}.wa-qr{padding:20px;border:1px solid var(--border-color);border-radius:14px;gap:24px;align-items:center;margin:20px 0}.wa-qr img{max-width:100%;background:white;flex-shrink:0}.wa-qr p{margin:12px 0;line-height:1.6}.wa-message-form{margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color)}.wa-message-form textarea{margin-bottom:16px;resize:vertical;line-height:1.5}.wa-message-form .form-help{margin:12px 0 18px}.wa-message-form label{display:block}
+  @media(max-width:650px){.system-version,.wa-heading,.wa-qr{flex-direction:column;align-items:flex-start}.whatsapp-settings{padding:20px}.wa-qr img{align-self:center;width:240px;height:240px}.wa-buttons button{flex:1 1 140px}.wa-heading{gap:14px}}
 </style>
 </head>
 <body>
@@ -392,6 +395,22 @@
       <h2 style="font-size:26px;">⚙ Configurações e Identidade</h2>
       <p style="font-size:14px; color:var(--text-muted);">Configure o atendimento, a identidade, a campainha e a impressão.</p>
     </div>
+
+    <div class="system-version"><div><strong>Sobre o sistema</strong><p id="versao-sistema"></p></div><small>Versão desta página. Após atualizar, use Ctrl + Shift + R em cada computador.</small></div>
+    <section class="whatsapp-settings" aria-labelledby="whatsapp-config-title">
+      <div class="wa-heading"><div><h3 id="whatsapp-config-title">WhatsApp da loja</h3><p class="form-help">Conecte seu número e envie atualizações dos pedidos.</p></div><strong id="wa-conexao-status" class="wa-state" role="status">Ainda não consultado</strong></div>
+      <p id="wa-numero" class="wa-number"></p><p id="wa-automacao-status" class="form-help"></p><p id="wa-agendamento-status" class="form-help"></p>
+      <div class="wa-buttons"><button type="button" id="wa-conectar" class="btn-action" onclick="acaoWhatsApp('conectar')">Conectar por QR Code</button><button type="button" id="wa-atualizar" class="btn-action" onclick="consultarWhatsApp()">Atualizar conexão</button><button type="button" id="wa-ativar" class="btn-action" onclick="acaoWhatsApp('ativar')" disabled>Ativar mensagens</button><button type="button" id="wa-pausar" class="btn-action" onclick="acaoWhatsApp('pausar')" disabled>Pausar mensagens</button><button type="button" id="wa-teste" class="btn-action" onclick="acaoWhatsApp('teste')" disabled>Enviar teste para meu número</button><button type="button" id="wa-desconectar" class="btn-action" onclick="acaoWhatsApp('desconectar')" disabled>Desconectar número</button></div>
+      <div id="wa-qr-box" class="wa-qr" style="display:none"><img id="wa-qr-imagem" alt="QR Code para vincular seu WhatsApp" width="280" height="280"><div><strong>Vincule seu número pelo celular</strong><p>Abra WhatsApp → Dispositivos conectados → Conectar dispositivo e escaneie o QR Code.</p><p class="form-help">O código pode mudar enquanto você aguarda. Esta tela atualiza a conexão automaticamente.</p></div></div>
+      <p id="wa-feedback" class="form-help" role="status"></p><p class="form-help">A conexão por QR usa um serviço de WhatsApp que deve estar instalado e online. A instalação está no guia da V14.</p>
+      <form class="wa-message-form" onsubmit="salvarMensagensWhatsApp(event)">
+        <h4>Mensagens automáticas do pedido</h4><p class="form-help">Use {{cliente}}, {{pedido}} e {{loja}}. Mantenha {{pedido}} em cada mensagem. Só enviamos para clientes que escolheram receber atualizações.</p>
+        <label class="form-label" for="wa-msg-recebido">1 · Recebido, após confirmar o Pix</label><textarea id="wa-msg-recebido" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
+        <label class="form-label" for="wa-msg-preparando">2 · Aceito e em preparo</label><textarea id="wa-msg-preparando" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
+        <label class="form-label" for="wa-msg-a_caminho">3 · Despachado para o motoboy</label><textarea id="wa-msg-a_caminho" class="input-text" rows="3" maxlength="1000" required oninput="mensagensWhatsAppEditadas=true"></textarea>
+        <button id="wa-salvar-mensagens" class="btn-submit" style="max-width:280px" disabled>Salvar mensagens</button>
+      </form>
+    </section>
 
     <form class="atendimento-form" onsubmit="salvarAtendimento(event)">
       <h3>Atendimento e entrega</h3><p class="form-help">Estas preferências valem para todos os clientes e computadores.</p>
@@ -539,7 +558,7 @@
       <div><h2 style="font-size:28px;">Atendimento e despacho</h2><p class="kitchen-sub">Confira o Pix, aceite pedidos, imprima as vias e despache para entrega ou salão.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
-    <div class="kitchen-connection" id="conexao-cozinha" role="status">Malik v13 • conectando…</div>
+    <div class="kitchen-connection" id="conexao-cozinha" role="status">Conectando…</div>
     <div id="resumo-cozinha" class="kitchen-summary"></div><div class="prep-legend" aria-label="Legenda do tempo de preparo"><span class="prep-green">Verde: menos de 15 min</span><span class="prep-orange">Laranja: 15 a 29 min</span><span class="prep-red">Vermelho: 30 min ou mais</span><small>Tempo desde Iniciar preparo, mantido até concluir o pedido.</small></div>
     <div class="kitchen-toolbar">
       <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
@@ -919,9 +938,56 @@
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
       if (aba === 'admin') renderAdmin();
       if (['cozinha','kds'].includes(aba)) carregarPedidos();
-      if (aba === 'crm') carregarPedidosCRM(); 
+      if (aba === 'crm') carregarPedidosCRM();
+      if(aba==='config')iniciarMonitorWhatsApp();else pararMonitorWhatsApp(); 
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
+
+    const MALIK_VERSION='14';
+    document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
+    let timerWhatsApp=null,consultandoWhatsApp=false,acaoWhatsAppEmCurso=false,mensagensWhatsAppEditadas=false,whatsappConfig=null,whatsappConectado=false,whatsappNumero='',qrWhatsAppSolicitado=false;
+    function pararMonitorWhatsApp(){clearInterval(timerWhatsApp);timerWhatsApp=null;qrWhatsAppSolicitado=false;whatsappConectado=false;whatsappNumero='';document.getElementById('wa-qr-box').style.display='none';document.getElementById('wa-qr-imagem').removeAttribute('src');}
+    function iniciarMonitorWhatsApp(){if(!usuarioAtual)return;consultarWhatsApp();if(!timerWhatsApp)timerWhatsApp=setInterval(()=>{if(usuarioAtual&&!document.hidden&&document.getElementById('sec-config').style.display==='block')consultarWhatsApp(true);},5000);}
+    function renderConfigWhatsApp(data){
+      whatsappConfig=data.config||whatsappConfig;whatsappConectado=data.conectado===true;whatsappNumero=data.numero||'';
+      const status=document.getElementById('wa-conexao-status');status.textContent=whatsappConectado?'Conectado':data.configurado===false?'Serviço não configurado':data.qr?'Aguardando leitura do QR Code':data.estado==='connecting'?'Conectando…':'Desconectado';status.dataset.connected=String(whatsappConectado);
+      document.getElementById('wa-numero').textContent=whatsappNumero?'Número conectado: +'+whatsappNumero:whatsappConectado?'Número conectado · identificação indisponível':'';
+      document.getElementById('wa-automacao-status').textContent=whatsappConfig?.auto_ativo?(whatsappConectado?'Mensagens ativadas para novos eventos dos pedidos.':'Mensagens ativadas, aguardando reconexão. A fila está preservada.'):'Mensagens automáticas pausadas.';
+      document.getElementById('wa-agendamento-status').textContent=whatsappConfig?.ultimo_worker_em?'Última execução do serviço: '+new Date(whatsappConfig.ultimo_worker_em).toLocaleString('pt-BR')+(whatsappConfig.ultimo_erro?' · '+whatsappConfig.ultimo_erro:''):'Agendamento: aguardando primeira execução. Instale o serviço de envio conforme o guia.';
+      const qr=typeof data.qr==='string'&&/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(data.qr)&&data.qr.length<500000?data.qr:null;
+      document.getElementById('wa-qr-box').style.display=qr&&!whatsappConectado?'flex':'none';if(qr&&!whatsappConectado)document.getElementById('wa-qr-imagem').src=qr;else document.getElementById('wa-qr-imagem').removeAttribute('src');
+      if(whatsappConectado)qrWhatsAppSolicitado=false;
+      document.getElementById('wa-conectar').disabled=whatsappConectado||acaoWhatsAppEmCurso;
+      document.getElementById('wa-ativar').disabled=!whatsappConectado||whatsappConfig?.auto_ativo||acaoWhatsAppEmCurso;
+      document.getElementById('wa-pausar').disabled=!whatsappConfig?.auto_ativo||acaoWhatsAppEmCurso;
+      document.getElementById('wa-teste').disabled=!whatsappConectado||!whatsappNumero||acaoWhatsAppEmCurso;
+      document.getElementById('wa-desconectar').disabled=(!whatsappConectado&&!qrWhatsAppSolicitado)||acaoWhatsAppEmCurso;
+      document.getElementById('wa-salvar-mensagens').disabled=!whatsappConfig||acaoWhatsAppEmCurso;
+      if(whatsappConfig?.mensagens&&!mensagensWhatsAppEditadas)for(const [evento,txt] of Object.entries(whatsappConfig.mensagens)){const el=document.getElementById('wa-msg-'+evento);if(el)el.value=txt;}
+      if(data.aviso)document.getElementById('wa-feedback').textContent=data.aviso;
+    }
+    async function chamarConexaoWhatsApp(body){
+      if(!malikDB?.functions?.invoke)throw new Error('Atualize a página e instale a função de conexão da V14.');
+      const {data,error}=await malikDB.functions.invoke('malik-whatsapp-conexao',{body});
+      if(error)throw new Error('Não foi possível acessar a conexão do WhatsApp. Confira o login e a instalação das funções da V14.');
+      if(data?.error)throw new Error(data.error);if(!data||typeof data.conectado!=='boolean')throw new Error('Resposta inválida do serviço de WhatsApp.');return data;
+    }
+    async function consultarWhatsApp(silencioso=false){
+      if(!usuarioAtual||consultandoWhatsApp||acaoWhatsAppEmCurso)return;consultandoWhatsApp=true;const uid=usuarioAtual.id;
+      try{const data=await chamarConexaoWhatsApp({acao:'status',qr:qrWhatsAppSolicitado});if(usuarioAtual?.id!==uid)return;renderConfigWhatsApp(data);if(!silencioso&&!data.aviso)document.getElementById('wa-feedback').textContent='Conexão consultada.';}
+      catch(e){if(usuarioAtual?.id===uid){whatsappConectado=false;document.getElementById('wa-conexao-status').textContent='Não foi possível consultar';document.getElementById('wa-qr-box').style.display='none';document.getElementById('wa-qr-imagem').removeAttribute('src');document.getElementById('wa-ativar').disabled=true;document.getElementById('wa-teste').disabled=true;document.getElementById('wa-feedback').textContent=e.message;}}
+      finally{consultandoWhatsApp=false;}
+    }
+    async function acaoWhatsApp(acao,mensagens=null){
+      if(!usuarioAtual||acaoWhatsAppEmCurso||consultandoWhatsApp)return;
+      if(acao==='desconectar'&&!confirm('Desconectar este número do Malik e pausar as mensagens? Seu WhatsApp no celular continua disponível.'))return;
+      acaoWhatsAppEmCurso=true;document.querySelectorAll('.wa-buttons button,#wa-salvar-mensagens').forEach(b=>b.disabled=true);const uid=usuarioAtual.id;
+      document.getElementById('wa-feedback').textContent=acao==='conectar'?'Gerando QR Code pelo serviço…':'Aguarde…';
+      try{const data=await chamarConexaoWhatsApp({acao,...(mensagens?{mensagens}:{})});if(usuarioAtual?.id!==uid)return;if(acao==='conectar')qrWhatsAppSolicitado=data.configurado!==false&&!data.conectado;if(acao==='desconectar')qrWhatsAppSolicitado=false;if(acao==='salvar_mensagens')mensagensWhatsAppEditadas=false;acaoWhatsAppEmCurso=false;renderConfigWhatsApp(data);if(!data.aviso)document.getElementById('wa-feedback').textContent=acao==='salvar_mensagens'?'Mensagens salvas.':acao==='conectar'?data.conectado?'Número conectado.':data.qr?'Escaneie o QR Code com seu WhatsApp.':'Conexão iniciada. Aguarde o código ou clique em Conectar novamente.':'Configuração atualizada.';}
+      catch(e){if(usuarioAtual?.id===uid)document.getElementById('wa-feedback').textContent=e.message;}
+      finally{acaoWhatsAppEmCurso=false;if(usuarioAtual?.id===uid){document.getElementById('wa-atualizar').disabled=false;document.getElementById('wa-conectar').disabled=whatsappConectado;document.getElementById('wa-salvar-mensagens').disabled=!whatsappConfig;document.getElementById('wa-pausar').disabled=!whatsappConfig?.auto_ativo;document.getElementById('wa-desconectar').disabled=!whatsappConectado&&!qrWhatsAppSolicitado;document.getElementById('wa-ativar').disabled=!whatsappConectado||whatsappConfig?.auto_ativo;document.getElementById('wa-teste').disabled=!whatsappConectado||!whatsappNumero;}}
+    }
+    async function salvarMensagensWhatsApp(e){e.preventDefault();const mensagens={};for(const evento of ['recebido','preparando','a_caminho']){const txt=document.getElementById('wa-msg-'+evento).value.trim();if(!txt||txt.length>1000||!txt.includes('{{pedido}}')||txt.replace(/\{\{(cliente|pedido|loja)\}\}/g,'').includes('{{')){document.getElementById('wa-feedback').textContent='Confira as três mensagens e mantenha {{pedido}} em cada uma.';return;}mensagens[evento]=txt;}await acaoWhatsApp('salvar_mensagens',mensagens);}
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
     async function carregarConfigDaNuvem() {
@@ -1853,7 +1919,7 @@
       if(!usuarioAtual||mensagensPedidoAtual!==id)return;if(error){el.textContent='Não foi possível consultar a fila. Confira a instalação do SQL 07.';return;}
       if(!data?.length){el.textContent=p.whatsapp_autorizado?'Nenhuma mensagem gerada. A primeira será gerada após a confirmação do Pix.':'O cliente não escolheu receber atualizações pelo WhatsApp. Nenhuma mensagem automática será gerada.';return;}
       let numero=String(p.telefone||'').replace(/\D/g,'');if(numero.length===10||numero.length===11)numero='55'+numero;
-      el.innerHTML=['recebido','preparando','a_caminho'].flatMap(evento=>{const m=data.find(m=>m.evento===evento);if(!m)return [];const txt=textoMensagemPedido(p,evento);return [`<div class="message-event"><strong>${{recebido:'1 · Pedido recebido',preparando:'2 · Em preparo',a_caminho:'3 · A caminho'}[evento]}</strong><p>${escaparHTML(txt)}</p><small>${escaparHTML({pendente:'Na fila · envio requer integração ativa',enviando:'Enviando pela integração',aceito_api:'Aceita pela API · entrega ao cliente ainda não comprovada',falha:'Falha no envio',revisar:'Verificar envio na API antes de repetir'}[m.estado]||m.estado)}</small>${m.erro?`<p class="form-help">${escaparHTML(m.erro)}</p>`:''}${/^[0-9]{12,13}$/.test(numero)?`<br><a href="https://wa.me/${numero}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener noreferrer">Abrir WhatsApp para envio manual</a>`:''}</div>`];}).join('');
+      el.innerHTML='<p class="form-help">Os textos abaixo são sugestões para envio manual. A automação usa as mensagens salvas em Configurações.</p>'+['recebido','preparando','a_caminho'].flatMap(evento=>{const m=data.find(m=>m.evento===evento);if(!m)return [];const txt=textoMensagemPedido(p,evento);return [`<div class="message-event"><strong>${{recebido:'1 · Pedido recebido',preparando:'2 · Em preparo',a_caminho:'3 · A caminho'}[evento]}</strong><p>${escaparHTML(txt)}</p><small>${escaparHTML({pendente:'Na fila · envio requer integração ativa',enviando:'Enviando pela integração',aceito_api:'Aceita pelo serviço de WhatsApp · entrega ao cliente ainda não comprovada',falha:'Falha no envio',revisar:'Verificar envio na API antes de repetir'}[m.estado]||m.estado)}</small>${m.erro?`<p class="form-help">${escaparHTML(m.erro)}</p>`:''}${/^[0-9]{12,13}$/.test(numero)?`<br><a href="https://wa.me/${numero}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener noreferrer">Abrir WhatsApp para envio manual</a>`:''}</div>`];}).join('');
     }
     async function alternarArquivados() {
       mostrandoArquivados=!mostrandoArquivados;
@@ -2047,7 +2113,7 @@
     let consultaPendente=false;
     function atualizarConexaoCozinha(){
       const el=document.getElementById('conexao-cozinha');if(!el)return;
-      el.textContent='Malik v13 • '+(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
+      el.textContent=(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
         ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
       document.getElementById('kds-conexao').textContent=el.textContent;
     }
@@ -2071,6 +2137,7 @@
       }else if(!canalPedidos){estadoRealtime='indisponível';atualizarConexaoCozinha();}
     }
     function encerrarMonitorPedidos(){
+      pararMonitorWhatsApp();whatsappConfig=null;mensagensWhatsAppEditadas=false;document.getElementById('wa-conexao-status').textContent='Ainda não consultado';document.getElementById('wa-feedback').textContent='';
       if(canalPedidos&&malikDB&&malikDB.removeChannel)malikDB.removeChannel(canalPedidos);
       canalPedidos=null;estadoRealtime='desconectado';revisaoPedidos++;consultaPendente=false;
       pedidosArquivados=[];pedidosCRM=[];mostrandoArquivados=false;
