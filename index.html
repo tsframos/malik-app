@@ -309,6 +309,19 @@
 
 /* V19: mídias sociais carregadas por clique, preservando capa e controles oficiais. */
 .social-placeholder{display:flex;align-items:center;justify-content:center;background:var(--bg-subsurface);color:var(--accent);font-size:48px;width:100%;height:100%;min-height:160px}.social-cover .youtube-play{text-decoration:none;text-align:center;min-width:0;width:85%;max-width:250px}.social-help{font-size:12px!important;line-height:1.5!important;color:var(--text-muted);padding:8px 0;margin:0!important}.portrait-player{aspect-ratio:9/16;max-height:620px}.instagram-host{width:100%;min-width:0;overflow:hidden}.instagram-host .instagram-media,.instagram-host iframe{width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important}.instagram-host blockquote{padding:18px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-surface)}
+
+    /* V20: montagem, edição e compartilhamento de combos */
+    .combo-shortcut{max-width:1200px;margin:0 auto 12px;padding:0 24px}
+    .combo-shortcut button{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);font-weight:800}
+    .public-combo-notice{max-width:1152px;margin:0 auto 12px;padding:12px 24px;color:var(--text-main)}
+    .detail-actions{position:sticky;bottom:0;z-index:3;background:var(--bg-surface);border-top:1px solid var(--border-color);margin-top:16px}
+    .detail-actions .product-add{position:static;margin:0;padding:10px 0}
+    .combo-progress{padding:8px 0 0;font-size:13px;font-weight:800;color:var(--accent)}
+    .cart-edit{display:inline-block;border:0;background:none;color:var(--accent);font:inherit;font-size:13px;font-weight:750;text-decoration:underline;cursor:pointer;padding:9px 0}
+    .combo-share .input-text{margin:6px 0}
+    .kitchen-connection[data-health="warning"]{border:2px solid var(--danger);color:var(--danger);font-weight:800}
+    @media(max-width:650px){.combo-shortcut{padding:0 16px}.combo-shortcut button{width:100%;justify-content:center}}
+
 </style>
 </head>
 <body>
@@ -369,6 +382,8 @@
         </div>
     </div>
 
+    <div class="combo-shortcut" id="combo-shortcut" hidden><button type="button" class="btn-action" onclick="abrirAtalhoCombos()">Montar meu combo</button></div>
+    <p id="combo-link-aviso" class="public-combo-notice" role="status" hidden></p>
     <!-- Categorias Dinâmicas no Topo -->
     <div class="cat-nav-wrapper" id="sticky-cat-nav">
         <div class="cat-nav">
@@ -562,10 +577,10 @@
       </div>
       <form id="chk-form" onsubmit="enviarPedido(event)" style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px;">
         <div class="form-group">
-          <label class="form-label">Modalidade de Entrega</label>
+          <label class="form-label">Como você quer receber o pedido?</label>
           <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
             <button type="button" class="tab-btn active" id="btn-cons-deliv" onclick="setConsumo('delivery')" style="border:1px solid var(--border-color); padding:10px;">Entrega</button>
-            <button type="button" class="tab-btn" id="btn-cons-balcao" onclick="setConsumo('balcao')" style="border:1px solid var(--border-color); padding:10px;">Balcão</button>
+            <button type="button" class="tab-btn" id="btn-cons-balcao" onclick="setConsumo('balcao')" style="border:1px solid var(--border-color); padding:10px;">Retirada</button>
             <button type="button" class="tab-btn" id="btn-cons-mesa" onclick="setConsumo('mesa')" style="border:1px solid var(--border-color); padding:10px;">Mesa</button>
           </div>
         </div>
@@ -624,12 +639,14 @@
       <div class="product-photo"><img id="detalhe-img" src="" alt=""><div id="detalhe-youtube" class="youtube-holder" style="display:none"></div><video id="detalhe-video" style="display:none" controls playsinline muted preload="metadata"></video><span id="detalhe-placeholder">🍽️</span></div>
       <div class="product-details"><span class="menu-eyebrow">FEITO PARA VOCÊ</span><h2 id="detalhe-nome"></h2>
         <p id="detalhe-desc"></p><strong id="detalhe-preco" class="detail-price"></strong>
+        <div class="combo-share" id="combo-share" hidden><button type="button" class="cart-edit" onclick="copiarLinkCombo()">Copiar link do combo</button><input id="combo-share-url" class="input-text" aria-label="Link do combo" readonly hidden><p id="combo-share-status" class="form-help" role="status"></p></div>
         <div id="detalhe-grupos"></div><p id="detalhe-aviso" aria-live="polite"></p>
         <label for="detalhe-obs" class="form-label">Alguma observação?</label>
         <textarea id="detalhe-obs" class="input-text" maxlength="500" rows="3" placeholder="Ex.: sem cebola, por favor"></textarea>
         <p class="form-help">Solicitações sujeitas à disponibilidade da cozinha.</p>
+        <div class="detail-actions"><div id="detalhe-progresso" class="combo-progress" role="status" aria-atomic="true" hidden></div>
         <div class="product-add"><div class="stepper"><button class="stepper-btn" aria-label="Diminuir quantidade" onclick="mudarQtdDetalhe(-1)">−</button><span id="detalhe-qtd" class="stepper-val">1</span><button class="stepper-btn" aria-label="Aumentar quantidade" onclick="mudarQtdDetalhe(1)">+</button></div>
-        <button id="detalhe-adicionar" class="btn-submit" onclick="confirmarAdicaoDetalhe()">Adicionar • <span id="detalhe-total"></span></button></div>
+        <button id="detalhe-adicionar" class="btn-submit" onclick="confirmarAdicaoDetalhe()"><span id="detalhe-acao">Adicionar</span> • <span id="detalhe-total"></span></button></div></div>
       </div>
     </div>
   </div>
@@ -647,10 +664,10 @@
   <div id="modal-editar-categoria" class="modal-overlay" style="display:none;z-index:1005"><form class="modal-box" style="max-width:440px" role="dialog" aria-modal="true" aria-labelledby="category-edit-title" onsubmit="salvarNomeCategoria(event)"><div class="modal-header"><h3 id="category-edit-title">Editar categoria</h3><button type="button" aria-label="Fechar edição" onclick="fecharEdicaoCategoria()">✕</button></div><p class="form-help">O novo nome será aplicado aos produtos, preservando a ordem deles.</p><label for="editar-cat-nome" class="form-label">Nome da categoria</label><input id="editar-cat-nome" class="input-text" maxlength="80" required><p id="editar-cat-feedback" role="status" class="form-help"></p><button id="btn-salvar-categoria" type="submit" class="btn-submit">Salvar nome</button></form></div>
   <!-- MODAL: CARRINHO DE COMPRAS -->
   <div class="modal-overlay" id="modal-carrinho" style="display:none; z-index: 999;">
-    <div class="modal-box" style="max-width: 450px;">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="cart-title" style="max-width: 450px;">
       <div class="modal-header">
-        <h3 style="font-size:20px; color:var(--text-main); font-family:'Outfit', sans-serif;">Sua Sacola</h3>
-        <button onclick="fecharModalCarrinho()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
+        <h3 id="cart-title" style="font-size:20px; color:var(--text-main); font-family:'Outfit', sans-serif;">Sua Sacola</h3>
+        <button id="cart-close" aria-label="Fechar sacola" onclick="fecharModalCarrinho()" style="background:none; border:none; color:var(--text-muted); font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
       
       <div id="carrinho-lista" style="max-height:50vh; overflow-y:auto; margin:16px 0; display:flex; flex-direction:column; gap:12px;">
@@ -662,7 +679,7 @@
           + Continuar Comprando
         </button>
         <button class="btn-submit" onclick="avancarParaCheckout()" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Ir para Pagamento</span>
+          <span>Continuar pedido</span>
           <span id="carrinho-total-btn" class="mono" style="font-size:16px;">R$ 0,00</span>
         </button>
       </div>
@@ -847,8 +864,9 @@
           renderDestaques();
           atualizarSacolaBar();
 
-          // Verifica se acessou direto pelo /#admin
+          // Rotas da equipe têm prioridade sobre links públicos de produtos.
           verificarRotaAdmin();
+          if(!window.location.hash)abrirComboDoLink();
       }
     }
 
@@ -892,11 +910,27 @@
     }
     function renderCategoriasUI(){
       const cats=[{nome:'Todas'},...categoriasVisiveis()];
-      if(catCliente!=='Todas'&&!categoriasVisiveis().some(c=>c.nome===catCliente))catCliente='Todas';
+      if(catCliente!=='Todas'&&catCliente!=='__malik_combos__'&&!categoriasVisiveis().some(c=>c.nome===catCliente))catCliente='Todas';
       document.getElementById('cat-list').innerHTML=cats.map(c=>`<button class="cat-btn ${catCliente===c.nome?'active':''}" aria-pressed="${catCliente===c.nome}" onclick="setCatCliente(${escaparHTML(JSON.stringify(c.nome))})">${escaparHTML(c.nome)}</button>`).join('');
       document.getElementById('novo-cat').innerHTML=categoriasVisiveis().map(c=>`<option value="${escaparHTML(c.nome)}">${escaparHTML(c.nome)}</option>`).join('');
     }
     function setCatCliente(nome){catCliente=nome;document.getElementById('busca-produtos').value='';renderCategoriasUI();renderProdutos();}
+    function combosPublicos(){return personalizacaoCarregada?ordenarProdutos(DADOS.produtos).filter(p=>p.ativo!==false&&!DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false)&&gruposProduto(p.id).some(g=>g.tipo==='combo')):[];}
+    function focarCardapio(){const titulo=document.getElementById('menu-category-title');titulo.tabIndex=-1;titulo.focus();titulo.scrollIntoView({block:'start'});}
+    function abrirAtalhoCombos(){if(!combosPublicos().length)return;catCliente='__malik_combos__';document.getElementById('busca-produtos').value='';renderCategoriasUI();renderProdutos();focarCardapio();}
+    function abrirComboDoLink(){
+      const id=new URLSearchParams(window.location.search).get('combo');if(!id)return;
+      const p=combosPublicos().find(p=>p.id===id);
+      if(p&&lojaAberta&&(p.estoque==null||Number(p.estoque)>0)){abrirDetalheProduto(p.id);return;}
+      const aviso=document.getElementById('combo-link-aviso');aviso.hidden=false;aviso.textContent='Este combo não está disponível para pedido agora. Confira o cardápio da loja.';
+    }
+    async function copiarLinkCombo(){
+      if(!produtoDetalheAtual||!gruposProduto(produtoDetalheAtual.id).some(g=>g.tipo==='combo'))return;
+      const url=new URL(window.location.pathname,window.location.origin);url.searchParams.set('combo',produtoDetalheAtual.id);
+      const campo=document.getElementById('combo-share-url'),status=document.getElementById('combo-share-status');
+      try{await navigator.clipboard.writeText(url.href);status.textContent='Link copiado.';}
+      catch(_){campo.hidden=false;campo.value=url.href;campo.focus();campo.select();status.textContent='Copie o endereço acima para compartilhar.';}
+    }
     function setCat(nome){catAtiva=nome;renderAdmin();document.querySelector('.admin-category-tab.active')?.scrollIntoView({block:'nearest',inline:'nearest'});}
     function renderAdminCategorias(){
       const cats=categoriasVisiveis();
@@ -976,14 +1010,14 @@
       if (aba === 'cardapio') atualizarSacolaBar(); else document.getElementById('bar-sacola').style.display = 'none';
       if(aba==='cardapio'){iniciarRolagemDestaques();observarVideosCatalogo();observarVideoBanner();}
       if(aba!=='config')document.getElementById('conf-banner-video-preview').pause();
-      if(aba!=='cardapio'){fecharDetalheProduto();pausarYouTube();}
+      if(aba!=='cardapio'){fecharDetalheProduto(false);pausarYouTube();}
       if (aba === 'admin') renderAdmin();
       if (['cozinha','kds'].includes(aba)) carregarPedidos();
       if (aba === 'crm') carregarPedidosCRM();
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='19';
+    const MALIK_VERSION='20';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1084,7 +1118,7 @@
       const aviso=document.getElementById('loja-fechada-aviso');if(aviso){aviso.hidden=lojaAberta;aviso.textContent=atendimentoCarregado?'Estamos fechados no momento. Você pode consultar o cardápio e voltar para pedir quando a loja abrir.':'Não foi possível conferir o atendimento. Atualize a página para tentar novamente.';}
       aplicarModalidadesVisual();
       renderProdutos();renderDestaques();atualizarSacolaBar();
-      if(document.getElementById('sec-checkout').style.display==='block'&&sacola.length){const sub=sacola.reduce((n,i)=>n+i.preco*i.qtd,0),fee=tipoConsumo==='delivery'&&atendimentoCarregado?Number(CONFIG_LOJA.taxa_entrega):0;document.getElementById('chk-taxa').textContent=atendimentoCarregado?dinheiro(fee):'Indisponível';document.getElementById('chk-tot').textContent=dinheiro(sub+fee);document.getElementById('chk-prazo').textContent=lojaAberta?(tipoConsumo==='delivery'?'Entrega estimada: '+prazo:'Retirada e mesa: sem taxa de entrega.'):'O restaurante está fechado. Sua sacola foi mantida.';document.getElementById('btn-finalizar-pedido').disabled=!lojaAberta||!modalidadeHabilitada(tipoConsumo)||enviandoPedido;}
+      if(document.getElementById('sec-checkout').style.display==='block'&&sacola.length)renderResumoCheckout();
     }
     async function atualizarAtendimento(){
       if(!malikDB)return false;
@@ -1139,7 +1173,7 @@
       document.getElementById('desktop-cart-count').textContent=qtd+' '+(qtd===1?'item':'itens');
       document.getElementById('desktop-cart-total').textContent=dinheiro(total);
       document.getElementById('desktop-cart-button').disabled=!qtd||!lojaAberta;
-      box.innerHTML=qtd?sacola.map((i,index)=>`<div class="desktop-cart-item"><div><strong>${escaparHTML(i.nome)}</strong>${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}<span>${dinheiro(i.preco*i.qtd)}</span></div><div class="stepper"><button class="stepper-btn" aria-label="Diminuir ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},-1)">−</button><span class="stepper-val">${i.qtd}</span><button class="stepper-btn" aria-label="Aumentar ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},1)">+</button></div></div>`).join(''):'<div class="desktop-cart-empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7zm3 0V5a4 4 0 0 1 8 0v2"/></svg><b>Sua sacola está vazia</b><p>Escolha algo gostoso no cardápio para começar.</p></div>';
+      box.innerHTML=qtd?sacola.map((i,index)=>`<div class="desktop-cart-item"><div><strong>${escaparHTML(i.nome)}</strong>${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}<span>${dinheiro(i.preco*i.qtd)}</span>${botaoEditarCombo(i,index,'desktop')}</div><div class="stepper"><button class="stepper-btn" aria-label="Diminuir ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},-1)">−</button><span class="stepper-val">${i.qtd}</span><button class="stepper-btn" aria-label="Aumentar ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},1)">+</button></div></div>`).join(''):'<div class="desktop-cart-empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7zm3 0V5a4 4 0 0 1 8 0v2"/></svg><b>Sua sacola está vazia</b><p>Escolha algo gostoso no cardápio para começar.</p></div>';
     }
 
     // PRODUTOS E DUPLICAÇÃO
@@ -1433,9 +1467,12 @@
       const el = document.getElementById('prod-list');
       if(!DADOS.produtos) DADOS.produtos = [];
       const termo = normalizarBusca(document.getElementById('busca-produtos').value);
-      const list = ordenarProdutos(DADOS.produtos).filter(p=>!DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false)).filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : catCliente==='Todas' || p.categoria === catCliente);
+      const combos=combosPublicos(),modoCombos=catCliente==='__malik_combos__'&&!termo;
+      document.getElementById('combo-shortcut').hidden=!combos.length;
+      const listaBase=modoCombos?combos:ordenarProdutos(DADOS.produtos);
+      const list = listaBase.filter(p=>!DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false)).filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : modoCombos || catCliente==='Todas' || p.categoria === catCliente);
       
-      document.getElementById('menu-category-title').textContent = termo ? 'Resultados da busca' : catCliente==='Todas' ? 'Escolha seu favorito' : catCliente;
+      document.getElementById('menu-category-title').textContent = termo ? 'Resultados da busca' : modoCombos?'Monte seu combo':catCliente==='Todas' ? 'Escolha seu favorito' : catCliente;
       document.getElementById('menu-count').textContent = list.length + (list.length===1?' opção':' opções');
       if (list.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 60px 20px; grid-column: 1 / -1; font-size:15px; background:var(--bg-surface); border-radius:16px; border:1px dashed var(--border-color);">Nenhum produto encontrado. Escolha outra categoria ou altere a busca.</div>'; return; }
       
@@ -1599,14 +1636,31 @@
     }
 
     // ===== LÓGICA DO DETALHE E CARRINHO =====
-    function abrirDetalheProduto(id) {
+    let itemComboEmEdicao=null;
+    function botaoEditarCombo(item,index,origem){
+      if(!lojaAberta||!personalizacaoCarregada||!gruposProduto(item.prodId).some(g=>g.tipo==='combo'))return '';
+      return `<button type="button" class="cart-edit" data-combo-edit="${index}" onclick="editarComboSacola(${index},'${origem}')" aria-label="Editar sabores de ${escaparHTML(item.nome)}">Editar sabores</button>`;
+    }
+    function editarComboSacola(index,origem){
+      const item=sacola[index];if(!item||!gruposProduto(item.prodId).some(g=>g.tipo==='combo'))return;
+      if(abrirDetalheProduto(item.prodId,{item,origem})&&origem==='modal')fecharModalCarrinho();
+    }
+    function abrirDetalheProduto(id,edicao=null) {
       if(!lojaAberta) return;
       if(!personalizacaoCarregada){alert('Não foi possível carregar as opções. Atualize a página ou tente novamente em instantes.');return;}
       produtoDetalheAtual = DADOS.produtos.find(p => p.id === id);
       if(!produtoDetalheAtual || produtoDetalheAtual.ativo === false || (produtoDetalheAtual.estoque != null && Number(produtoDetalheAtual.estoque) <= 0)) return;
       
-      qtdDetalheAtual = 1; escolhasDetalhe=[]; renderEscolhasDetalhe();
-      document.getElementById('detalhe-obs').value='';
+      itemComboEmEdicao=edicao;
+      const permitidas=gruposProduto(id).flatMap(g=>opcoesGrupo(g.id).map(o=>o.id));
+      qtdDetalheAtual=edicao?.item.qtd||1;
+      escolhasDetalhe=(edicao?.item.opcoes||[]).filter(o=>permitidas.includes(o));
+      document.getElementById('detalhe-obs').value=edicao?.item.det||'';
+      document.getElementById('detalhe-acao').textContent=edicao?'Salvar alterações':'Adicionar';
+      document.getElementById('combo-share').hidden=!!edicao||!gruposProduto(id).some(g=>g.tipo==='combo');
+      document.getElementById('combo-share-url').hidden=true;
+      document.getElementById('combo-share-status').textContent='';
+      renderEscolhasDetalhe();
       document.getElementById('detalhe-preco').textContent='A partir de ' + dinheiro(precoInicial(produtoDetalheAtual));
       document.getElementById('detalhe-placeholder').style.display=(produtoDetalheAtual.img_url||produtoDetalheAtual.video_url)?'none':'block';
       const imgEl = document.getElementById('detalhe-img');
@@ -1626,17 +1680,27 @@
       document.getElementById('detalhe-desc').innerText = produtoDetalheAtual.descricao || 'Preparado com cuidado pela nossa cozinha.';
       atualizarPrecoDetalhe();
       
-      document.getElementById('modal-detalhe-produto').style.display = 'flex';
+      const modal=document.getElementById('modal-detalhe-produto');
+      modal.style.display='flex';modal.querySelector('.product-dialog').scrollTop=0;
+      modal.querySelector('.product-close').focus({preventScroll:true});
+      return true;
     }
 
-    function fecharDetalheProduto() {
+    function fecharDetalheProduto(voltarSacola=true) {
+      const edicao=itemComboEmEdicao;itemComboEmEdicao=null;
       limparYouTubeProduto('detalhe-youtube');
       document.getElementById('detalhe-video').pause();
       document.getElementById('modal-detalhe-produto').style.display = 'none';
+      if(edicao&&voltarSacola)retomarSacola(edicao);
     }
+    function retomarSacola(edicao){
+      if(edicao.origem==='modal'){abrirModalCarrinho();document.getElementById('cart-close').focus();}
+      else document.getElementById('desktop-cart-button').focus();
+    }
+    function quantidadeEditavel(id){return quantidadeNaSacola(id)-(itemComboEmEdicao&&sacola.includes(itemComboEmEdicao.item)?itemComboEmEdicao.item.qtd:0);}
 
     function mudarQtdDetalhe(delta) {
-      if(delta>0 && produtoDetalheAtual.estoque != null && quantidadeNaSacola(produtoDetalheAtual.id)+qtdDetalheAtual+delta>Number(produtoDetalheAtual.estoque)){ alert('Quantidade maior que o estoque disponível.');return; }
+      if(delta>0 && produtoDetalheAtual.estoque != null && quantidadeEditavel(produtoDetalheAtual.id)+qtdDetalheAtual+delta>Number(produtoDetalheAtual.estoque)){ alert('Quantidade maior que o estoque disponível.');return; }
       qtdDetalheAtual += delta;
       if (qtdDetalheAtual < 1) qtdDetalheAtual = 1;
       atualizarPrecoDetalhe();
@@ -1648,7 +1712,15 @@
       const total = (validacao.ok?validacao.preco:precoInicial(produtoDetalheAtual)) * qtdDetalheAtual;
       document.getElementById('detalhe-aviso').textContent=validacao.ok?(gruposProduto(produtoDetalheAtual.id).some(g=>g.tipo==='combo')?'Preço por combo. A composição será repetida em cada combo.':'Preço por unidade. As escolhas serão repetidas em todas as unidades.'):validacao.erro;
       document.getElementById('detalhe-adicionar').disabled=!validacao.ok;
-      document.getElementById('detalhe-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+      document.getElementById('detalhe-total').textContent=dinheiro(total);
+      const g=gruposProduto(produtoDetalheAtual.id).find(g=>g.tipo==='combo');
+      const progresso=document.getElementById('detalhe-progresso');progresso.hidden=!g;
+      if(g){
+        const ids=new Set(opcoesGrupo(g.id).map(o=>o.id)),qtd=escolhasDetalhe.filter(id=>ids.has(id)).length;
+        const faltam=Math.max(0,g.minimo-qtd);
+        const texto=faltam?((faltam===1?'Falta 1':'Faltam '+faltam)+' de '+g.maximo+' · '+qtd+'/'+g.maximo+' escolhidas'):qtd+'/'+g.maximo+' escolhidas'+(qtd===g.maximo?' · Combo completo':'');
+        if(progresso.textContent!==texto)progresso.textContent=texto;
+      }
     }
 
     function confirmarAdicaoDetalhe() {
@@ -1657,22 +1729,19 @@
       if(!validacao.ok){alert(validacao.erro);return;}
       const opcoes=[...escolhasDetalhe].sort();
       const det = document.getElementById('detalhe-obs').value.trim().slice(0,500);
-      if (produtoDetalheAtual.estoque != null && qtdDetalheAtual + quantidadeNaSacola(produtoDetalheAtual.id) > Number(produtoDetalheAtual.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
-      const idx = sacola.findIndex(s => s.prodId === produtoDetalheAtual.id && s.det === det && JSON.stringify((s.opcoes||[]).slice().sort())===JSON.stringify(opcoes));
-      if (idx === -1) {
-        sacola.push({ 
-          prodId: produtoDetalheAtual.id, 
-          nome: produtoDetalheAtual.nome, 
-          det, 
-          qtd: qtdDetalheAtual, 
-          preco: validacao.preco, opcoes, escolhas:validacao.resumo 
-        });
-      } else {
-        sacola[idx].qtd += qtdDetalheAtual;
-      }
-      fecharDetalheProduto();
+      const edicao=itemComboEmEdicao;
+      const anterior=edicao?sacola.indexOf(edicao.item):-1;
+      if(edicao&&anterior<0){fecharDetalheProduto();alert('O item mudou. Abra a sacola para editar novamente.');return;}
+      if (produtoDetalheAtual.estoque != null && qtdDetalheAtual + quantidadeEditavel(produtoDetalheAtual.id) > Number(produtoDetalheAtual.estoque)) { alert('Quantidade maior que o estoque disponível.'); return; }
+      const item={prodId:produtoDetalheAtual.id,nome:produtoDetalheAtual.nome,det,qtd:qtdDetalheAtual,preco:validacao.preco,opcoes,escolhas:validacao.resumo};
+      const idx=sacola.findIndex((s,i)=>i!==anterior&&s.prodId===item.prodId&&s.det===det&&JSON.stringify((s.opcoes||[]).slice().sort())===JSON.stringify(opcoes));
+      if(idx>=0){item.qtd+=sacola[idx].qtd;sacola[idx]=item;if(anterior>=0)sacola.splice(anterior,1);}
+      else if(anterior>=0)sacola[anterior]=item;
+      else sacola.push(item);
+      fecharDetalheProduto(false);
       renderProdutos();
       atualizarSacolaBar();
+      if(edicao)retomarSacola(edicao);
     }
 
     function abrirModalCarrinho() {
@@ -1699,7 +1768,8 @@
           <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:12px; border-radius:12px; border:1px solid var(--border-color);">
             <div>
               <h4 style="font-size:14px; margin:0; color:var(--text-main);">${escaparHTML(item.nome)}</h4>${resumoItemSacola(item) ? `<p class="form-help selection-note">${escaparHTML(resumoItemSacola(item))}</p>` : ''}
-              <p class="mono" style="font-size:12px; color:var(--accent); margin:4px 0 0 0;">R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</p>
+              <p class="mono" style="font-size:12px; color:var(--accent); margin:4px 0 0 0;">${dinheiro(item.preco*item.qtd)}</p>
+              ${botaoEditarCombo(item,index,'modal')}
             </div>
             <div class="stepper" style="background:var(--bg-body);">
               <button class="stepper-btn" onclick="alterarQtdNoCarrinho(${index}, -1)">-</button>
@@ -1710,7 +1780,7 @@
         `;
       }).join('');
       
-      document.getElementById('carrinho-total-btn').innerText = `R$ ${totalStr.toFixed(2).replace('.', ',')}`;
+      document.getElementById('carrinho-total-btn').innerText = dinheiro(totalStr);
     }
 
     function alterarQtdNoCarrinho(index, delta) {
@@ -1731,7 +1801,6 @@
 
     function avancarParaCheckout() {
       if (sacola.length === 0) return;
-      fecharModalCarrinho();
       abrirCheckout();
     }
 
@@ -1740,7 +1809,7 @@
       renderSacolaDesktop();
       const bar = document.getElementById('bar-sacola');
       const count = sacola.reduce((acc, i) => acc + i.qtd, 0); const val = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
-      if (count > 0 && lojaAberta) { bar.style.display = 'block'; document.getElementById('sacola-count').innerText = count; document.getElementById('sacola-val').innerText = `R$ ${val.toFixed(2).replace('.', ',')}`; }
+      if (count > 0 && lojaAberta) { bar.style.display = 'block'; document.getElementById('sacola-count').innerText = count; document.getElementById('sacola-val').innerText = dinheiro(val); }
       else bar.style.display = 'none';
     }
 
@@ -1859,34 +1928,45 @@
     }
     function atualizarSelecaoConsumo(){
       const mapa={delivery:'btn-cons-deliv',balcao:'btn-cons-balcao',mesa:'btn-cons-mesa'};
-      for(const [tipo,id] of Object.entries(mapa)){const el=document.getElementById(id),ativo=tipo===tipoConsumo&&modalidadeHabilitada(tipo);el.classList[ativo?'add':'remove']('active');el.style.background=ativo?'var(--text-main)':'transparent';el.style.color=ativo?'var(--bg-surface)':'var(--text-muted)';el.setAttribute?.('aria-pressed',String(ativo));}
-      document.getElementById('chk-endereco-box').style.display=tipoConsumo==='delivery'?'block':'none';
+      for(const [tipo,id] of Object.entries(mapa)){const el=document.getElementById(id),ativo=tipo===tipoConsumo&&modalidadeHabilitada(tipo);el.classList[ativo?'add':'remove']('active');el.style.background=ativo?'var(--text-main)':'transparent';el.style.color=ativo?'var(--bg-surface)':'var(--text-muted)';el.setAttribute('aria-pressed',String(ativo));}
+      const endereco=tipoConsumo==='delivery'&&modalidadeHabilitada('delivery');
+      document.getElementById('chk-endereco-box').style.display=endereco?'block':'none';
+      for(const id of ['chk-rua','chk-bairro'])document.getElementById(id).required=endereco;
+    }
+    function renderResumoCheckout(){
+      atualizarSelecaoConsumo();
+      const sub=sacola.reduce((n,i)=>n+i.preco*i.qtd,0),valido=modalidadeHabilitada(tipoConsumo);
+      const taxa=valido&&tipoConsumo==='delivery'?Number(CONFIG_LOJA.taxa_entrega):0;
+      document.getElementById('chk-sub').textContent=dinheiro(sub);
+      document.getElementById('chk-taxa').textContent=valido?dinheiro(taxa):'—';
+      document.getElementById('chk-tot').textContent=valido?dinheiro(sub+taxa):'—';
+      document.getElementById('chk-prazo').textContent=!atendimentoCarregado?'Não foi possível conferir o atendimento. Sua sacola foi mantida.':!lojaAberta?'A loja está fechada. Sua sacola foi mantida.':!valido?'Escolha uma modalidade disponível.':tipoConsumo==='delivery'?'Entrega estimada: '+prazoEntrega(CONFIG_LOJA):tipoConsumo==='balcao'?'Retirada na loja · sem taxa de entrega.':'Pedido na mesa · sem taxa de entrega.';
+      document.getElementById('btn-finalizar-pedido').disabled=enviandoPedido||!lojaAberta||!valido||!sacola.length;
     }
     function setConsumo(c) {
-      if(!modalidadeHabilitada(c)){alert('Esta modalidade está indisponível. Escolha outra opção.');return;}
+      if(enviandoPedido||!modalidadeHabilitada(c))return;
+      tipoConsumo=c;
       document.getElementById('checkout-erro').textContent='';
-      tipoConsumo = c; 
-      ['btn-cons-deliv', 'btn-cons-balcao', 'btn-cons-mesa'].forEach(id => { document.getElementById(id).classList.remove('active'); document.getElementById(id).style.background = 'transparent'; document.getElementById(id).style.color = 'var(--text-muted)'; });
-      const btnMap = {'delivery': 'btn-cons-deliv', 'balcao': 'btn-cons-balcao', 'mesa': 'btn-cons-mesa'};
-      const activeBtn = document.getElementById(btnMap[c]); if(activeBtn) { activeBtn.classList.add('active'); activeBtn.style.background = 'var(--text-main)'; activeBtn.style.color = 'var(--bg-surface)'; }
-      const endBox = document.getElementById('chk-endereco-box'); if(endBox) endBox.style.display = (c === 'delivery') ? 'block' : 'none';
-      abrirCheckout(); 
+      renderResumoCheckout();
     }
 
+    let abrindoCheckout=false;
     async function abrirCheckout() {
-      if(!await atualizarAtendimento()){alert('Não foi possível conferir o atendimento da loja. Tente novamente.');return;}
-      if(!lojaAberta){alert('O restaurante está fechado no momento.');return;}
-      if (!sacola.length) { mostrarAba('cardapio'); return; }
-      if(!modalidadeHabilitada(tipoConsumo)){tipoConsumo=['delivery','balcao','mesa'].find(modalidadeHabilitada);document.getElementById('checkout-erro').textContent='Selecione a modalidade disponível para seu pedido.';}
-      atualizarSelecaoConsumo();
-      document.getElementById('btn-finalizar-pedido').disabled=enviandoPedido;
-      document.getElementById('chk-form').style.display = 'block';
-      document.getElementById('box-pix').style.display = 'none';
-      document.getElementById('chk-rua').required = tipoConsumo === 'delivery';
-      document.getElementById('chk-bairro').required = tipoConsumo === 'delivery';
-      mostrarAba('checkout'); const sub = sacola.reduce((acc, i) => acc + (i.preco * i.qtd), 0); document.getElementById('chk-sub').innerText = `R$ ${sub.toFixed(2)}`;
-      const taxa = tipoConsumo === 'delivery' ? Number(CONFIG_LOJA.taxa_entrega) : 0.00;
-      document.getElementById('chk-prazo').textContent=tipoConsumo==='delivery'?'Entrega estimada: '+prazoEntrega(CONFIG_LOJA):'Retirada e mesa: sem taxa de entrega.'; document.getElementById('chk-taxa').innerText = `R$ ${taxa.toFixed(2)}`; document.getElementById('chk-tot').innerText = `R$ ${(sub + taxa).toFixed(2)}`;
+      if(abrindoCheckout||enviandoPedido)return;
+      abrindoCheckout=true;
+      try{
+        if(!await atualizarAtendimento()){alert('Não foi possível conferir o atendimento da loja. Tente novamente.');return;}
+        if(!lojaAberta){alert('O restaurante está fechado no momento.');return;}
+        if(!sacola.length){mostrarAba('cardapio');return;}
+        const mudou=!modalidadeHabilitada(tipoConsumo);
+        if(mudou)tipoConsumo=['delivery','balcao','mesa'].find(modalidadeHabilitada);
+        document.getElementById('checkout-erro').textContent=mudou?'Confira a modalidade disponível antes de continuar.':'';
+        document.getElementById('chk-form').style.display='block';
+        document.getElementById('box-pix').style.display='none';
+        renderResumoCheckout();
+        fecharModalCarrinho();
+        mostrarAba('checkout');
+      } finally {abrindoCheckout=false;}
     }
 
     async function enviarPedido(e) {
@@ -1986,7 +2066,7 @@
         }
         const Audio = window.AudioContext || window.webkitAudioContext;
         if (!Audio) throw new Error('Áudio indisponível');
-        if (!audioCtx || audioCtx.state === 'closed') audioCtx = new Audio();
+        if (!audioCtx || audioCtx.state === 'closed') {audioCtx=new Audio();audioCtx.addEventListener('statechange',atualizarConexaoCozinha);}
         await audioCtx.resume();
         if (!usuarioAtual) return;
         if (audioCtx.state !== 'running') throw new Error('Áudio bloqueado');
@@ -2338,20 +2418,25 @@
     }
     function imprimirPedido(id,destino='cozinha'){if(!usuarioAtual)return;const p=pedidos.find(p=>p.id===id);if(p)return enviarComanda(p,configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null,destino);}
     function testarImpressora(){if(!usuarioAtual)return;return enviarComanda({id:'teste',codigo_curto:'TESTE',cliente:'COMANDA DE TESTE',telefone:'',endereco:'Não preparar / não entregar',tipo_entrega:'teste',criado_em:new Date().toISOString(),subtotal:0,taxa_entrega:0,total:0,forma_pagamento:'TESTE',itens:[{nome:'Item para conferir a impressão',qtd:1,preco:0,det:'Verifique largura, acentos e legibilidade.'}]},configOperacao.mode==='browser'?window.open('','_blank','width=480,height=720'):null);}
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharDetalheProduto();});
+    document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(document.getElementById('modal-detalhe-produto').style.display==='flex')fecharDetalheProduto();else if(document.getElementById('modal-carrinho').style.display==='flex')fecharModalCarrinho();});
 
     const CAMPOS_PEDIDO='id,restaurante_id,codigo_curto,cliente,telefone,endereco,tipo_entrega,status,subtotal,taxa_entrega,total,forma_pagamento,itens,criado_em,arquivado_em,entrega_minutos_min,entrega_minutos_max,preparo_iniciado_em,pagamento_confirmado_em,pagamento_origem,pronto_em,despachado_em,whatsapp_autorizado';
     let canalPedidos=null;
     let estadoRealtime='conectando';
     let ultimaConsultaPedidos='nenhuma';
+    let consultaPedidosFalhou=false;
     let revisaoPedidos=0;
     let consultaPendente=false;
     function atualizarConexaoCozinha(){
-      const el=document.getElementById('conexao-cozinha');if(!el)return;
-      el.textContent=(estadoRealtime==='SUBSCRIBED'?'Tempo real conectado':'Reserva: consulta a cada 2 s ('+estadoRealtime+')')+
-        ' • Som: '+(somPedidosAtivo?'ativo':'desativado')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
-      document.getElementById('kds-conexao').textContent=el.textContent;
+      const offline=navigator.onLine===false,tempoReal=estadoRealtime==='SUBSCRIBED';
+      const falha=offline||(!tempoReal&&consultaPedidosFalhou);
+      const status=offline?'Sem conexão com a internet':falha?'Falha ao atualizar os pedidos':consultaPedidosFalhou?'Consulta de reserva falhou; atualização em tempo real disponível':tempoReal?'Tempo real conectado':'Modo de reserva: consulta a cada 2 s';
+      const som=somPedidosAtivo&&(!audioCtx||audioPersonalizado||audioCtx.state==='running');
+      const texto=status+' • Campainha '+(som?'ativa':'inativa neste dispositivo. Ative em Configurações')+' • Última consulta: '+ultimaConsultaPedidos+' • Último som: '+ultimoDisparoSom;
+      for(const id of ['conexao-cozinha','kds-conexao']){const el=document.getElementById(id);if(el){el.dataset.health=falha||consultaPedidosFalhou||!som?'warning':'normal';if(el.textContent!==texto)el.textContent=texto;}}
     }
+    window.addEventListener('online',()=>{atualizarConexaoCozinha();if(usuarioAtual)carregarPedidos();});
+    window.addEventListener('offline',atualizarConexaoCozinha);
     function receberEventoPedido(payload){
       if(!usuarioAtual||!payload.new||payload.new.restaurante_id!==RESTAURANTE_ID)return;
       const p=payload.new;revisaoPedidos++;
@@ -2373,7 +2458,7 @@
     }
     function encerrarMonitorPedidos(){
       if(canalPedidos&&malikDB&&malikDB.removeChannel)malikDB.removeChannel(canalPedidos);
-      canalPedidos=null;estadoRealtime='desconectado';revisaoPedidos++;consultaPendente=false;
+      canalPedidos=null;estadoRealtime='desconectado';ultimaConsultaPedidos='nenhuma';consultaPedidosFalhou=false;revisaoPedidos++;consultaPendente=false;
       pedidosArquivados=[];pedidosCRM=[];mostrandoArquivados=false;
     }
     async function carregarPedidos(){
@@ -2391,9 +2476,9 @@
         if(revisao!==revisaoPedidos){consultaPendente=true;return;}
         pedidos=resultados.flatMap(r=>r.data||[]);
         detectarNovosPedidos(pedidos);renderKanban();renderCRM();
-        ultimaConsultaPedidos=new Date().toLocaleTimeString('pt-BR');atualizarConexaoCozinha();
+        ultimaConsultaPedidos=new Date().toLocaleTimeString('pt-BR');consultaPedidosFalhou=false;atualizarConexaoCozinha();
         document.getElementById('pedidos-feedback').textContent='Atualizado às '+ultimaConsultaPedidos+' • até 500 ativos e 100 concluídos recentes';
-      }catch(e){document.getElementById('pedidos-feedback').textContent='Falha ao atualizar: '+(e.message||'confira a conexão e as permissões.');}
+      }catch(e){if(!usuarioAtual||usuarioAtual.id!==userId)return;consultaPedidosFalhou=true;atualizarConexaoCozinha();document.getElementById('pedidos-feedback').textContent='Falha ao atualizar: '+(e.message||'confira a conexão e as permissões.');}
       finally{carregandoPedidos=false;if(consultaPendente&&usuarioAtual){consultaPendente=false;setTimeout(()=>carregarPedidos(),0);}}
     }
     async function persistirAudioLocal(blob,nome){
