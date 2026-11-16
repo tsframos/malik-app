@@ -322,6 +322,19 @@
     .kitchen-connection[data-health="warning"]{border:2px solid var(--danger);color:var(--danger);font-weight:800}
     @media(max-width:650px){.combo-shortcut{padding:0 16px}.combo-shortcut button{width:100%;justify-content:center}}
 
+
+    .tracking-card{max-width:560px;margin:16px auto 36px;padding:clamp(16px,5vw,30px);border:1px solid var(--border-color);border-radius:18px;background:var(--bg-surface)}
+    .tracking-card h1{font-size:clamp(23px,5vw,30px);margin:18px 0}
+    .tracking-card h2{font-size:21px;margin:10px 0}
+    .tracking-chip{display:inline-block;padding:6px 10px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:800}
+    .tracking-steps{margin:16px 0;padding:0 0 0 24px}
+    .tracking-steps li{padding:7px 0;color:var(--text-muted)}
+    .tracking-steps li[aria-current="step"]{font-weight:800;color:var(--accent)}
+    .tracking-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+    #box-pix .tracking-actions{justify-content:center}
+    .tracking-actions .tracking-cta{display:inline-flex;width:auto;margin:0;align-items:center;text-decoration:none}
+    .tracking-actions [hidden],#tracking-dados[hidden]{display:none!important}
+    #tracking-status{min-height:1.3em}
 </style>
 </head>
 <body>
@@ -561,16 +574,40 @@
     </div>
   </section>
   
+  <section id="sec-acompanhamento" class="container" style="display:none;">
+    <div class="tracking-card">
+      <button type="button" class="btn-action" onclick="voltarDoAcompanhamento()">← Voltar ao cardápio</button>
+      <h1 id="tracking-titulo" tabindex="-1">Acompanhar pedido</h1>
+      <div id="tracking-dados" hidden>
+        <p class="tracking-chip" id="tracking-identificacao"></p>
+        <h2 id="tracking-etapa"></h2>
+        <p id="tracking-pagamento"></p>
+        <ol id="tracking-passos" class="tracking-steps" aria-label="Etapas do pedido"></ol>
+      </div>
+      <p id="tracking-status" class="form-help" role="status" aria-live="polite"></p>
+      <div class="tracking-actions">
+        <button type="button" id="tracking-atualizar" class="btn-action" onclick="atualizarAcompanhamento()">Atualizar status</button>
+        <button type="button" id="tracking-copiar" class="btn-action" onclick="copiarLinkAcompanhado()">Copiar link</button>
+      </div>
+      <p id="tracking-copia-status" class="form-help" role="status"></p>
+    </div>
+  </section>
   <section id="sec-checkout" style="display:none;" class="container">
     <div style="max-width: 500px; margin: 0 auto;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
         <button onclick="mostrarAba('cardapio')" style="background:none; border:none; color:var(--accent); font-size:15px; font-weight:700; cursor:pointer;">← Voltar</button>
-        <h2 style="font-size:22px;">Finalizar Pedido</h2>
+        <h2 id="checkout-titulo" style="font-size:22px;">Finalizar Pedido</h2>
       </div>
       <div id="box-pix" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:16px; padding:32px; text-align:center; margin-bottom:24px;">
-        <h2>Pedido registrado <span id="pedido-codigo"></span></h2>
+        <h2 id="pedido-confirmacao-titulo" tabindex="-1">Pedido registrado <span id="pedido-codigo"></span></h2>
         <p>O pagamento ainda não foi confirmado. Consulte a loja para receber os dados do Pix.</p>
         <div id="pix-total" class="mono" style="font-size:28px;margin:20px 0;">R$ 0,00</div>
+        <div class="tracking-actions">
+          <a id="pedido-acompanhar" class="btn-submit tracking-cta" hidden>Acompanhar pedido</a>
+          <button type="button" class="btn-action" onclick="copiarResumoConfirmado()">Copiar resumo</button>
+          <button type="button" id="pedido-copiar-link" class="btn-action" onclick="copiarLinkConfirmado()" hidden>Copiar link</button>
+        </div>
+        <p id="pedido-copia-status" class="form-help" role="status"></p>
         <a id="pedido-whatsapp" class="btn-submit" target="_blank" rel="noopener noreferrer">Enviar resumo pelo WhatsApp</a>
         <p id="pedido-whatsapp-aviso" class="form-help" style="margin-top:14px">Seu pedido já está registrado. Abra o WhatsApp, revise o resumo e toque em Enviar.</p>
         <button class="btn-action" onclick="mostrarAba('cardapio')">Voltar ao cardápio</button>
@@ -604,6 +641,7 @@
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action" onclick="carregarPedidos()">Atualizar agora</button></div>
     </div>
     <div class="kitchen-connection" id="conexao-cozinha" role="status">Conectando…</div>
+    <p id="atendimento-link-status" class="form-help" role="status"></p>
     <div id="resumo-cozinha" class="kitchen-summary"></div><div class="prep-legend" aria-label="Legenda do tempo de preparo"><span class="prep-green">Verde: menos de 15 min</span><span class="prep-orange">Laranja: 15 a 29 min</span><span class="prep-red">Vermelho: 30 min ou mais</span><small>Tempo desde Iniciar preparo, mantido até concluir o pedido.</small></div>
     <div class="kitchen-toolbar">
       <input id="busca-pedidos" type="search" class="input-text" placeholder="Buscar pedido, cliente ou telefone" oninput="renderKanban()">
@@ -831,6 +869,10 @@
     window.addEventListener('hashchange', verificarRotaAdmin);
 
     function verificarRotaAdmin() {
+      const hash=window.location.hash;
+      if(hash.startsWith('#acompanhar')){abrirAcompanhamento(hash);return;}
+      if(document.getElementById('sec-acompanhamento').style.display==='block')mostrarAba('cardapio');
+
       if (['#atendimento','#kds'].includes(window.location.hash)) { if(!usuarioAtual)abrirModalLogin();else mostrarAba(window.location.hash==='#kds'?'kds':'cozinha');return; }
       if (window.location.hash === '#admin') {
           if (!usuarioAtual) {
@@ -1001,7 +1043,11 @@
 
     function mostrarAba(aba) {
       if (['admin','crm','config','cozinha','kds'].includes(aba) && !usuarioAtual) { abrirModalLogin(); return; }
-      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-crm', 'sec-config', 'sec-cozinha', 'sec-kds'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+      ['sec-cardapio', 'sec-admin', 'sec-checkout', 'sec-acompanhamento', 'sec-crm', 'sec-config', 'sec-cozinha', 'sec-kds'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+      if(aba!=='acompanhamento'){
+        pararAcompanhamento();
+        if(window.location.hash.startsWith('#acompanhar'))history.replaceState(null,'',window.location.pathname+window.location.search);
+      }
       const secAtiva = document.getElementById('sec-' + aba); if(secAtiva) secAtiva.style.display = 'block';
       
       ['tab-cardapio', 'tab-admin', 'tab-crm', 'tab-config', 'tab-cozinha', 'tab-kds'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.remove('active'); el.style.background = 'transparent'; el.style.color = 'var(--text-muted)'; } });
@@ -1017,7 +1063,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='20';
+    const MALIK_VERSION='21';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1961,6 +2007,7 @@
         const mudou=!modalidadeHabilitada(tipoConsumo);
         if(mudou)tipoConsumo=['delivery','balcao','mesa'].find(modalidadeHabilitada);
         document.getElementById('checkout-erro').textContent=mudou?'Confira a modalidade disponível antes de continuar.':'';
+        document.getElementById('checkout-titulo').textContent='Finalizar Pedido';
         document.getElementById('chk-form').style.display='block';
         document.getElementById('box-pix').style.display='none';
         renderResumoCheckout();
@@ -2009,7 +2056,11 @@
           tentativa = {assinatura, chave:crypto.randomUUID()};
           localStorage.setItem(tentativaKey,JSON.stringify(tentativa));
         }
-        const {data:novo,error} = await malikDB.rpc('malik_criar_pedido_v1', {p_pedido:payload,p_chave:tentativa.chave});
+        const args={p_pedido:payload,p_chave:tentativa.chave};
+        let resultado=await malikDB.rpc('malik_criar_pedido_v21',args);
+        // Compatibilidade apenas quando a API confirma que a função ainda não existe.
+        if(resultado.error?.code==='PGRST202')resultado=await malikDB.rpc('malik_criar_pedido_v1',args);
+        const {data:novo,error}=resultado;
         if (error) {
           const msg = String(error.message || '');
           throw new Error(msg.startsWith('MALIK:') ? msg.slice(6).trim() : 'Não foi possível confirmar o pedido. Sua sacola foi mantida. Tente novamente com os mesmos dados para evitar duplicação.');
@@ -2023,6 +2074,13 @@
         document.getElementById('box-pix').style.display = 'block';
         document.getElementById('pix-total').textContent = dinheiro(novo.total);
         document.getElementById('pedido-codigo').textContent = '#' + novo.codigo_curto;
+        document.getElementById('checkout-titulo').textContent='Confirmação';
+        document.getElementById('pedido-copia-status').textContent='';
+        const acompanhar=document.getElementById('pedido-acompanhar'),urlAcompanhamento=linkAcompanhamento(novo.acompanhamento_token);
+        acompanhar.hidden=!urlAcompanhamento;
+        document.getElementById('pedido-copiar-link').hidden=!urlAcompanhamento;
+        if(urlAcompanhamento)acompanhar.href=urlAcompanhamento;else acompanhar.removeAttribute('href');
+        document.getElementById('pedido-confirmacao-titulo').focus();
         const link = document.getElementById('pedido-whatsapp');
         const numero = numeroWhatsAppLoja(CONFIG_LOJA.whatsapp);
         link.style.display = numero ? 'inline-flex' : 'none';
@@ -2032,6 +2090,107 @@
       } catch (erro) {
         erroEl.textContent = erro.message || 'Falha de conexão. Sua sacola foi mantida; confira com a loja antes de tentar novamente.';
       } finally { enviandoPedido = false; btn.disabled = !lojaAberta||!atendimentoCarregado||!modalidadeHabilitada(tipoConsumo); btn.textContent = 'Confirmar Pedido'; }
+    }
+
+
+    // Acompanhamento público por token; pedidos completos ficam no atendimento.
+    const TOKEN_ACOMPANHAMENTO=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    let acompanhamentoToken='',acompanhamentoTimer=null,acompanhamentoRevisao=0,acompanhamentoConsultando=false,acompanhamentoFinal=false,acompanhamentoUltimo=null,acompanhamentoRender='';
+    function linkAcompanhamento(token){
+      if(!TOKEN_ACOMPANHAMENTO.test(token||''))return '';
+      return new URL(window.location.pathname+'#acompanhar='+token.toLowerCase(),window.location.origin).href;
+    }
+    function pararAcompanhamento(){
+      if(acompanhamentoTimer!==null)clearInterval(acompanhamentoTimer);
+      acompanhamentoTimer=null;acompanhamentoToken='';acompanhamentoRevisao++;acompanhamentoConsultando=false;acompanhamentoFinal=false;acompanhamentoUltimo=null;
+    }
+    function voltarDoAcompanhamento(){mostrarAba('cardapio');}
+    function abrirAcompanhamento(hash){
+      const entrada=hash.startsWith('#acompanhar=')?hash.slice('#acompanhar='.length):'';
+      const token=TOKEN_ACOMPANHAMENTO.test(entrada)?entrada.toLowerCase():'';
+      pararAcompanhamento();acompanhamentoToken=token;acompanhamentoRender='';
+      mostrarAba('acompanhamento');
+      document.getElementById('tracking-titulo').focus();
+      document.getElementById('tracking-dados').hidden=true;
+      document.getElementById('tracking-copiar').hidden=!token;
+      document.getElementById('tracking-atualizar').hidden=!token;
+      document.getElementById('tracking-atualizar').disabled=false;
+      document.getElementById('tracking-copia-status').textContent='';
+      const status=document.getElementById('tracking-status');
+      status.dataset.erro='';
+      status.textContent=token?'Consultando o pedido…':'Link inválido. Confira o endereço recebido.';
+      if(!token)return;
+      atualizarAcompanhamento();
+      acompanhamentoTimer=setInterval(()=>{if(!acompanhamentoFinal&&document.visibilityState!=='hidden')atualizarAcompanhamento();},12000);
+    }
+    function etapasAcompanhamento(modalidade){
+      const comum=[['recebido','Recebido'],['preparando','Em preparo']];
+      if(modalidade==='balcao')return [...comum,['pronto','Aguardando liberação'],['despachado','Pronto para retirada'],['concluido','Concluído']];
+      return [...comum,['pronto',modalidade==='mesa'?'Pronto para servir':'Pronto para despacho'],['despachado',modalidade==='mesa'?'A caminho da mesa':'Saiu para entrega'],['concluido','Concluído']];
+    }
+    function renderAcompanhamento(data){
+      const modos={delivery:'Entrega',balcao:'Retirada',mesa:'Mesa'};
+      const modo=Object.hasOwn(modos,data.modalidade)?modos[data.modalidade]:'Pedido';
+      const etapa=data.etapa;
+      const etapas=etapasAcompanhamento(data.modalidade),atual=etapas.findIndex(e=>e[0]===etapa);
+      const chave=JSON.stringify([data.codigo,data.modalidade,etapa,data.pix_confirmado]);
+      if(chave===acompanhamentoRender)return;
+      acompanhamentoRender=chave;
+      document.getElementById('tracking-identificacao').textContent='#'+String(data.codigo||'')+' · '+modo;
+      document.getElementById('tracking-etapa').textContent=atual>=0?etapas[atual][1]:'Etapa indisponível';
+      document.getElementById('tracking-pagamento').textContent=data.pix_confirmado?'Pix confirmado pela loja.':'Pix aguardando confirmação da loja.';
+      document.getElementById('tracking-passos').innerHTML=etapas.map((e,i)=>`<li${i===atual?' aria-current="step"':''}>${e[1]}${i<atual?' — concluída':''}</li>`).join('');
+      document.getElementById('tracking-dados').hidden=false;
+    }
+    async function atualizarAcompanhamento(){
+      if(!acompanhamentoToken||acompanhamentoConsultando)return;
+      const revisao=acompanhamentoRevisao,status=document.getElementById('tracking-status'),botao=document.getElementById('tracking-atualizar');
+      acompanhamentoConsultando=true;botao.disabled=true;
+      try{
+        if(!malikDB)throw Error('Sem conexão');
+        const {data,error}=await malikDB.rpc('malik_acompanhar_pedido_v21',{p_token:acompanhamentoToken});
+        if(revisao!==acompanhamentoRevisao)return;
+        if(error)throw error;
+        if(!data){
+          acompanhamentoFinal=true;acompanhamentoUltimo=null;acompanhamentoRender='';
+          document.getElementById('tracking-dados').hidden=true;
+          status.textContent='Link inválido, expirado ou pedido indisponível. Se precisar, fale com a loja.';
+          return;
+        }
+        const alterou=acompanhamentoUltimo?.etapa!==data.etapa||acompanhamentoUltimo?.pix_confirmado!==data.pix_confirmado;
+        const estavaComErro=status.dataset.erro==='sim';
+        status.dataset.erro='';
+        acompanhamentoUltimo=data;renderAcompanhamento(data);
+        acompanhamentoFinal=data.etapa==='concluido';
+        if(alterou||estavaComErro)status.textContent=acompanhamentoFinal?'Pedido concluído.':document.getElementById('tracking-etapa').textContent+' · Atualiza automaticamente.';
+      }catch(_){
+        if(revisao===acompanhamentoRevisao){status.dataset.erro='sim';status.textContent=acompanhamentoUltimo?'Não foi possível atualizar. A etapa exibida é a última consultada.':'Não foi possível consultar agora. Tente atualizar novamente.';}
+      }finally{if(revisao===acompanhamentoRevisao){acompanhamentoConsultando=false;botao.disabled=false;}}
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='hidden'&&!acompanhamentoFinal)atualizarAcompanhamento();});
+    async function copiarTextoPedido(texto,statusId){
+      if(!texto)return;
+      const status=document.getElementById(statusId);
+      try{await navigator.clipboard.writeText(texto);status.textContent='Copiado.';}
+      catch(_){window.prompt('Copie o texto abaixo:',texto);status.textContent='Copie o texto na janela, se necessário.';}
+    }
+    function copiarResumoConfirmado(){if(pedidoConfirmado)copiarTextoPedido(resumoWhatsApp(pedidoConfirmado),'pedido-copia-status');}
+    function copiarLinkConfirmado(){copiarTextoPedido(linkAcompanhamento(pedidoConfirmado?.acompanhamento_token),'pedido-copia-status');}
+    function copiarLinkAcompanhado(){copiarTextoPedido(linkAcompanhamento(acompanhamentoToken),'tracking-copia-status');}
+    const linksAtendimentoEmCurso=new Set();
+    async function copiarLinkAtendimento(id){
+      if(!usuarioAtual||linksAtendimentoEmCurso.has(id))return;
+      const status=document.getElementById('atendimento-link-status');
+      linksAtendimentoEmCurso.add(id);
+      try{
+        const {data,error}=await malikDB.rpc('malik_link_atendimento_v21',{p_id:id});
+        if(error)throw error;
+        if(!usuarioAtual)return;
+        const url=linkAcompanhamento(data);
+        if(!url){status.textContent='Link indisponível. O acompanhamento fica disponível por até sete dias após o pedido.';return;}
+        await copiarTextoPedido(url,'atendimento-link-status');
+      }catch(_){status.textContent='Não foi possível obter o link do pedido. Tente novamente.';}
+      finally{linksAtendimentoEmCurso.delete(id);}
     }
 
     let audioCtx = null;
@@ -2202,7 +2361,7 @@
           if(p.status==='novo'&&!p.pagamento_confirmado_em){botoes=`<button class="order-main-action" ${disabled} onclick="confirmarPixPedido('${id}')">Conferir e confirmar Pix</button>`;}else if(transicoes[p.status]){const [proximo,label]=transicoes[p.status];botoes=`<button class="order-main-action" ${disabled} onclick="mudarStatusNaNuvem('${id}','${proximo}')">${label}</button>`;}
           if(p.status==='fim') botoes=`<button class="order-secondary" ${disabled} onclick="gerenciarConcluido('${id}','${p.arquivado_em?'restaurar':'arquivar'}')">${p.arquivado_em?'Restaurar':'Arquivar'}</button><button class="order-delete" ${disabled} onclick="gerenciarConcluido('${id}','excluir')">Excluir</button>`;
           const itens=(Array.isArray(p.itens)?p.itens:[]).map(i=>`<div class="order-item"><b>${escaparHTML(i.qtd)}×</b> ${escaparHTML(i.nome)}${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}</div>`).join('');
-          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">${p.pagamento_confirmado_em?'Pix confirmado':'Pix aguardando conferência'}</span></div><div class="order-actions">${botoes}<button class="order-secondary" onclick="imprimirPedido('${id}','cozinha')">Imprimir cozinha</button><button class="order-secondary" onclick="imprimirPedido('${id}','expedicao')">${p.tipo_entrega==='delivery'?'Imprimir motoboy':'Imprimir salão / retirada'}</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
+          return `<article class="order-card" ${sinal?`data-preparo-id="${id}" data-tempo="${sinal.nivel}"`:''} style="--order-color:${sinal?sinal.cor:c.cor}"><div class="order-top"><span class="order-code">#${escaparHTML(p.codigo_curto)}</span><span class="order-mode">${escaparHTML(p.tipo_entrega)}</span></div><div class="order-meta">${horario}${p.status==='novo'&&Number.isFinite(minutos)?` • ${minutos} min aguardando`:''}</div>${sinal?`<div class="order-prep-time">${escaparHTML(sinal.texto)}</div>`:''}<div class="order-customer">${escaparHTML(p.cliente)}</div><div class="order-meta">${escaparHTML(p.telefone)}<br>${escaparHTML(p.endereco)}${p.entrega_minutos_min?'<br>Prazo estimado: '+escaparHTML(prazoEntrega(p)):''}</div><div class="order-items">${itens}</div><div class="order-bottom"><strong>${dinheiro(p.total)}</strong><span class="order-meta">${p.pagamento_confirmado_em?'Pix confirmado':'Pix aguardando conferência'}</span></div><div class="order-actions">${botoes}<button type="button" class="order-secondary" onclick="copiarLinkAtendimento('${id}')">Copiar link do cliente</button><button class="order-secondary" onclick="imprimirPedido('${id}','cozinha')">Imprimir cozinha</button><button class="order-secondary" onclick="imprimirPedido('${id}','expedicao')">${p.tipo_entrega==='delivery'?'Imprimir motoboy':'Imprimir salão / retirada'}</button></div><p class="form-help">${escaparHTML(estadoImpressao[id]||'')}</p></article>`;
         }).join('');
         return `<div class="kanban-col"><div class="col-header" style="color:${c.cor}"><span>${c.t}</span><span>${lista.length}</span></div><div class="kitchen-cards">${cards||'<div class="kitchen-empty">Nenhum pedido nesta etapa.</div>'}</div></div>`;
       }).join('');
