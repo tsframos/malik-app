@@ -335,6 +335,8 @@
     .tracking-actions .tracking-cta{display:inline-flex;width:auto;margin:0;align-items:center;text-decoration:none}
     .tracking-actions [hidden],#tracking-dados[hidden]{display:none!important}
     #tracking-status{min-height:1.3em}
+    .menu-visibility-btn{font:inherit;font-size:12px;font-weight:750;cursor:pointer;color:var(--text-main);background:var(--bg-subsurface);border:1px solid var(--border-color);padding:8px;border-radius:7px}
+    .menu-visibility-label{display:block;margin-top:3px;color:var(--text-muted);font-weight:750}
 </style>
 </head>
 <body>
@@ -448,7 +450,7 @@
     
     <p class="form-help">Use ↑ e ↓ para mudar a posição dentro da categoria. A ordem é salva para todos os clientes.</p><p id="ordem-produtos-feedback" role="status" class="form-help"></p>
     <div class="table-container">
-      <table>
+      <p id="produto-visibilidade-status" class="form-help" role="status"></p><table>
         <thead><tr><th style="width:125px">Ordem</th><th>Foto</th><th>Item</th><th>Preço</th><th style="text-align:center;">Destaque 🌟</th><th style="text-align:center;">Saldo (Estoque)</th><th style="text-align:center;">Visível</th><th style="text-align:right;">Ações</th></tr></thead>
         <tbody id="admin-prod-rows"></tbody>
       </table>
@@ -698,7 +700,7 @@
       <div class="custom-save"><p id="custom-erro" role="alert" style="color:var(--danger)"></p><button type="button" class="btn-submit" id="custom-salvar" onclick="salvarPersonalizacao()">Salvar opções</button></div>
     </div>
   </div>
-  <div id="modal-categorias" class="modal-overlay" style="display:none;z-index:1004"><div class="modal-box category-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="categorias-title"><div class="modal-header"><h3 id="categorias-title">Gerenciar categorias</h3><button type="button" aria-label="Fechar categorias" onclick="fecharGestaoCategorias()">✕</button></div><p class="form-help">Edite os nomes e a ordem das categorias. Categorias com produtos só podem ser excluídas depois que os produtos forem movidos.</p><input id="busca-categorias-admin" class="input-text" type="search" placeholder="Buscar categoria..." aria-label="Buscar categoria" oninput="renderListaGestaoCategorias()"><div id="gestao-categorias-lista"></div><form class="category-manager-tools" onsubmit="adicionarCategoriaAdmin(event)"><input id="nova-cat-nome" class="input-text" maxlength="80" required placeholder="Nome da nova categoria" aria-label="Nome da nova categoria"><button id="btn-criar-categoria" type="submit" class="btn-submit" style="width:auto;margin:0">+ Criar categoria</button></form><p id="gestao-categorias-feedback" class="form-help" role="status"></p></div></div>
+  <div id="modal-categorias" class="modal-overlay" style="display:none;z-index:1004"><div class="modal-box category-manager-dialog" role="dialog" aria-modal="true" aria-labelledby="categorias-title"><div class="modal-header"><h3 id="categorias-title">Gerenciar categorias</h3><button type="button" aria-label="Fechar categorias" onclick="fecharGestaoCategorias()">✕</button></div><p class="form-help">Edite, reordene ou oculte categorias. Ocultar preserva os produtos. Categorias com produtos só podem ser excluídas depois que os produtos forem movidos.</p><input id="busca-categorias-admin" class="input-text" type="search" placeholder="Buscar categoria..." aria-label="Buscar categoria" oninput="renderListaGestaoCategorias()"><div id="gestao-categorias-lista"></div><form class="category-manager-tools" onsubmit="adicionarCategoriaAdmin(event)"><input id="nova-cat-nome" class="input-text" maxlength="80" required placeholder="Nome da nova categoria" aria-label="Nome da nova categoria"><button id="btn-criar-categoria" type="submit" class="btn-submit" style="width:auto;margin:0">+ Criar categoria</button></form><p id="gestao-categorias-feedback" class="form-help" role="status"></p></div></div>
   <div id="modal-editar-categoria" class="modal-overlay" style="display:none;z-index:1005"><form class="modal-box" style="max-width:440px" role="dialog" aria-modal="true" aria-labelledby="category-edit-title" onsubmit="salvarNomeCategoria(event)"><div class="modal-header"><h3 id="category-edit-title">Editar categoria</h3><button type="button" aria-label="Fechar edição" onclick="fecharEdicaoCategoria()">✕</button></div><p class="form-help">O novo nome será aplicado aos produtos, preservando a ordem deles.</p><label for="editar-cat-nome" class="form-label">Nome da categoria</label><input id="editar-cat-nome" class="input-text" maxlength="80" required><p id="editar-cat-feedback" role="status" class="form-help"></p><button id="btn-salvar-categoria" type="submit" class="btn-submit">Salvar nome</button></form></div>
   <!-- MODAL: CARRINHO DE COMPRAS -->
   <div class="modal-overlay" id="modal-carrinho" style="display:none; z-index: 999;">
@@ -943,21 +945,24 @@
 
     // ===== CATEGORIAS DINÂMICAS COM REORDENAÇÃO =====
     function categoriasVisiveis(){return DADOS.categorias.filter(c=>c.ativa!==false);}
+    function categoriaOculta(nome){return DADOS.categorias.some(c=>c.nome===nome&&c.ativa===false);}
+    function produtoVisivelNoCardapio(p){return !!p&&p.oculto_cardapio!==true&&!categoriaOculta(p.categoria);}
+    function rotuloCategoriaAdmin(c){return c.nome+(c.ativa===false?' · Oculta':'');}
     function quantidadeCategoria(nome){return DADOS.produtos.filter(p=>p.categoria===nome).length;}
     async function carregarCategorias(){
       const {data,error}=await malikDB.from('categorias').select('*').eq('restaurante_id',RESTAURANTE_ID).order('ordem',{ascending:true}).order('id',{ascending:true});
       if(error)throw error;
-      DADOS.categorias=data||[];if(!categoriasVisiveis().some(c=>c.nome===catAtiva))catAtiva=categoriasVisiveis()[0]?.nome||'';
+      DADOS.categorias=data||[];if(!DADOS.categorias.some(c=>c.nome===catAtiva))catAtiva=DADOS.categorias[0]?.nome||'';
       renderCategoriasUI();renderAdminCategorias();
     }
     function renderCategoriasUI(){
       const cats=[{nome:'Todas'},...categoriasVisiveis()];
       if(catCliente!=='Todas'&&catCliente!=='__malik_combos__'&&!categoriasVisiveis().some(c=>c.nome===catCliente))catCliente='Todas';
       document.getElementById('cat-list').innerHTML=cats.map(c=>`<button class="cat-btn ${catCliente===c.nome?'active':''}" aria-pressed="${catCliente===c.nome}" onclick="setCatCliente(${escaparHTML(JSON.stringify(c.nome))})">${escaparHTML(c.nome)}</button>`).join('');
-      document.getElementById('novo-cat').innerHTML=categoriasVisiveis().map(c=>`<option value="${escaparHTML(c.nome)}">${escaparHTML(c.nome)}</option>`).join('');
+      document.getElementById('novo-cat').innerHTML=DADOS.categorias.map(c=>`<option value="${escaparHTML(c.nome)}">${escaparHTML(rotuloCategoriaAdmin(c))}</option>`).join('');
     }
     function setCatCliente(nome){catCliente=nome;document.getElementById('busca-produtos').value='';renderCategoriasUI();renderProdutos();}
-    function combosPublicos(){return personalizacaoCarregada?ordenarProdutos(DADOS.produtos).filter(p=>p.ativo!==false&&!DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false)&&gruposProduto(p.id).some(g=>g.tipo==='combo')):[];}
+    function combosPublicos(){return personalizacaoCarregada?ordenarProdutos(DADOS.produtos).filter(p=>p.ativo!==false&&produtoVisivelNoCardapio(p)&&gruposProduto(p.id).some(g=>g.tipo==='combo')):[];}
     function focarCardapio(){const titulo=document.getElementById('menu-category-title');titulo.tabIndex=-1;titulo.focus();titulo.scrollIntoView({block:'start'});}
     function abrirAtalhoCombos(){if(!combosPublicos().length)return;catCliente='__malik_combos__';document.getElementById('busca-produtos').value='';renderCategoriasUI();renderProdutos();focarCardapio();}
     function abrirComboDoLink(){
@@ -975,11 +980,11 @@
     }
     function setCat(nome){catAtiva=nome;renderAdmin();document.querySelector('.admin-category-tab.active')?.scrollIntoView({block:'nearest',inline:'nearest'});}
     function renderAdminCategorias(){
-      const cats=categoriasVisiveis();
-      document.getElementById('admin-cat-list').innerHTML=cats.map(c=>`<button class="admin-category-tab ${catAtiva===c.nome?'active':''}" aria-pressed="${catAtiva===c.nome}" onclick="setCat(${escaparHTML(JSON.stringify(c.nome))})">${escaparHTML(c.nome)}<small>${quantidadeCategoria(c.nome)}</small></button>`).join('');
-      document.getElementById('admin-cat-select').innerHTML=cats.length?cats.map(c=>`<option value="${escaparHTML(c.nome)}">${escaparHTML(c.nome)} (${quantidadeCategoria(c.nome)})</option>`).join(''):'<option value="">Crie sua primeira categoria</option>';
+      const cats=DADOS.categorias;
+      document.getElementById('admin-cat-list').innerHTML=cats.map(c=>`<button class="admin-category-tab ${catAtiva===c.nome?'active':''}" aria-pressed="${catAtiva===c.nome}" onclick="setCat(${escaparHTML(JSON.stringify(c.nome))})">${escaparHTML(rotuloCategoriaAdmin(c))}<small>${quantidadeCategoria(c.nome)}</small></button>`).join('');
+      document.getElementById('admin-cat-select').innerHTML=cats.length?cats.map(c=>`<option value="${escaparHTML(c.nome)}">${escaparHTML(rotuloCategoriaAdmin(c))} (${quantidadeCategoria(c.nome)})</option>`).join(''):'<option value="">Crie sua primeira categoria</option>';
       document.getElementById('admin-cat-select').value=catAtiva;
-      document.getElementById('admin-cat-title').textContent=catAtiva?'Produtos em: '+catAtiva:'Comece criando uma categoria';
+      document.getElementById('admin-cat-title').textContent=catAtiva?'Produtos em: '+catAtiva+(categoriaOculta(catAtiva)?' · Oculta no cardápio':''):'Comece criando uma categoria';
       document.getElementById('btn-editar-cat-atual').disabled=!cats.length;document.getElementById('btn-novo-produto').disabled=!cats.length;
       if(document.getElementById('modal-categorias').style.display==='flex')renderListaGestaoCategorias();
     }
@@ -987,16 +992,16 @@
     function fecharGestaoCategorias(){if(!gerindoCategoria)document.getElementById('modal-categorias').style.display='none';}
     function renderListaGestaoCategorias(){
       const query=normalizarBusca(document.getElementById('busca-categorias-admin').value||'');
-      document.getElementById('gestao-categorias-lista').innerHTML=DADOS.categorias.map((c,index)=>({c,index})).filter(({c})=>normalizarBusca(c.nome).includes(query)).map(({c,index})=>{const qty=quantidadeCategoria(c.nome);return `<div class="category-manager-row"><div class="category-manager-name"><strong>${escaparHTML(c.nome)}</strong><small>${qty} ${qty===1?'produto':'produtos'}${c.ativa===false?' · Pausada':''}</small></div><div class="category-manager-actions"><button type="button" aria-label="Subir ${escaparHTML(c.nome)}" ${index===0||gerindoCategoria||query?'disabled':''} onclick="moverCategoriaAdmin('${c.id}',-1)">↑</button><button type="button" aria-label="Descer ${escaparHTML(c.nome)}" ${index===DADOS.categorias.length-1||gerindoCategoria||query?'disabled':''} onclick="moverCategoriaAdmin('${c.id}',1)">↓</button><button type="button" ${gerindoCategoria?'disabled':''} onclick="abrirEdicaoCategoria('${c.id}')">Editar</button><button type="button" ${gerindoCategoria||qty?'disabled':''} title="${qty?'Mova os produtos antes de excluir':'Excluir categoria vazia'}" onclick="excluirCategoriaAdmin('${c.id}')">Excluir</button></div></div>`;}).join('')||'<p class="form-help">Nenhuma categoria encontrada.</p>';
+      document.getElementById('gestao-categorias-lista').innerHTML=DADOS.categorias.map((c,index)=>({c,index})).filter(({c})=>normalizarBusca(c.nome).includes(query)).map(({c,index})=>{const qty=quantidadeCategoria(c.nome);return `<div class="category-manager-row"><div class="category-manager-name"><strong>${escaparHTML(c.nome)}</strong><small>${qty} ${qty===1?'produto':'produtos'}${c.ativa===false?' · Oculta no cardápio':' · Visível no cardápio'}</small></div><div class="category-manager-actions"><button type="button" aria-label="Subir ${escaparHTML(c.nome)}" ${index===0||gerindoCategoria||query?'disabled':''} onclick="moverCategoriaAdmin('${c.id}',-1)">↑</button><button type="button" aria-label="Descer ${escaparHTML(c.nome)}" ${index===DADOS.categorias.length-1||gerindoCategoria||query?'disabled':''} onclick="moverCategoriaAdmin('${c.id}',1)">↓</button><button type="button" ${gerindoCategoria?'disabled':''} onclick="abrirEdicaoCategoria('${c.id}')">Editar</button><button type="button" class="menu-visibility-btn" ${gerindoCategoria?'disabled':''} aria-label="${c.ativa===false?'Mostrar categoria':'Ocultar categoria'}: ${escaparHTML(c.nome)}" onclick="alterarVisibilidadeCategoria('${c.id}',${c.ativa===false})">${c.ativa===false?'Mostrar':'Ocultar'}</button><button type="button" ${gerindoCategoria||qty?'disabled':''} title="${qty?'Mova os produtos antes de excluir':'Excluir categoria vazia'}" onclick="excluirCategoriaAdmin('${c.id}')">Excluir</button></div></div>`;}).join('')||'<p class="form-help">Nenhuma categoria encontrada.</p>';
     }
-    function editarCategoriaAtual(){const c=categoriasVisiveis().find(c=>c.nome===catAtiva);if(c)abrirEdicaoCategoria(c.id);}
+    function editarCategoriaAtual(){const c=DADOS.categorias.find(c=>c.nome===catAtiva);if(c)abrirEdicaoCategoria(c.id);}
     function abrirEdicaoCategoria(id){if(gerindoCategoria||!usuarioAtual)return;const c=DADOS.categorias.find(c=>c.id===id);if(!c)return;categoriaEmEdicao={...c};document.getElementById('editar-cat-nome').value=c.nome;document.getElementById('editar-cat-feedback').textContent='';document.getElementById('modal-editar-categoria').style.display='flex';document.getElementById('editar-cat-nome').focus();}
     function fecharEdicaoCategoria(){if(gerindoCategoria)return;document.getElementById('modal-editar-categoria').style.display='none';categoriaEmEdicao=null;}
     async function gerirCategoria(args,feedbackId){
       if(gerindoCategoria||!usuarioAtual)return false;gerindoCategoria=true;document.getElementById(feedbackId).textContent='Salvando...';renderListaGestaoCategorias();
       try{const {data,error}=await malikDB.rpc('malik_gerir_categoria_v1',args);if(error)throw error;if(!Array.isArray(data?.categorias))throw new Error('Resposta inesperada. Atualize a página.');
         if(args.p_acao==='renomear'){const nova=data.categorias.find(c=>c.id===args.p_id);if(nova){if(catAtiva===args.p_anterior)catAtiva=nova.nome;if(catCliente===args.p_anterior)catCliente=nova.nome;DADOS.produtos.forEach(p=>{if(p.categoria===args.p_anterior)p.categoria=nova.nome;});}}
-        DADOS.categorias=data.categorias;if(!categoriasVisiveis().some(c=>c.nome===catAtiva))catAtiva=categoriasVisiveis()[0]?.nome||'';
+        DADOS.categorias=data.categorias;if(!DADOS.categorias.some(c=>c.nome===catAtiva))catAtiva=DADOS.categorias[0]?.nome||'';
         renderCategoriasUI();renderAdmin();renderProdutos();renderDestaques();document.getElementById(feedbackId).textContent='Alteração salva.';return true;
       }catch(e){document.getElementById(feedbackId).textContent=String(e.message||'Não foi possível salvar.').replace(/^MALIK:\s*/,'');return false;}
       finally{gerindoCategoria=false;renderListaGestaoCategorias();}
@@ -1038,8 +1043,8 @@
     }
 
     function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { if (data.user.id !== ADMIN_UID) { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); alert('Esta conta não tem acesso à administração desta loja.'); btn.innerText = 'Entrar'; return; } usuarioAtual = data.user; await carregarProdutosDaNuvem(); atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba(window.location.hash==='#kds'?'kds':window.location.hash==='#atendimento'?'cozinha':'admin'); } }
-    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; document.getElementById('modal-personalizacao').style.display='none'; await carregarProdutosDaNuvem(); atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
+    async function realizarLogin(e) { e.preventDefault(); const email = document.getElementById('login-email').value; const senha = document.getElementById('login-senha').value; const btn = document.getElementById('btn-login'); btn.innerText = 'Aguarde...'; const { data, error } = await malikDB.auth.signInWithPassword({ email, password: senha }); if (error) { alert("Erro: " + error.message); btn.innerText = 'Entrar'; } else { if (data.user.id !== ADMIN_UID) { await malikDB.auth.signOut(); usuarioAtual = null; atualizarUINavegacao(); alert('Esta conta não tem acesso à administração desta loja.'); btn.innerText = 'Entrar'; return; } usuarioAtual = data.user; await carregarCategorias().catch(console.warn); await carregarProdutosDaNuvem(); atualizarUINavegacao(); document.getElementById('modal-login').style.display='none'; mostrarAba(window.location.hash==='#kds'?'kds':window.location.hash==='#atendimento'?'cozinha':'admin'); } }
+    async function fazerLogout() { await malikDB.auth.signOut(); usuarioAtual = null; document.getElementById('modal-personalizacao').style.display='none'; await carregarCategorias().catch(console.warn); await carregarProdutosDaNuvem(); atualizarUINavegacao(); window.location.hash = ''; mostrarAba('cardapio'); }
 
     function mostrarAba(aba) {
       if (['admin','crm','config','cozinha','kds'].includes(aba) && !usuarioAtual) { abrirModalLogin(); return; }
@@ -1063,7 +1068,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    const MALIK_VERSION='21';
+    const MALIK_VERSION='22';
     document.getElementById('versao-sistema').textContent='Malik · versão '+MALIK_VERSION;
 
     // CONFIGURAÇÕES DA LOJA E REDES SOCIAIS
@@ -1222,10 +1227,77 @@
       box.innerHTML=qtd?sacola.map((i,index)=>`<div class="desktop-cart-item"><div><strong>${escaparHTML(i.nome)}</strong>${resumoItemSacola(i)?`<small>${escaparHTML(resumoItemSacola(i))}</small>`:''}<span>${dinheiro(i.preco*i.qtd)}</span>${botaoEditarCombo(i,index,'desktop')}</div><div class="stepper"><button class="stepper-btn" aria-label="Diminuir ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},-1)">−</button><span class="stepper-val">${i.qtd}</span><button class="stepper-btn" aria-label="Aumentar ${escaparHTML(i.nome)}" onclick="alterarQtdNoCarrinho(${index},1)">+</button></div></div>`).join(''):'<div class="desktop-cart-empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7zm3 0V5a4 4 0 0 1 8 0v2"/></svg><b>Sua sacola está vazia</b><p>Escolha algo gostoso no cardápio para começar.</p></div>';
     }
 
+
+    async function salvarVisibilidadeNoServidor(tipo,id,visivel){
+      const {data,error}=await malikDB.rpc('malik_visibilidade_cardapio_v22',{p_tipo:tipo,p_id:String(id),p_visivel:visivel});
+      if(error?.code==='PGRST202')throw new Error('Execute o SQL de visibilidade da V22 antes de usar este botão.');
+      if(error)throw error;
+      if(data?.id!==String(id)||data.visivel!==visivel)throw new Error('Não foi possível confirmar a alteração. Atualize o painel.');
+    }
+    function atualizarCardapioAposVisibilidade(){
+      if(produtoDetalheAtual&&!produtoVisivelNoCardapio(produtoDetalheAtual))fecharDetalheProduto(false);
+      const antes=sacola.length;
+      sacola=sacola.filter(i=>produtoVisivelNoCardapio(DADOS.produtos.find(p=>p.id===i.prodId)));
+      if(antes!==sacola.length){
+        renderItensCarrinho();
+        if(document.getElementById('sec-checkout').style.display==='block'){
+          renderResumoCheckout();
+          document.getElementById('checkout-erro').textContent='Alguns itens ficaram indisponíveis e foram retirados da sua sacola.';
+        }
+      }
+      renderCategoriasUI();renderProdutos();renderDestaques();atualizarSacolaBar();
+    }
+    async function alterarVisibilidadeCategoria(id,visivel){
+      const c=DADOS.categorias.find(c=>c.id===id);
+      if(!usuarioAtual||gerindoCategoria||!c)return;
+      gerindoCategoria=true;
+      const msg=document.getElementById('gestao-categorias-feedback');
+      msg.textContent='Salvando…';renderListaGestaoCategorias();
+      try{
+        await salvarVisibilidadeNoServidor('categoria',id,visivel);
+        c.ativa=visivel;
+        atualizarCardapioAposVisibilidade();renderAdmin();
+        msg.textContent=c.nome+(visivel?' voltou ao cardápio. Produtos ocultos individualmente continuam ocultos.':' foi ocultada do cardápio, junto com seus produtos.');
+      }catch(e){msg.textContent=String(e.message||'Não foi possível salvar.').replace(/^MALIK:\s*/,'');}
+      finally{gerindoCategoria=false;renderListaGestaoCategorias();}
+    }
+    const produtosVisibilidadeEmCurso=new Set();
+    async function alterarVisibilidadeProduto(id,visivel){
+      const p=DADOS.produtos.find(p=>p.id===id);
+      if(!usuarioAtual||produtosVisibilidadeEmCurso.has(id)||!p)return;
+      produtosVisibilidadeEmCurso.add(id);
+      const msg=document.getElementById('produto-visibilidade-status');
+      msg.textContent='Salvando…';renderAdmin();
+      try{
+        await salvarVisibilidadeNoServidor('produto',id,visivel);
+        p.oculto_cardapio=!visivel;
+        atualizarCardapioAposVisibilidade();
+        msg.textContent=p.nome+(visivel?(categoriaOculta(p.categoria)?' foi marcado como visível, mas a categoria continua oculta.':' voltou ao cardápio.'):' foi ocultado do cardápio.');
+      }catch(e){msg.textContent=String(e.message||'Não foi possível salvar.').replace(/^MALIK:\s*/,'');}
+      finally{produtosVisibilidadeEmCurso.delete(id);renderAdmin();}
+    }
+
+    let atualizandoCatalogoVisibilidade=false;
+    async function atualizarCatalogoVisibilidade(){
+      if(!malikDB||atualizandoCatalogoVisibilidade)return false;
+      atualizandoCatalogoVisibilidade=true;
+      try{
+        await carregarCategorias();
+        if(!await carregarProdutosDaNuvem())return false;
+        atualizarCardapioAposVisibilidade();
+        return true;
+      }catch(_){return false;}
+      finally{atualizandoCatalogoVisibilidade=false;}
+    }
+    document.addEventListener('visibilitychange',()=>{
+      if(!document.hidden&&!usuarioAtual&&personalizacaoCarregada&&document.getElementById('sec-cardapio').style.display!=='none')atualizarCatalogoVisibilidade();
+    });
     // PRODUTOS E DUPLICAÇÃO
     async function carregarProdutosDaNuvem() { 
         const { data, error } = await malikDB.from('produtos').select('*').eq('restaurante_id', RESTAURANTE_ID).order('criado_em', { ascending: false }); 
-        if (!error && data) { DADOS.produtos = ordenarProdutos(data); await carregarPersonalizacao(); renderProdutos(); renderDestaques(); if(usuarioAtual) { renderAdmin(); } } 
+        if (error || !Array.isArray(data)) return false;
+        DADOS.produtos = ordenarProdutos(data); await carregarPersonalizacao(); renderProdutos(); renderDestaques(); if(usuarioAtual)renderAdmin();
+        return true; 
     }
 
     async function duplicarProdutoNaNuvem(id) {
@@ -1490,7 +1562,7 @@
 
     function renderDestaques() {
         if(!DADOS.produtos) return;
-        const destaques = ordenarProdutos(DADOS.produtos).filter(p => p.destaque === true && p.ativo !== false && !DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false));
+        const destaques = ordenarProdutos(DADOS.produtos).filter(p => p.destaque === true && p.ativo !== false && produtoVisivelNoCardapio(p));
         const box = document.getElementById('box-destaques'); const list = document.getElementById('destaques-list');
         
         if(destaques.length > 0) {
@@ -1516,7 +1588,7 @@
       const combos=combosPublicos(),modoCombos=catCliente==='__malik_combos__'&&!termo;
       document.getElementById('combo-shortcut').hidden=!combos.length;
       const listaBase=modoCombos?combos:ordenarProdutos(DADOS.produtos);
-      const list = listaBase.filter(p=>!DADOS.categorias.some(c=>c.nome===p.categoria&&c.ativa===false)).filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : modoCombos || catCliente==='Todas' || p.categoria === catCliente);
+      const list = listaBase.filter(produtoVisivelNoCardapio).filter(p => termo ? normalizarBusca((p.nome || '') + ' ' + (p.descricao || '')).includes(termo) : modoCombos || catCliente==='Todas' || p.categoria === catCliente);
       
       document.getElementById('menu-category-title').textContent = termo ? 'Resultados da busca' : modoCombos?'Monte seu combo':catCliente==='Todas' ? 'Escolha seu favorito' : catCliente;
       document.getElementById('menu-count').textContent = list.length + (list.length===1?' opção':' opções');
@@ -1695,7 +1767,7 @@
       if(!lojaAberta) return;
       if(!personalizacaoCarregada){alert('Não foi possível carregar as opções. Atualize a página ou tente novamente em instantes.');return;}
       produtoDetalheAtual = DADOS.produtos.find(p => p.id === id);
-      if(!produtoDetalheAtual || produtoDetalheAtual.ativo === false || (produtoDetalheAtual.estoque != null && Number(produtoDetalheAtual.estoque) <= 0)) return;
+      if(!produtoVisivelNoCardapio(produtoDetalheAtual) || produtoDetalheAtual.ativo === false || (produtoDetalheAtual.estoque != null && Number(produtoDetalheAtual.estoque) <= 0)) return;
       
       itemComboEmEdicao=edicao;
       const permitidas=gruposProduto(id).flatMap(g=>opcoesGrupo(g.id).map(o=>o.id));
@@ -1770,7 +1842,7 @@
     }
 
     function confirmarAdicaoDetalhe() {
-      if (!produtoDetalheAtual || !lojaAberta) return;
+      if (!produtoVisivelNoCardapio(produtoDetalheAtual) || !lojaAberta) return;
       const validacao=validarEscolhas(produtoDetalheAtual,escolhasDetalhe);
       if(!validacao.ok){alert(validacao.erro);return;}
       const opcoes=[...escolhasDetalhe].sort();
@@ -1934,7 +2006,7 @@
                 <tr style="opacity: ${opacity};">
                     <td><div class="product-order-controls"><span>${index+1}</span><button type="button" title="Subir produto" aria-label="Subir ${escaparHTML(p.nome)}" ${index===0||movendoProduto?'disabled':''} onclick="moverProduto('${p.id}',-1)">↑</button><button type="button" title="Descer produto" aria-label="Descer ${escaparHTML(p.nome)}" ${index===produtosDaCategoria.length-1||movendoProduto?'disabled':''} onclick="moverProduto('${p.id}',1)">↓</button></div></td>
                     <td>${img}</td>
-                    <td><b>${escaparHTML(p.nome || 'Produto')}</b></td>
+                    <td><b>${escaparHTML(p.nome || 'Produto')}</b>${!produtoVisivelNoCardapio(p)?`<small class="menu-visibility-label">${p.oculto_cardapio?'Produto oculto':'Categoria oculta'}</small>`:''}</td>
                     <td class="mono-td">R$ ${precoF.toFixed(2)}</td>
                     <td style="text-align:center;">
                         <input type="checkbox" ${checkedDest} onchange="toggleDestaqueTabela('${p.id}', this.checked)" style="transform:scale(1.5); cursor:pointer;">
@@ -1946,7 +2018,8 @@
                         <label class="switch"><input type="checkbox" ${checkedAtiv} onchange="toggleStatusProduto('${p.id}', this.checked)"><span class="slider"></span></label>
                     </td>
                     <td>
-                        <div style="display:flex; gap:8px; justify-content:flex-end;">
+                        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end;">
+                            <button type="button" class="menu-visibility-btn" ${produtosVisibilidadeEmCurso.has(p.id)?'disabled':''} aria-label="${p.oculto_cardapio?'Mostrar produto':'Ocultar produto'}: ${escaparHTML(p.nome)}" onclick="alterarVisibilidadeProduto('${p.id}',${p.oculto_cardapio===true})">${p.oculto_cardapio?'Mostrar':'Ocultar'}</button>
                             <button onclick="abrirPersonalizacao('${p.id}')" style="background:var(--bg-subsurface);border:1px solid var(--border-color);padding:8px;border-radius:6px;cursor:pointer;" title="Sabores e adicionais">Opções</button>
                             <button onclick="duplicarProdutoNaNuvem('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;" title="Duplicar Item">📄</button>
                             <button onclick="abrirModalProduto('${p.id}')" style="background:var(--bg-subsurface); border:none; padding:8px; border-radius:6px; cursor:pointer;" title="Editar">✏️</button>
@@ -2037,7 +2110,7 @@
         if (tipoConsumo === 'delivery' && (!rua || !bairro)) throw new Error('Informe endereço, número e bairro para entrega.');
         const itens = sacola.map(item => {
           const p = DADOS.produtos.find(p => p.id === item.prodId);
-          if (!p || p.ativo === false || !Number.isInteger(item.qtd) || item.qtd < 1 || (p.estoque != null && item.qtd > Number(p.estoque))) throw new Error('Revise os itens da sacola: um produto está indisponível.');
+          if (!produtoVisivelNoCardapio(p) || p.ativo === false || !Number.isInteger(item.qtd) || item.qtd < 1 || (p.estoque != null && item.qtd > Number(p.estoque))) throw new Error('Revise os itens da sacola: um produto está indisponível.');
           const validacao=validarEscolhas(p,item.opcoes||[]);
           if(!validacao.ok)throw new Error('Revise '+p.nome+': '+validacao.erro);
           const preco = validacao.preco;
@@ -2063,6 +2136,7 @@
         const {data:novo,error}=resultado;
         if (error) {
           const msg = String(error.message || '');
+          if(/^MALIK:.*(ocultad[oa]|categoria indisponível)/i.test(msg)&&await atualizarCatalogoVisibilidade())throw new Error('Um item deixou de estar disponível. Confira sua sacola antes de continuar.');
           throw new Error(msg.startsWith('MALIK:') ? msg.slice(6).trim() : 'Não foi possível confirmar o pedido. Sua sacola foi mantida. Tente novamente com os mesmos dados para evitar duplicação.');
         }
         if (!novo || !novo.id || !Array.isArray(novo.itens) || !Number.isFinite(Number(novo.total)))
@@ -2490,7 +2564,7 @@
         const usados = {}; let removidos=false;
         sacola = salvo.itens.flatMap(i => {
           const p = DADOS.produtos.find(p => p.id === i.prodId);
-          if (!p || p.ativo === false || !Number.isInteger(i.qtd) || i.qtd < 1) {removidos=true;return [];}
+          if (!produtoVisivelNoCardapio(p) || p.ativo === false || !Number.isInteger(i.qtd) || i.qtd < 1) {removidos=true;return [];}
           const validacao=validarEscolhas(p,i.opcoes||[]);if(!validacao.ok){removidos=true;return [];}
           const qtd = p.estoque == null ? i.qtd : Math.min(i.qtd, Math.max(0, Number(p.estoque)-(usados[p.id]||0)));
           usados[p.id]=(usados[p.id]||0)+qtd;
